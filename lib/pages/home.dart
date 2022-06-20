@@ -7,7 +7,11 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-
+      child: SingleChildScrollView(
+        child: Column(
+          children: [Text("This is home page.")],
+        ),
+      ),
     );
   }
 }
