@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 
 class Home extends StatelessWidget {
   const Home({Key? key}) : super(key: key);
@@ -9,7 +8,7 @@ class Home extends StatelessWidget {
     return Container(
       child: SingleChildScrollView(
         child: Column(
-          children: [Text("This is home page.")],
+          children: [Text("This is home page..sdfsdf")],
         ),
       ),
     );
