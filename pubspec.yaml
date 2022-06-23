@@ -36,6 +36,8 @@ dependencies:
 
   http: 0.13.4
 
+  image_cropper: ^2.0.3
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -64,6 +66,7 @@ flutter:
   #   - images/a_dot_ham.jpeg
   assets:
     - assets/
+    - assets/images/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
@@ -90,3 +93,10 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+  fonts:
+    - family: NanumBarunGothic
+      fonts:
+        - asset: fonts/NanumBarunGothic.ttf
+    - family: NanumBarunGothicBold
+      fonts:
+        - asset: fonts/NanumBarunGothicBold.ttf
