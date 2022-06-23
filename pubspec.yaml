@@ -96,7 +96,12 @@ flutter:
   fonts:
     - family: NanumBarunGothic
       fonts:
-        - asset: fonts/NanumBarunGothic.ttf
+        - asset: assets/fonts/NanumBarunGothic.ttf
     - family: NanumBarunGothicBold
       fonts:
-        - asset: fonts/NanumBarunGothicBold.ttf
+        - asset: assets/fonts/NanumBarunGothicBold.ttf
+    - family: ChosunCentennial
+      fonts:
+        - asset: assets/fonts/ChosunCentennial.ttf
+
+

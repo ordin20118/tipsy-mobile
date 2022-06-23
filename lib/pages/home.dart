@@ -29,7 +29,6 @@ class Home extends StatelessWidget {
                       child: Text(
                         "추천 게시글",
                         style: TextStyle(
-                          fontFamily: 'NanumBarunGothic',
                           color: Colors.white,
                         )
                   )),
