@@ -1,6 +1,9 @@
+import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:tipsy_mobile/pages/home.dart';
+//import 'package:tipsy_mobile/classes/liquor.dart';
 
 void main() {
   runApp(
@@ -10,8 +13,6 @@ void main() {
     ),
   );
 }
-
-
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -35,6 +36,24 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
+
+  void searchhLiquor() async {
+
+    final searchUrl = "http://www.tipsy.co.kr/svcmgr/api/search.tipsy?keyword=레몬&target=all";
+    final Uri url = Uri.parse(searchUrl);
+    final response = await http.get(url);
+
+    print("this");
+
+    if (response.statusCode == 200) {
+      // 만약 서버로의 요청이 성공하면, JSON을 파싱합니다.
+      print("api result is $response.body");
+
+    } else {
+      // 만약 요청이 실패하면, 에러를 던집니다.
+      throw Exception('Failed to load liquor data.');
+    }
+  }
 
   int _selectedPageIndex = 0; // 선택된 페이지의 인덱스 번호
 
@@ -111,6 +130,7 @@ class _MainPageState extends State<MainPage> {
   void initState() {
     // 해당 클래스가 호출되었을 때
     super.initState();
+    searchhLiquor();
   }
 
   @override
