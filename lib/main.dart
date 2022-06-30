@@ -2,10 +2,12 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:tipsy_mobile/pages/home.dart';
 //import 'package:tipsy_mobile/classes/liquor.dart';
 
 void main() {
+  KakaoSdk.init(nativeAppKey: '87257d8db7512fd56ca5157564988776');
   runApp(
     MaterialApp(
       title: 'Main',
