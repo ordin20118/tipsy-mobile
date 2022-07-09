@@ -41,15 +41,21 @@ class _MainPageState extends State<MainPage> {
 
   void searchhLiquor() async {
 
-    final searchUrl = "http://www.tipsy.co.kr/svcmgr/api/search.tipsy?keyword=레몬&target=all";
+    print("#### [searchhLiquor] ####");
+
+    final searchUrl = "http://www.tipsy.co.kr/svcmgr/api/search.tipsy?keyword=lemon&target=all";
     final Uri url = Uri.parse(searchUrl);
+
+    print("URL: $url");
+
     final response = await http.get(url);
 
-    print("this");
+    print("#### Test Log ####");
 
     if (response.statusCode == 200) {
       // 만약 서버로의 요청이 성공하면, JSON을 파싱합니다.
-      print("api result is $response.body");
+      String resString = response.body.toString();
+      print("api result is $resString");
 
     } else {
       // 만약 요청이 실패하면, 에러를 던집니다.
@@ -132,6 +138,7 @@ class _MainPageState extends State<MainPage> {
   void initState() {
     // 해당 클래스가 호출되었을 때
     super.initState();
+    print("#### [[initSTate]] ####");
     searchhLiquor();
   }
 

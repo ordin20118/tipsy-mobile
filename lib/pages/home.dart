@@ -44,25 +44,25 @@ class Home extends StatelessWidget {
                 children: [
                   Column(
                       children: [
-                        Expanded(child: Image.asset('images/10_300.png')),
+                        Expanded(child: Image.asset('assets/images/10_300.png')),
                         Text('주류')
                       ]
                   ),
                   Column(
                       children: [
-                        Expanded(child: Image.asset('images/11_300.png')),
+                        Expanded(child: Image.asset('assets/images/11_300.png')),
                         Text('칵테일')
                       ]
                   ),
                   Column(
                       children: [
-                        Expanded(child: Image.asset('images/12_300.png')),
+                        Expanded(child: Image.asset('assets/images/12_300.png')),
                         Text('재료')
                       ]
                   ),
                   Column(
                       children: [
-                        Expanded(child: Image.asset('images/13_300.png')),
+                        Expanded(child: Image.asset('assets/images/13_300.png')),
                         Text('용어')
                       ]
                   ),
