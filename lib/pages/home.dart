@@ -8,8 +8,8 @@ class Home extends StatelessWidget {
       fontWeight: FontWeight.bold
   );
 
-  static TextStyle boxMenuDark = TextStyle(
-      color: Color(0xff5D5D5D),
+  static TextStyle boxMenuPupple = TextStyle(
+      color: Color(0xff8748E1),
       fontWeight: FontWeight.bold
   );
 
@@ -36,8 +36,8 @@ class Home extends StatelessWidget {
               ]
             ),
             Container(
-              color: Colors.blue,
-              padding: EdgeInsets.all(8),
+              color: Colors.white,
+              padding: EdgeInsets.all(10),
               height: MediaQuery.of(context).size.height * 0.15,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -71,7 +71,7 @@ class Home extends StatelessWidget {
             ),
             Container(
               height: MediaQuery.of(context).size.height * 0.55,
-              color: Colors.green,
+              color: Colors.white,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -89,12 +89,13 @@ class Home extends StatelessWidget {
                             height: MediaQuery.of(context).size.height * 0.2,
                             child: Container(
                                 child: Card(
+                                  color: Color(0xffFFFFDD),
                                   shape: RoundedRectangleBorder(
                                       borderRadius: const BorderRadius.all(const Radius.circular(10.0))
                                   ),
                                   elevation: 4.0, // 그림자 깊이
                                   child: Center(
-                                    child: Text('나의 술 지식 테스트', style: boxMenuDark),
+                                    child: Text('나의 술 지식 테스트', style: boxMenuPupple),
                                   ),
                                 )
                             ),
@@ -135,7 +136,7 @@ class Home extends StatelessWidget {
                 ),
                 elevation: 4.0, // 그림자 깊이
                 child: Center(
-                    child: Text('Top10 순위보기', style: boxMenuDark)),
+                    child: Text('Top10 순위보기', style: boxMenuPupple)),
               )
           ),
         ),

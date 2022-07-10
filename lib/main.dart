@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:tipsy_mobile/pages/home.dart';
+import 'package:tipsy_mobile/pages/search.dart';
 //import 'package:tipsy_mobile/classes/liquor.dart';
 
 void main() {
@@ -32,36 +33,11 @@ class MyApp extends StatelessWidget {
 
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
-
   @override
   _MainPageState createState() => _MainPageState();
 }
 
 class _MainPageState extends State<MainPage> {
-
-  void searchhLiquor() async {
-
-    print("#### [searchhLiquor] ####");
-
-    final searchUrl = "http://www.tipsy.co.kr/svcmgr/api/search.tipsy?keyword=lemon&target=all";
-    final Uri url = Uri.parse(searchUrl);
-
-    print("URL: $url");
-
-    final response = await http.get(url);
-
-    print("#### Test Log ####");
-
-    if (response.statusCode == 200) {
-      // 만약 서버로의 요청이 성공하면, JSON을 파싱합니다.
-      String resString = response.body.toString();
-      print("api result is $resString");
-
-    } else {
-      // 만약 요청이 실패하면, 에러를 던집니다.
-      throw Exception('Failed to load liquor data.');
-    }
-  }
 
   int _selectedPageIndex = 0; // 선택된 페이지의 인덱스 번호
 
@@ -82,9 +58,21 @@ class _MainPageState extends State<MainPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: Text('Tipsy'),
-          backgroundColor: Color(0xff005766),
-          actions: []
+          title: Text('Tipsy', style: TextStyle(color: Color(0xff005766))),
+          //backgroundColor: Color(0xff005766),
+          backgroundColor: Color(0xffffffff),
+          actions: [
+            IconButton(icon: Icon(Icons.search),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => SearchPage()),
+                );
+              },
+              color: Color(0xff005766),
+              iconSize: 30,
+            )
+          ]
       ),
       body: _pageChildren.elementAt(_selectedPageIndex),
       bottomNavigationBar: BottomNavigationBar(
@@ -138,8 +126,6 @@ class _MainPageState extends State<MainPage> {
   void initState() {
     // 해당 클래스가 호출되었을 때
     super.initState();
-    print("#### [[initSTate]] ####");
-    searchhLiquor();
   }
 
   @override

@@ -28,16 +28,16 @@ class Liquor {
             this.category2Id, this.category3Id, this.category4Id, this.category1Name,
             this.category2Name, this.category3Name, this.category4Name,
             this.vintage, this.abv, this.countryId,
-            this.description, this.history, this.regDate, this.updateDate})
+            this.description, this.history, this.regDate, this.updateDate});
 
 
-  factory PhotosList.fromJson(List<dynamic> parsedJson) {
-    List<Photo> photos = new List<Photo>();
-    ​
-    return new PhotosList(
-    photos: photos,
-    );
-  }
+  // factory PhotosList.fromJson(List<dynamic> parsedJson) {
+  //   List<Photo> photos = new List<Photo>();
+  //   ​
+  //   return new PhotosList(
+  //   photos: photos,
+  //   );
+  // }
 
   factory Liquor.fromJson(Map<String, dynamic> json) {
     return Liquor.set(
@@ -64,9 +64,18 @@ class Liquor {
 }
 
 class LiquorList {
-  final List<Liquor> liquors;
-  ​
-  LiquorList({
+  List<Liquor>? liquors;
+
+  LiquorList() {}
+  LiquorList.set({
     this.liquors,
   });
+
+  factory LiquorList.fromJson(List<dynamic> parsedJson) {
+    List<Liquor> liquors = new List<Liquor>.empty();
+    liquors = parsedJson.map((i)=>Liquor.fromJson(i)).toList();
+    return new LiquorList.set(
+      liquors: liquors,
+    );
+  }
 }
