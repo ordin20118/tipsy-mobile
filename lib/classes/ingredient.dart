@@ -1,61 +1,45 @@
 import 'package:flutter/cupertino.dart';
 
-class Liquor {
-  int _liquorId;
+class Ingredient {
+  int _ingdId;
   String _nameKr;
   String _nameEn;
 
   int _category1Id;
-  int _category2Id;
+  late int _category2Id;
   late int _category3Id;
   late int _category4Id;
   String _category1Name;
-  String _category2Name;
+  late String _category2Name;
   late String _category3Name;
   late String _category4Name;
 
   late String _description;
-  late String _history;
-
-  late int _vintage;
-  double _abv;
-  late int _countryId;
-
   String _repImg;
 
   DateTime _regDate;
   late DateTime _updateDate;
 
-  Liquor.set({
-    required int liquorId,
+  Ingredient.set({
+    required int ingdId,
     required String nameKr,
     required String nameEn,
     required int category1Id,
-    required int category2Id,
     required String category1Name,
-    required String category2Name,
-    required double abv,
-    required int countryId,
     required String repImg,
     required DateTime regDate,
-  }) : this._liquorId = liquorId, this._nameKr = nameKr,
+  }) : this._ingdId = ingdId, this._nameKr = nameKr,
         this._nameEn = nameEn, this._category1Id = category1Id,
-        this._category2Id = category2Id, this._category1Name = category1Name,
-        this._category2Name = category2Name, this._abv = abv, this._countryId = countryId,
-        this._repImg = repImg, this._regDate = regDate;
+         this._category1Name = category1Name, this._repImg = repImg, this._regDate = regDate;
 
 
-  factory Liquor.fromJson(Map<String, dynamic> json) {
-    Liquor tmp = Liquor.set(
-        liquorId: json['liquor_id'],
+  factory Ingredient.fromJson(Map<String, dynamic> json) {
+    Ingredient tmp = Ingredient.set(
+        ingdId: json['ingd_id'],
         nameKr: json['name_kr'],
         nameEn: json['name_en'],
         category1Id: json['category1_id'],
-        category2Id: json['category2_id'],
         category1Name: json['category1_name'],
-        category2Name: json['category2_name'],
-        abv: json['abv'],
-        countryId: json['country_id'],
         repImg: json['rep_img'],
         regDate: DateTime.fromMillisecondsSinceEpoch(json['reg_date'] * 1000)
     );
@@ -65,19 +49,17 @@ class Liquor {
     // category4_id
     // category3_ame
     // category4_ame
-    // vintage
-    // country_id
     // description
-    // history
     // update_date
 
     return tmp;
   }
 
-  int get liquorId => _liquorId;
 
-  set liquorId(int value) {
-    _liquorId = value;
+  int get ingdId => _ingdId;
+
+  set ingdId(int value) {
+    _ingdId = value;
   }
 
   String get nameKr => _nameKr;
@@ -146,36 +128,6 @@ class Liquor {
     _description = value;
   }
 
-  String get history => _history;
-
-  set history(String value) {
-    _history = value;
-  }
-
-  int get vintage => _vintage;
-
-  set vintage(int value) {
-    _vintage = value;
-  }
-
-  double get abv => _abv;
-
-  set abv(double value) {
-    _abv = value;
-  }
-
-  String get repImg => _repImg;
-
-  set repImg(String value) {
-    _repImg = value;
-  }
-
-  int get countryId => _countryId;
-
-  set countryId(int value) {
-    _countryId = value;
-  }
-
   DateTime get regDate => _regDate;
 
   set regDate(DateTime value) {
@@ -187,25 +139,31 @@ class Liquor {
   set updateDate(DateTime value) {
     _updateDate = value;
   }
+
+  String get repImg => _repImg;
+
+  set repImg(String value) {
+    _repImg = value;
+  }
 }
 
-class LiquorList {
-  List<Liquor> liquors = List<Liquor>.empty();
+class IngdList {
+  List<Ingredient> ingredients = List<Ingredient>.empty();
 
-  LiquorList() {}
-  LiquorList.set(List<Liquor> liquorList) {
-    List<Liquor> emptyList = [];
-    liquorList.forEach((element) {
+  IngdList() {}
+  IngdList.set(List<Ingredient> ingdList) {
+    List<Ingredient> emptyList = [];
+    ingdList.forEach((element) {
       emptyList.add(element);
     });
-    liquors = emptyList;
+    ingredients = emptyList;
   }
 
-  factory LiquorList.fromJson(List<dynamic> parsedJson) {
-    List<Liquor> liquors = List<Liquor>.empty(growable: true); // []와 같다.
-    liquors = parsedJson.map((i)=>Liquor.fromJson(i)).toList();
-    return new LiquorList.set(
-      liquors,
+  factory IngdList.fromJson(List<dynamic> parsedJson) {
+    List<Ingredient> ingredients = List<Ingredient>.empty(growable: true); // []와 같다.
+    ingredients = parsedJson.map((i)=>Ingredient.fromJson(i)).toList();
+    return new IngdList.set(
+      ingredients,
     );
   }
 }

@@ -102,6 +102,9 @@ flutter:
     - family: NanumBarunGothic
       fonts:
         - asset: assets/fonts/NanumBarunGothic.ttf
+    - family: NanumBarunGothicLight
+      fonts:
+        - asset: assets/fonts/NanumBarunGothicLight.ttf
     - family: NanumBarunGothicBold
       fonts:
         - asset: assets/fonts/NanumBarunGothicBold.ttf
