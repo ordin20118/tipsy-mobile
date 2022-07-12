@@ -36,12 +36,12 @@ dependencies:
 
   http: 0.13.4
   image_cropper: ^2.0.3
-  kakao_flutter_sdk: ^1.1.1 # 전체 추가
+#  kakao_flutter_sdk: ^1.1.1 # 전체 추가
   kakao_flutter_sdk_user: ^1.1.1 # 카카오 로그인
   kakao_flutter_sdk_talk: ^1.1.1 # 카카오톡(소셜, 메시지)
   kakao_flutter_sdk_story: ^1.1.1 # 카카오스토리
   kakao_flutter_sdk_link: ^1.1.1 # 카카오톡 공유
-  kakao_flutter_sdk_navi: ^1.1.1 # 카카오내비
+#  kakao_flutter_sdk_navi: ^1.1.1 # 카카오내비
 
 dev_dependencies:
   flutter_test:

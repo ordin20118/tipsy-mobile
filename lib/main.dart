@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
+import 'package:kakao_flutter_sdk_link/kakao_flutter_sdk_link.dart';
 import 'package:tipsy_mobile/pages/home.dart';
 import 'package:tipsy_mobile/pages/search.dart';
 //import 'package:tipsy_mobile/classes/liquor.dart';
