@@ -60,7 +60,7 @@ class _MainPageState extends State<MainPage> {
       theme: ThemeData(fontFamily: 'NanumBarunGothic'),
       home: Scaffold(
         appBar: AppBar(
-            title: Text('Tipsy', style: TextStyle(color: Color(0xff005766))),
+            title: Text('TIPSY', style: TextStyle(color: Color(0xff005766), fontFamily: 'NanumBarunGothicBold')),
             //backgroundColor: Color(0xff005766),
             backgroundColor: Color(0xffffffff),
             actions: [
