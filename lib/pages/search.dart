@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:flutter/src/scheduler/ticker.dart';
 import 'package:tipsy_mobile/classes/liquor.dart';
 import 'package:tipsy_mobile/classes/ingredient.dart';
 import 'package:tipsy_mobile/classes/response.dart';
@@ -105,26 +106,48 @@ Future<SearchResult> searchRequest(keyword, SearchTarget target, categLv, categI
 class _SearchPageState extends State<SearchPage> {
 
   List<Liquor> gridLiquorList = [];
+  List<Ingredient> gridIngdList = [];
 
-
-  static TextStyle boxMenuWhite = TextStyle(
-      color: Colors.white,
-      fontWeight: FontWeight.bold
-  );
-
-  static TextStyle boxMenuDark = TextStyle(
-      color: Color(0xff5D5D5D),
-      fontWeight: FontWeight.bold
-  );
+  int _searchState = 0;
 
   // 검색창 내용 controller
   TextEditingController searchTextController = TextEditingController();
 
+  /*
+    검색 상태에 따른 페이지 반환 함수
+      _searchState:0 => 검색 결과 없음 페이지
+      _searchState:1 => 검색 결과 페이지
+      _searchState:3 => 자동완성 페이지
+   */
+  Widget selectWidget() {
+    if(_searchState == 0) {
+      return NoSearchRes();
+    } else if(_searchState == 1) {
+      return SearchResTab(gridLiquorList: gridLiquorList, gridIngdList: gridIngdList,);
+    } else if(_searchState == 2) {
+      return NoSearchRes();
+    }
+    return NoSearchRes();
+  }
+
+  // 검색 실행
   submitSearch(keyword) async {
     print("Search Keyord: " + keyword);
     SearchResult res = await searchRequest(keyword, SearchTarget.all, null, null);
     print("liquor count: " + res.liquorList.length.toString());
     print("ingd count: " + res.ingredientList.length.toString());
+
+    if(res.liquorList.length <= 0 && res.ingredientList.length <= 0 && res.equipmentList.length <= 0) {
+      print("야 검색 결과 없다 ㅈ됐다.");
+      setState(() {
+        _searchState = 0;
+      });
+    } else {
+      print("야 검색 결과 있다. ㅎㅎ");
+      setState(() {
+        _searchState = 1;
+      });
+    }
 
     gridLiquorList = [];
     for(int i=0; i<res.liquorList.length; i++) {
@@ -148,7 +171,9 @@ class _SearchPageState extends State<SearchPage> {
           controller: searchTextController,
           decoration: InputDecoration(
               hintText: '검색어를 입력해주세요.',
-              hintStyle: commonTextGrey,
+              hintStyle: TextStyle(
+                color: Colors.grey
+              ),
               contentPadding: const EdgeInsets.symmetric(vertical: 25.0, horizontal: 2.0),
               border: InputBorder.none,
               focusedBorder: InputBorder.none,
@@ -159,7 +184,9 @@ class _SearchPageState extends State<SearchPage> {
               suffixIcon: IconButton(icon: Icon(Icons.clear, color: Colors.blueGrey,),
                   onPressed: emptySearchField)
           ),
-          style: commonTextBlack,
+          style: TextStyle(
+            color: Colors.black87
+          ),
           onFieldSubmitted: submitSearch,
         ),
         backgroundColor: Colors.white,
@@ -173,105 +200,109 @@ class _SearchPageState extends State<SearchPage> {
         leadingWidth: MediaQuery.of(context).size.width * 0.1,
       ),
       body: Container(
-        child: CustomScrollView(
-            slivers: [
-              // SliverAppBar #1 - liquor
-              SliverAppBar(
-                automaticallyImplyLeading: false,
-                elevation: 5,
-                pinned: true,
-                backgroundColor: Colors.pink,
-                expandedHeight: 170.0,
-                flexibleSpace: FlexibleSpaceBar(
-                  background: Container(
-                    color: Colors.amber,
-                    child: const Center(
-                        child: Icon(
-                          Icons.run_circle,
-                          size: 60,
-                          color: Colors.white,
-                        )),
-                  ),
-                  title: const Text(
-                    'Liquor',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-              ),
-              // SliverGrid #1
-              SliverGrid(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 10,
-                  crossAxisSpacing: 10,
-                  childAspectRatio: 2.0,
-                ),
-                delegate: SliverChildBuilderDelegate(
-                      (context, index) {
-                    return Card(
-                      // generate ambers with random shades
-                      color: Colors.amber[Random().nextInt(9) * 100],
-                      child: Container(
-                        alignment: Alignment.center,
-                        child: Text(gridLiquorList[index].nameKr),
-                      ),
-                    );
-                  },
-                  //childCount: _gridItems.length,
-                  childCount: gridLiquorList.length,
-                ),
-              ),
-              // SliverAppBar #2 - ingredient
-              SliverAppBar(
-                automaticallyImplyLeading: false,
-                elevation: 5,
-                pinned: true,
-                backgroundColor: Colors.green,
-                expandedHeight: 170.0,
-                flexibleSpace: FlexibleSpaceBar(
-                  background: Container(
-                    color: Colors.lightGreen,
-                    child: const Center(
-                        child: Icon(
-                          Icons.run_circle,
-                          size: 60,
-                          color: Colors.white,
-                        )),
-                  ),
-                  title: const Text(
-                    'Ingredient',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-              ),
-              // SliverGrid #2 - ingredient
-              SliverGrid(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 10,
-                  crossAxisSpacing: 10,
-                  childAspectRatio: 2.0,
-                ),
-                delegate: SliverChildBuilderDelegate(
-                      (context, index) {
-                    return Card(
-                      // generate ambers with random shades
-                      color: Colors.amber[Random().nextInt(9) * 100],
-                      child: Container(
-                        alignment: Alignment.center,
-                        //child: Text(_gridItems[index]),
-                        child: Text('!'),
-                      ),
-                    );
-                  },
-                  //childCount: _gridItems.length,
-                  childCount: 1,
-                ),
-              ),
-            ]
-        ),
+        child: selectWidget(),
       ),
       bottomNavigationBar: Container(height: 0.0),
+    );
+  }
+
+  Widget buildSearchResultScroll(BuildContext context) {
+    return CustomScrollView(
+        slivers: [
+          // SliverAppBar #1 - liquor
+          SliverAppBar(
+            automaticallyImplyLeading: false,
+            elevation: 5,
+            pinned: true,
+            backgroundColor: Colors.pink,
+            expandedHeight: 170.0,
+            flexibleSpace: FlexibleSpaceBar(
+              background: Container(
+                color: Colors.amber,
+                child: const Center(
+                    child: Icon(
+                      Icons.run_circle,
+                      size: 60,
+                      color: Colors.white,
+                    )),
+              ),
+              title: const Text(
+                'Liquor',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          ),
+          // SliverGrid #1
+          SliverGrid(
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              mainAxisSpacing: 10,
+              crossAxisSpacing: 10,
+              childAspectRatio: 2.0,
+            ),
+            delegate: SliverChildBuilderDelegate(
+                  (context, index) {
+                return Card(
+                  // generate ambers with random shades
+                  color: Colors.amber[Random().nextInt(9) * 100],
+                  child: Container(
+                    alignment: Alignment.center,
+                    child: Text(gridLiquorList[index].nameKr),
+                  ),
+                );
+              },
+              //childCount: _gridItems.length,
+              childCount: gridLiquorList.length,
+            ),
+          ),
+          // SliverAppBar #2 - ingredient
+          SliverAppBar(
+            automaticallyImplyLeading: false,
+            elevation: 5,
+            pinned: true,
+            backgroundColor: Colors.green,
+            expandedHeight: 170.0,
+            flexibleSpace: FlexibleSpaceBar(
+              background: Container(
+                color: Colors.lightGreen,
+                child: const Center(
+                    child: Icon(
+                      Icons.run_circle,
+                      size: 60,
+                      color: Colors.white,
+                    )),
+              ),
+              title: const Text(
+                'Ingredient',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          ),
+          // SliverGrid #2 - ingredient
+          SliverGrid(
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              mainAxisSpacing: 10,
+              crossAxisSpacing: 10,
+              childAspectRatio: 2.0,
+            ),
+            delegate: SliverChildBuilderDelegate(
+                  (context, index) {
+                return Card(
+                  // generate ambers with random shades
+                  color: Colors.amber[Random().nextInt(9) * 100],
+                  child: Container(
+                    alignment: Alignment.center,
+                    //child: Text(_gridItems[index]),
+                    child: Text('!'),
+                  ),
+                );
+              },
+              //childCount: _gridItems.length,
+              childCount: 1,
+            ),
+          ),
+        ]
     );
   }
 
@@ -285,4 +316,80 @@ class _SearchPageState extends State<SearchPage> {
     super.dispose();
   }
 
+}
+
+class SearchResTab extends StatefulWidget {
+  SearchResTab({Key? key, required this.gridLiquorList, required this.gridIngdList}) : super(key: key);
+
+  List<Liquor> gridLiquorList;
+  List<Ingredient> gridIngdList;
+
+  @override
+  _SearchResTabState createState() => _SearchResTabState();
+}
+
+class _SearchResTabState extends State<SearchResTab> with TickerProviderStateMixin {
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(
+        length: 4,
+        vsync: this
+    );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  late TabController _tabController;
+  TabBar get _tabBar => TabBar(
+    labelColor: Colors.black87,
+    unselectedLabelColor: Colors.grey,
+    indicatorColor: Colors.black87,
+    controller: _tabController,
+    tabs: const <Widget>[
+      Tab(
+        text: '주류',
+      ),
+      Tab(
+        text: '칵테일',
+      ),
+      Tab(
+        text: '재료',
+      ),
+      Tab(
+        text: '용어',
+      ),
+    ],
+  );
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: _tabBar.preferredSize,
+        child: Material(
+          color: Color(0xffffffff),
+          child: _tabBar,
+        ),
+      ),
+      body: Container(height: 100,),
+      bottomNavigationBar: Container(height: 0.0,),
+    );
+  }
+
+}
+
+class NoSearchRes extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Center(
+        child: Text('검색 결과가 없습니다.', style: TextStyle(color: Colors.grey),),
+      ),
+    );
+  }
 }

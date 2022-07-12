@@ -41,7 +41,7 @@ class _MainPageState extends State<MainPage> {
 
   int _selectedPageIndex = 0; // 선택된 페이지의 인덱스 번호
 
-  final List<Widget> _pageChildren = <Widget>[
+  List<Widget> _pageChildren = <Widget>[
     Home(),
     SecondRoute2(),
     SecondRoute2()
@@ -56,68 +56,71 @@ class _MainPageState extends State<MainPage> {
   // main widget
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-          title: Text('Tipsy', style: TextStyle(color: Color(0xff005766))),
-          //backgroundColor: Color(0xff005766),
-          backgroundColor: Color(0xffffffff),
-          actions: [
-            IconButton(icon: Icon(Icons.search),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => SearchPage()),
-                );
-              },
-              color: Color(0xff005766),
-              iconSize: 30,
-            )
-          ]
-      ),
-      body: _pageChildren.elementAt(_selectedPageIndex),
-      bottomNavigationBar: BottomNavigationBar(
-        items: [
-          new BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: "홈",
-          ),
-          new BottomNavigationBarItem(
-            icon: Icon(Icons.add_circle_outline),
-            label: "new",
-          ),
-          new BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: "마이페이지",
-          ),
-        ],
-        selectedLabelStyle: TextStyle(fontWeight: FontWeight.bold,fontSize: 11),
-        selectedItemColor: Color(0xdd005766),
-        onTap: _onItemTapped,
-        // onTap: (int index) {
-        //   print("INDEX is $index");
-        //   _selectedPageIndex = index;
-        //   switch (index) {
-        //     case 0:
-        //       // Navigator.push(
-        //       //   context,
-        //       //   MaterialPageRoute(builder: (context) => SecondRoute()),
-        //       // );
-        //       break;
-        //     case 1:
-        //       Navigator.push(
-        //         context,
-        //         MaterialPageRoute(builder: (context) => SecondRoute()),
-        //       );
-        //       break;
-        //     case 2:
-        //       Navigator.push(
-        //         context,
-        //         MaterialPageRoute(builder: (context) => SecondRoute()),
-        //       );
-        //       break;
-        //   }
-        // },
+    return MaterialApp(
+      theme: ThemeData(fontFamily: 'NanumBarunGothic'),
+      home: Scaffold(
+        appBar: AppBar(
+            title: Text('Tipsy', style: TextStyle(color: Color(0xff005766))),
+            //backgroundColor: Color(0xff005766),
+            backgroundColor: Color(0xffffffff),
+            actions: [
+              IconButton(icon: Icon(Icons.search),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => SearchPage()),
+                  );
+                },
+                color: Color(0xff005766),
+                iconSize: 30,
+              )
+            ]
+        ),
+        body: _pageChildren.elementAt(_selectedPageIndex),
+        bottomNavigationBar: BottomNavigationBar(
+          items: [
+            new BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: "홈",
+            ),
+            new BottomNavigationBarItem(
+              icon: Icon(Icons.add_circle_outline),
+              label: "new",
+            ),
+            new BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              label: "마이페이지",
+            ),
+          ],
+          selectedLabelStyle: TextStyle(fontWeight: FontWeight.bold,fontSize: 11),
+          selectedItemColor: Color(0xdd005766),
+          onTap: _onItemTapped,
+          // onTap: (int index) {
+          //   print("INDEX is $index");
+          //   _selectedPageIndex = index;
+          //   switch (index) {
+          //     case 0:
+          //       // Navigator.push(
+          //       //   context,
+          //       //   MaterialPageRoute(builder: (context) => SecondRoute()),
+          //       // );
+          //       break;
+          //     case 1:
+          //       Navigator.push(
+          //         context,
+          //         MaterialPageRoute(builder: (context) => SecondRoute()),
+          //       );
+          //       break;
+          //     case 2:
+          //       Navigator.push(
+          //         context,
+          //         MaterialPageRoute(builder: (context) => SecondRoute()),
+          //       );
+          //       break;
+          //   }
+          // },
 
+        ),
       ),
     );
   }
