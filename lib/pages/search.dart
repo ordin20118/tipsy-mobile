@@ -7,6 +7,7 @@ import 'package:tipsy_mobile/classes/liquor.dart';
 import 'package:tipsy_mobile/classes/ingredient.dart';
 import 'package:tipsy_mobile/classes/response.dart';
 import 'package:tipsy_mobile/classes/styles.dart';
+import 'package:tipsy_mobile/pages/liquor_page.dart';
 import 'package:http/http.dart' as http;
 
 
@@ -422,20 +423,28 @@ class _LiquorGridViewState extends State<LiquorGridView> {
   Widget liquorItemBuilder(context, index) {
 
     // http://tipsy.co.kr/svcmgr/api/image/1.tipsy
-    return Card(
-      // generate ambers with random shades
-      color: Colors.amber[Random().nextInt(9) * 100],
-      child: Container(
-        height: MediaQuery.of(context).size.height * 0.3,
-        alignment: Alignment.center,
-        child: Column(
-          children: [
-            Image.network(
-              'http://tipsy.co.kr/svcmgr/api/image/1.tipsy',
-              width: MediaQuery.of(context).size.width * 0.25,
-            ),
-            Text(widget.gridLiquorList[index].nameKr)
-          ],
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => LiquorDetail(liquorId: widget.gridLiquorList[index].liquorId)),
+        );
+      },
+      child: Card(
+        // generate ambers with random shades
+        color: Colors.amber[Random().nextInt(9) * 100],
+        child: Container(
+          height: MediaQuery.of(context).size.height * 0.3,
+          alignment: Alignment.center,
+          child: Column(
+            children: [
+              Image.network(
+                'http://tipsy.co.kr/svcmgr/api/image/1.tipsy',
+                width: MediaQuery.of(context).size.width * 0.25,
+              ),
+              Text(widget.gridLiquorList[index].nameKr)
+            ],
+          ),
         ),
       ),
     );
