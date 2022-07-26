@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:kakao_flutter_sdk_link/kakao_flutter_sdk_link.dart';
 import 'package:tipsy_mobile/pages/home.dart';
 import 'package:tipsy_mobile/pages/search.dart';
-//import 'package:tipsy_mobile/classes/liquor_page.dart';
+import 'package:tipsy_mobile/pages/splash_page.dart';
 
 void main() {
   KakaoSdk.init(nativeAppKey: '87257d8db7512fd56ca5157564988776');
@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         fontFamily: 'NanumBarunGothicBold'
       ),
-      home:MainPage(),
+      home:SplashPage(),
     );
   }
 }
@@ -127,8 +127,8 @@ class _MainPageState extends State<MainPage> {
 
   @override
   void initState() {
-    // 해당 클래스가 호출되었을 때
     super.initState();
+    print("Main Page initState()");
   }
 
   @override
