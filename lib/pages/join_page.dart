@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
 class JoinPage extends StatefulWidget {
-  const JoinPage({Key? key}) : super(key: key);
+  const JoinPage({Key? key, required this.email, required this.nickname}) : super(key: key);
+
+  final String email;
+  final String nickname;
 
   @override
   _JoinPageState createState() => _JoinPageState();

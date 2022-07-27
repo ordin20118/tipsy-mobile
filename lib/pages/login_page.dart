@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:kakao_flutter_sdk_auth/kakao_flutter_sdk_auth.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:kakao_flutter_sdk_talk/kakao_flutter_sdk_talk.dart';
 import 'package:flutter/services.dart';
-
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:tipsy_mobile/pages/join_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -94,6 +97,43 @@ class _LoginPageState extends State<LoginPage> {
       OAuthToken token = await UserApi.instance.loginWithKakaoTalk();
       print('카카오톡으로 로그인 성공 ${token.accessToken}/${token.refreshToken}');
       // 회원 가입 절차
+      // 1. 회원 여부 확인
+
+      User user = await UserApi.instance.me();
+      String? email = user.kakaoAccount?.email;
+      String? nickname = user.kakaoAccount?.profile?.nickname;
+
+      print("[사용자의 EMAIL]: " + email!);
+      print("[사용자의 NICKNAME]: " + nickname!);
+
+      // api로 사용자 계정 유무 확인
+      // email, nickname
+      bool isDup =  await checkEmailDuplicate(email);
+
+      if(isDup == true) {
+        print("이미 가입된 이메일 입니다.");
+        // 알림 띄우기
+
+      } else {
+        print("가입할 수 있는 이메일 입니다.");
+        // 가입 페이지로 이동
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => JoinPage(email: email, nickname: nickname)),
+        );
+
+      }
+
+      Fluttertoast.showToast(
+          msg: "This is Center Short Toast",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0
+      );
+
     } catch(e) {
       print('카카오톡으로 로그인 실패 $e');
       // 사용자가 카카오톡 설치 후 디바이스 권한 요청 화면에서 로그인을 취소한 경우,
@@ -118,6 +158,17 @@ class _LoginPageState extends State<LoginPage> {
       print('카카오계정으로 로그인 성공 ${token.accessToken}/${token.refreshToken}');
     } catch(e) {
       print('카카오계정으로 로그인 실패 $e');
+      print("토스트 띄우기");
+      Fluttertoast.showToast(
+          msg: "This is Center Short Toast",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 2,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0
+      );
+      print("토스트 띄우기2");
     }
   }
 
@@ -137,6 +188,43 @@ class _LoginPageState extends State<LoginPage> {
     // 플랫폼에 따라서 자동 로그인 절차 진행
     // 1. 카카오 로그인 연동일 경우
     // 1-1.
+  }
+
+  Future<bool> checkEmailDuplicate(email) async {
+    print("#### [checkEmailDuplicate] ####");
+    String chckUrl = "http://www.tipsy.co.kr/svcmgr/api/user/has_dup_email.tipsy";
+    final Uri url = Uri.parse(chckUrl);
+
+    http.Response response = await http.post(
+      url,
+      headers: <String, String> {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: <String, String> {
+        'email': email,
+      },
+    );
+
+    if (response.statusCode == 200) {
+
+      String resString = response.body.toString();
+      var parsed = json.decode(resString);
+      var isDuplicated = parsed['state'];
+      print("isDuplicated: $isDuplicated");
+
+      if(isDuplicated == 0) {
+        return true;
+      } else if(isDuplicated == 1) {
+        return false;
+      } else {
+        throw Exception('Failed to check email duplication.');
+      }
+
+    } else {
+      throw Exception('Failed to check email duplication.');
+    }
+
+
   }
 
 }

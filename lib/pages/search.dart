@@ -57,7 +57,7 @@ Future<SearchResult> searchRequest(keyword, SearchTarget target, categLv, categI
   final response = await http.get(url);
 
   if (response.statusCode == 200) {
-    // 만약 서버로의 요청이 성공하면, JSON을 파싱합니다.
+
     String resString = response.body.toString();
 
     // response{} => data{} => liquor_list[]
@@ -99,7 +99,6 @@ Future<SearchResult> searchRequest(keyword, SearchTarget target, categLv, categI
 
     return searchRes;
   } else {
-    // 만약 요청이 실패하면, 에러를 던집니다.
     throw Exception('Failed to load liquor data.');
   }
 }
