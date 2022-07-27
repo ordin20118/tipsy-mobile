@@ -66,7 +66,7 @@ class _SplashPageState extends State<SplashPage> {
     await storage.deleteAll();
     //await storage.write(key:'is_auto_login', value:'true');
 
-    String isAutoLogin = await storage.read(key: 'is_auto_login');
+    String? isAutoLogin = await storage.read(key: 'is_auto_login');
     if(isAutoLogin == 'true') {
       print("메인 페이지로 이동");
       // 메인 페이지로
