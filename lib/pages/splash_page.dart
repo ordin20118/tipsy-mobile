@@ -30,6 +30,8 @@ class _SplashPageState extends State<SplashPage> {
         leadingWidth: MediaQuery.of(context).size.width * 0.1,
       ),
       body: Container(
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
         decoration: BoxDecoration(
           image: DecorationImage(
               image: AssetImage('assets/images/login_background.jpg'),
