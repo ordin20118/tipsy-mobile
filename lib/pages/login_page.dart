@@ -19,46 +19,51 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(toolbarHeight: 0,),
-      body: Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-              image: AssetImage('assets/images/login_background.jpg'),
-              fit: BoxFit.cover,
-              colorFilter: ColorFilter.mode(
-                  Colors.black.withOpacity(0.8),
-                  BlendMode.dstATop
-              )
-          ),
-        ),
-        child: Column(
-          children: [
-            Container(
-              height: MediaQuery.of(context).size.height * 0.7,
-              child: Center(
-                child: Text('Tipsy', style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 60,
-                ),),
-              ),
-            ),
-            //kakao_login_medium_wide
-            ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  padding: EdgeInsets.all(0.0),
-                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                ),
-                child: Image.asset('assets/images/login_btn/kakao_login_medium_wide.png'),
-                onPressed: _isKakaoTalkInstalled ? _loginWithKakaoTalk : _loginWithKakaoAccount
-            ),
-            Container(
-              height: MediaQuery.of(context).size.height * 0.2,
+    return Container(
+      height: MediaQuery.of(context).size.height,
+      width: MediaQuery.of(context).size.width,
+      decoration: BoxDecoration(
+        image: DecorationImage(
+            image: AssetImage('assets/images/login_background.jpg'),
+            fit: BoxFit.cover,
+            colorFilter: ColorFilter.mode(
+                Colors.black.withOpacity(0.8),
+                BlendMode.dstATop
             )
-          ],
         ),
       ),
-      bottomNavigationBar: Container(height: 0,),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        appBar: AppBar(toolbarHeight: 0,),
+        body: Container(
+          child: Column(
+            children: [
+              Container(
+                height: MediaQuery.of(context).size.height * 0.6,
+                child: Center(
+                  child: Text('Tipsy', style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 60,
+                  ),),
+                ),
+              ),
+              //kakao_login_medium_wide
+              ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    padding: EdgeInsets.all(0.0),
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  ),
+                  child: Image.asset('assets/images/login_btn/kakao_login_medium_wide.png'),
+                  onPressed: _isKakaoTalkInstalled ? _loginWithKakaoTalk : _loginWithKakaoAccount
+              ),
+              Container(
+                height: MediaQuery.of(context).size.height * 0.2,
+              )
+            ],
+          ),
+        ),
+        bottomNavigationBar: Container(height: 0,),
+      ),
     );
   }
 
