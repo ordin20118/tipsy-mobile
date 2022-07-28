@@ -51,6 +51,6 @@ class _JoinPageState extends State<JoinPage> {
   @override
   void initState() {
     super.initState();
-    print("회원가입 화면");
+    print("회원가입 화면" + widget.email + "/" + widget.nickname);
   }
 }

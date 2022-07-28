@@ -80,6 +80,8 @@ class _LoginPageState extends State<LoginPage> {
     super.initState();
     print("Login Page initState()");
     initKakaoTalkInstalled();
+    _logoutFromKakao();
+    _unlinkFromKakao();
   }
 
   // 카카오톡 존재 여부 초기화
@@ -89,6 +91,8 @@ class _LoginPageState extends State<LoginPage> {
     setState(() {
       _isKakaoTalkInstalled = installed;
     });
+
+
   }
 
   // 카카오톡으로 로그인
@@ -96,6 +100,7 @@ class _LoginPageState extends State<LoginPage> {
     try {
       OAuthToken token = await UserApi.instance.loginWithKakaoTalk();
       print('카카오톡으로 로그인 성공 ${token.accessToken}/${token.refreshToken}');
+
       // 회원 가입 절차
       // 1. 회원 여부 확인
 
@@ -110,7 +115,7 @@ class _LoginPageState extends State<LoginPage> {
       // email, nickname
       bool isDup =  await checkEmailDuplicate(email);
 
-      if(isDup == true) {
+      if(isDup) {
         print("이미 가입된 이메일 입니다.");
         // 알림 띄우기
 
@@ -124,16 +129,6 @@ class _LoginPageState extends State<LoginPage> {
 
       }
 
-      Fluttertoast.showToast(
-          msg: "This is Center Short Toast",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER,
-          timeInSecForIosWeb: 1,
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-          fontSize: 16.0
-      );
-
     } catch(e) {
       print('카카오톡으로 로그인 실패 $e');
       // 사용자가 카카오톡 설치 후 디바이스 권한 요청 화면에서 로그인을 취소한 경우,
@@ -142,12 +137,7 @@ class _LoginPageState extends State<LoginPage> {
         return;
       }
       // 카카오톡에 연결된 카카오계정이 없는 경우, 카카오계정으로 로그인
-      try {
-        await UserApi.instance.loginWithKakaoAccount();
-        print('카카오계정으로 로그인 성공');
-      } catch (error) {
-        print('카카오계정으로 로그인 실패 $error');
-      }
+      _loginWithKakaoAccount();
     }
   }
 
@@ -182,6 +172,15 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
+  void _unlinkFromKakao() async {
+    try {
+      await UserApi.instance.unlink();
+      print('연결 끊기 성공, SDK에서 토큰 삭제');
+    } catch (error) {
+      print('연결 끊기 실패 $error');
+    }
+  }
+
   // 자동로그인 여부 확인
   void _checkKakaoToken() {
     // keychain에 저장되어 있는 정보가 있는지 확인
@@ -191,26 +190,33 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<bool> checkEmailDuplicate(email) async {
-    print("#### [checkEmailDuplicate] ####");
+    print("#### [checkEmailDuplicate] ####//email:"+email);
     String chckUrl = "http://www.tipsy.co.kr/svcmgr/api/user/has_dup_email.tipsy";
     final Uri url = Uri.parse(chckUrl);
+    
+    var bodyData = {
+      "email": email
+    };
 
     http.Response response = await http.post(
       url,
       headers: <String, String> {
-        'Content-Type': 'application/x-www-form-urlencoded',
+        'Content-Type': 'application/json',
       },
-      body: <String, String> {
-        'email': email,
-      },
+      body: json.encode(bodyData),
     );
 
     if (response.statusCode == 200) {
 
       String resString = response.body.toString();
-      var parsed = json.decode(resString);
+      var parsed = null;
+      try {
+        parsed = json.decode(resString);
+      } catch(e) {
+        print(e);
+      }
+
       var isDuplicated = parsed['state'];
-      print("isDuplicated: $isDuplicated");
 
       if(isDuplicated == 0) {
         return true;
