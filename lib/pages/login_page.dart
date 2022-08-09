@@ -128,7 +128,7 @@ class _LoginPageState extends State<LoginPage> {
 
       if(isDup) {
         print("이미 가입된 이메일 입니다.");
-        // 알림 띄우기
+        // TODO: 자동 로그인 처리
 
       } else {
         print("가입할 수 있는 이메일 입니다.");
@@ -240,8 +240,6 @@ class _LoginPageState extends State<LoginPage> {
     } else {
       throw Exception('Failed to check email duplication.');
     }
-
-
   }
 
 }
