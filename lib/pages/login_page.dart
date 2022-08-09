@@ -58,6 +58,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   child: Image.asset('assets/images/login_btn/kakao_login_medium_wide.png'),
                   onPressed: _isKakaoTalkInstalled ? _loginWithKakaoTalk : _loginWithKakaoAccount
+                  //onPressed: goToJoinPage
               ),
               Container(
                 height: MediaQuery.of(context).size.height * 0.2,
@@ -91,12 +92,20 @@ class _LoginPageState extends State<LoginPage> {
     setState(() {
       _isKakaoTalkInstalled = installed;
     });
+  }
 
-
+  // for test
+  // 함수를 하나로 통일해서 파라미터를 받자
+  void goToJoinPage() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => JoinPage(platform: 1, email: 'kimho2018@naver.com', nickname: '팡호', accessToken: '', refreshToken: '',)),
+    );
   }
 
   // 카카오톡으로 로그인
   void _loginWithKakaoTalk() async {
+
     try {
       OAuthToken token = await UserApi.instance.loginWithKakaoTalk();
       print('카카오톡으로 로그인 성공 ${token.accessToken}/${token.refreshToken}');
@@ -115,6 +124,8 @@ class _LoginPageState extends State<LoginPage> {
       // email, nickname
       bool isDup =  await checkEmailDuplicate(email);
 
+      print("isDup:" + isDup.toString());
+
       if(isDup) {
         print("이미 가입된 이메일 입니다.");
         // 알림 띄우기
@@ -124,7 +135,7 @@ class _LoginPageState extends State<LoginPage> {
         // 가입 페이지로 이동
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => JoinPage(email: email, nickname: nickname)),
+          MaterialPageRoute(builder: (context) => JoinPage(platform: 1, email: email, nickname: nickname, accessToken: token.accessToken, refreshToken: token.refreshToken,)),
         );
 
       }
