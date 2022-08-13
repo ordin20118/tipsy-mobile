@@ -6,6 +6,7 @@ import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:kakao_flutter_sdk_talk/kakao_flutter_sdk_talk.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
+import 'package:tipsy_mobile/pages/home.dart';
 import 'dart:convert';
 import 'package:tipsy_mobile/pages/join_page.dart';
 
@@ -57,8 +58,8 @@ class _LoginPageState extends State<LoginPage> {
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   ),
                   child: Image.asset('assets/images/login_btn/kakao_login_medium_wide.png'),
-                  onPressed: _isKakaoTalkInstalled ? _loginWithKakaoTalk : _loginWithKakaoAccount
-                  //onPressed: goToJoinPage
+                  //onPressed: _isKakaoTalkInstalled ? _loginWithKakaoTalk : _loginWithKakaoAccount
+                  onPressed: goToMainPage
               ),
               Container(
                 height: MediaQuery.of(context).size.height * 0.2,
@@ -100,6 +101,14 @@ class _LoginPageState extends State<LoginPage> {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => JoinPage(platform: 1, email: 'kimho2018@naver.com', nickname: '팡호', accessToken: '', refreshToken: '',)),
+    );
+  }
+
+  // for test
+  void goToMainPage() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => Home()),
     );
   }
 

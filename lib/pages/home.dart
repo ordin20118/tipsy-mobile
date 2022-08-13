@@ -29,6 +29,7 @@ class Home extends StatelessWidget {
                       child: Text(
                         "추천 게시글",
                         style: TextStyle(
+                          fontSize: 13,
                           color: Colors.white,
                         )
                   )),
@@ -45,25 +46,48 @@ class Home extends StatelessWidget {
                   Column(
                       children: [
                         Expanded(child: Image.asset('assets/images/10_300.png')),
-                        Text('주류')
+                        Text(
+                          '주류',
+                          style: TextStyle(
+                              fontSize: 13,
+                              color: Colors.black87
+                          ),
+                        )
                       ]
                   ),
                   Column(
                       children: [
                         Expanded(child: Image.asset('assets/images/11_300.png')),
-                        Text('칵테일')
+                        Text(
+                            '칵테일',
+                          style: TextStyle(
+                              fontSize: 13,
+                              color: Colors.black87
+                          ),
+                        )
                       ]
                   ),
                   Column(
                       children: [
                         Expanded(child: Image.asset('assets/images/12_300.png')),
-                        Text('재료')
+                        Text(
+                          '재료',
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: Colors.black87
+                          ),
+                        )
                       ]
                   ),
                   Column(
                       children: [
                         Expanded(child: Image.asset('assets/images/13_300.png')),
-                        Text('용어')
+                        Text(
+                          '용어',
+                          style: TextStyle(
+                              fontSize: 13,
+                              color: Colors.black87
+                          ),)
                       ]
                   ),
                 ],
