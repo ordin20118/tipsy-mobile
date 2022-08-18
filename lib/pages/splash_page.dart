@@ -79,9 +79,13 @@ class _SplashPageState extends State<SplashPage> {
     } else {
       print("로그인 페이지로 이동");
       // 로그인 페이지로
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(builder: (context) => LoginPage()),
+      // );
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => LoginPage()),
+        MaterialPageRoute(builder: (context) => MainPage()),
       );
     }
   }

@@ -8,6 +8,7 @@ import 'package:tipsy_mobile/classes/ingredient.dart';
 import 'package:tipsy_mobile/classes/response.dart';
 import 'package:tipsy_mobile/classes/styles.dart';
 import 'package:tipsy_mobile/pages/liquor_page.dart';
+import 'package:tipsy_mobile/classes/util.dart';
 import 'package:http/http.dart' as http;
 
 
@@ -422,32 +423,68 @@ class _LiquorGridViewState extends State<LiquorGridView> {
   Widget liquorItemBuilder(context, index) {
 
     // http://tipsy.co.kr/svcmgr/api/image/1.tipsy
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => LiquorDetail(liquorId: widget.gridLiquorList[index].liquorId)),
-        );
-      },
-      child: Card(
+    return Card(
         // generate ambers with random shades
-        color: Colors.amber[Random().nextInt(9) * 100],
+        //color: Colors.amber[Random().nextInt(9) * 100],
+        color: Colors.white,
         child: Container(
-          height: MediaQuery.of(context).size.height * 0.3,
-          alignment: Alignment.center,
+          height: MediaQuery.of(context).size.height * 0.4,
+          //height: 400,
+          //alignment: Alignment.center,
           child: Column(
             children: [
               Image.network(
-                'http://tipsy.co.kr/svcmgr/api/image/1.tipsy',
-                width: MediaQuery.of(context).size.width * 0.25,
+                //'http://tipsy.co.kr/svcmgr/api/image/1.tipsy',
+                makeImgUrl(widget.gridLiquorList[index].repImg, 300),
+                //widget.gridLiquorList[index].repImg,
+                height: MediaQuery.of(context).size.height * 0.17,
               ),
-              Text(widget.gridLiquorList[index].nameKr)
+              Text(widget.gridLiquorList[index].nameKr),
+              Text(widget.gridLiquorList[index].nameKr),
+              Text(widget.gridLiquorList[index].nameKr),
+              Text(widget.gridLiquorList[index].nameKr),
+              Text(widget.gridLiquorList[index].nameKr),
             ],
           ),
         ),
-      ),
-    );
+      );
   }
+
+  // Widget liquorItemBuilder(context, index) {
+  //
+  //   // http://tipsy.co.kr/svcmgr/api/image/1.tipsy
+  //   return GestureDetector(
+  //     onTap: () {
+  //       Navigator.push(
+  //         context,
+  //         MaterialPageRoute(builder: (context) => LiquorDetail(liquorId: widget.gridLiquorList[index].liquorId)),
+  //       );
+  //     },
+  //     child: Card(
+  //       // generate ambers with random shades
+  //       color: Colors.amber[Random().nextInt(9) * 100],
+  //       child: Container(
+  //         //height: MediaQuery.of(context).size.height * 0.4,
+  //         height: 400,
+  //         //alignment: Alignment.center,
+  //         child: Column(
+  //           children: [
+  //             Image.network(
+  //               'http://tipsy.co.kr/svcmgr/api/image/1.tipsy',
+  //               //width: MediaQuery.of(context).size.width * 0.17,
+  //               height: MediaQuery.of(context).size.height * 0.1,
+  //             ),
+  //             Text(widget.gridLiquorList[index].nameKr),
+  //             Text(widget.gridLiquorList[index].nameKr),
+  //             Text(widget.gridLiquorList[index].nameKr),
+  //             Text(widget.gridLiquorList[index].nameKr),
+  //             Text(widget.gridLiquorList[index].nameKr),
+  //           ],
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -457,9 +494,10 @@ class _LiquorGridViewState extends State<LiquorGridView> {
         child: GridView.builder(
             gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
                 maxCrossAxisExtent: 200,
-                childAspectRatio: 3 / 2,
-                crossAxisSpacing: 20,
-                mainAxisSpacing: 20
+                //childAspectRatio: 3 / 2,
+                childAspectRatio: 0.7,
+                crossAxisSpacing: 7,
+                mainAxisSpacing: 7
             ),
             itemCount: widget.gridLiquorList.length,
             itemBuilder: (BuildContext context, index) {

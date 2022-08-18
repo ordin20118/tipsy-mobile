@@ -23,7 +23,7 @@ class Home extends StatelessWidget {
               children: [
                 Container(
                   color: Color(0xffb74093),
-                  height: MediaQuery.of(context).size.height * 0.2,
+                  height: MediaQuery.of(context).size.height * 0.3,
                   width: MediaQuery.of(context).size.width,
                   child: Center(
                       child: Text(
@@ -37,58 +37,58 @@ class Home extends StatelessWidget {
               ]
             ),
             Container(
-              color: Colors.white,
+              color: Colors.grey,
               padding: EdgeInsets.all(10),
               height: MediaQuery.of(context).size.height * 0.15,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Column(
-                      children: [
-                        Expanded(child: Image.asset('assets/images/10_300.png')),
-                        Text(
-                          '주류',
-                          style: TextStyle(
-                              fontSize: 13,
-                              color: Colors.black87
-                          ),
-                        )
-                      ]
-                  ),
-                  Column(
-                      children: [
-                        Expanded(child: Image.asset('assets/images/11_300.png')),
-                        Text(
-                            '칵테일',
-                          style: TextStyle(
-                              fontSize: 13,
-                              color: Colors.black87
-                          ),
-                        )
-                      ]
-                  ),
-                  Column(
-                      children: [
-                        Expanded(child: Image.asset('assets/images/12_300.png')),
-                        Text(
-                          '재료',
-                          style: TextStyle(
+                    children: [
+                      Expanded(child: Image.asset('assets/images/10_300.png')),
+                      Text(
+                        '주류',
+                        style: TextStyle(
                             fontSize: 13,
                             color: Colors.black87
-                          ),
-                        )
-                      ]
+                        ),
+                      )
+                    ]
                   ),
                   Column(
-                      children: [
-                        Expanded(child: Image.asset('assets/images/13_300.png')),
-                        Text(
-                          '용어',
-                          style: TextStyle(
-                              fontSize: 13,
-                              color: Colors.black87
-                          ),)
-                      ]
+                    children: [
+                      Expanded(child: Image.asset('assets/images/11_300.png')),
+                      Text(
+                          '칵테일',
+                        style: TextStyle(
+                            fontSize: 13,
+                            color: Colors.black87
+                        ),
+                      )
+                    ]
+                  ),
+                  Column(
+                    children: [
+                      Expanded(child: Image.asset('assets/images/12_300.png')),
+                      Text(
+                        '재료',
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: Colors.black87
+                        ),
+                      )
+                    ]
+                  ),
+                  Column(
+                    children: [
+                      Expanded(child: Image.asset('assets/images/13_300.png')),
+                      Text(
+                        '용어',
+                        style: TextStyle(
+                            fontSize: 13,
+                            color: Colors.black87
+                        ),)
+                    ]
                   ),
                 ],
               ),

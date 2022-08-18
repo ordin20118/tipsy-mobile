@@ -6,9 +6,17 @@ import 'package:kakao_flutter_sdk_link/kakao_flutter_sdk_link.dart';
 import 'package:tipsy_mobile/pages/home.dart';
 import 'package:tipsy_mobile/pages/search.dart';
 import 'package:tipsy_mobile/pages/splash_page.dart';
+import 'package:flutter_config/flutter_config.dart';
 
-void main() {
+void main() async {
   KakaoSdk.init(nativeAppKey: '87257d8db7512fd56ca5157564988776');
+
+  // set config data
+  WidgetsFlutterBinding.ensureInitialized(); // Required by FlutterConfig
+  await FlutterConfig.loadEnvVariables();
+
+  print(FlutterConfig.get('API_URL'));
+
   runApp(
     MaterialApp(
       title: 'Main',

@@ -10,6 +10,8 @@ import 'package:tipsy_mobile/pages/home.dart';
 import 'dart:convert';
 import 'package:tipsy_mobile/pages/join_page.dart';
 
+import '../main.dart';
+
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
 
@@ -108,7 +110,7 @@ class _LoginPageState extends State<LoginPage> {
   void goToMainPage() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => Home()),
+      MaterialPageRoute(builder: (context) => MainPage()),
     );
   }
 
