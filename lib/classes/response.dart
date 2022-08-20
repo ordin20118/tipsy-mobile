@@ -1,10 +1,11 @@
 import 'package:tipsy_mobile/classes/liquor.dart';
 import 'package:tipsy_mobile/classes/ingredient.dart';
+import 'package:tipsy_mobile/classes/equipment.dart';
 
 class SearchResult {
   List<Liquor> _liquorList =[];
   List<Ingredient> _ingredientList =[];
-  List<Liquor> _equipmentList =[];
+  List<Equipment> _equipmentList =[];
   List<Liquor> _wordList =[];
 
   SearchResult() {}
@@ -15,9 +16,9 @@ class SearchResult {
     _wordList = value;
   }
 
-  List<Liquor> get equipmentList => _equipmentList;
+  List<Equipment> get equipmentList => _equipmentList;
 
-  set equipmentList(List<Liquor> value) {
+  set equipmentList(List<Equipment> value) {
     _equipmentList = value;
   }
 

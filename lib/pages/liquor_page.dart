@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class LiquorDetail extends StatefulWidget {
-  const LiquorDetail({Key? key, required int liquorId}) : super(key: key);
+  const LiquorDetail({Key? key, required this.liquorId}) : super(key: key);
 
-  final int liquorId = 0;
+  final int liquorId;
 
   @override
   _LiquorDetailState createState() => _LiquorDetailState();

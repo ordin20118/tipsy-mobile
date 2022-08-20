@@ -4,16 +4,20 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/scheduler/ticker.dart';
 import 'package:tipsy_mobile/classes/liquor.dart';
+import 'package:tipsy_mobile/classes/equipment.dart';
 import 'package:tipsy_mobile/classes/ingredient.dart';
 import 'package:tipsy_mobile/classes/response.dart';
 import 'package:tipsy_mobile/classes/styles.dart';
 import 'package:tipsy_mobile/pages/liquor_page.dart';
 import 'package:tipsy_mobile/classes/util.dart';
+import 'package:tipsy_mobile/pages/collector/equip_view.dart';
 import 'package:http/http.dart' as http;
+
+import 'collector/ingredient_view.dart';
 
 
 enum SearchTarget {
-  all, liquor, ingredient, equipment
+  all, liquor, ingredient, equipment, word
 }
 
 class SearchPage extends StatefulWidget {
@@ -69,6 +73,8 @@ Future<SearchResult> searchRequest(keyword, SearchTarget target, categLv, categI
 
     var liquorListRes = parsedData['liquor_list'];
     var ingdListRes = parsedData['ingredient_list'];
+    var equipListRes = parsedData['equipment_list'];
+    var wordListRes = parsedData['word_list'];
 
     //print("\n\nliquor list response: $liquorListRes");
     //print("\n\ingredient list response: $ingdListRes");
@@ -85,6 +91,12 @@ Future<SearchResult> searchRequest(keyword, SearchTarget target, categLv, categI
     if(ingdListRes != null) {
       ingdList = IngdList.fromJson(ingdListRes);
       searchRes.ingredientList = ingdList.ingredients;
+    }
+
+    EquipList equipList = new EquipList();
+    if(equipListRes != null) {
+      equipList = EquipList.fromJson(equipListRes);
+      searchRes.equipmentList = equipList.equips;
     }
 
     // print("검색 결과의 주류 개수:" + searchRes.liquorList.length.toString());
@@ -107,7 +119,8 @@ Future<SearchResult> searchRequest(keyword, SearchTarget target, categLv, categI
 class _SearchPageState extends State<SearchPage> {
 
   List<Liquor> gridLiquorList = [];
-  List<Ingredient> gridIngdList = [];
+  List<Ingredient> ingdList = [];
+  List<Equipment> equipList = [];
 
   int _searchState = 0;
 
@@ -118,13 +131,13 @@ class _SearchPageState extends State<SearchPage> {
     검색 상태에 따른 페이지 반환 함수
       _searchState:0 => 검색 결과 없음 페이지
       _searchState:1 => 검색 결과 페이지
-      _searchState:3 => 자동완성 페이지
+      _searchState:2 => 자동완성 페이지
    */
   Widget selectWidget() {
     if(_searchState == 0) {
       return NoSearchRes();
     } else if(_searchState == 1) {
-      return SearchResTab(gridLiquorList: gridLiquorList, gridIngdList: gridIngdList,);
+      return SearchResTab(gridLiquorList: gridLiquorList, ingdList: ingdList, equipList: equipList,);
     } else if(_searchState == 2) {
       return NoSearchRes();
     }
@@ -137,6 +150,7 @@ class _SearchPageState extends State<SearchPage> {
     SearchResult res = await searchRequest(keyword, SearchTarget.all, null, null);
     print("liquor count: " + res.liquorList.length.toString());
     print("ingd count: " + res.ingredientList.length.toString());
+    print("equip count: " + res.equipmentList.length.toString());
 
     if(res.liquorList.length <= 0 && res.ingredientList.length <= 0 && res.equipmentList.length <= 0) {
       setState(() {
@@ -152,6 +166,16 @@ class _SearchPageState extends State<SearchPage> {
     for(int i=0; i<res.liquorList.length; i++) {
       Liquor item = res.liquorList[i];
       gridLiquorList.add(item);
+    }
+
+    ingdList = [];
+    for(Ingredient ingd in res.ingredientList) {
+      ingdList.add(ingd);
+    }
+
+    equipList = [];
+    for(Equipment e in res.equipmentList) {
+      equipList.add(e);
     }
   }
 
@@ -318,10 +342,11 @@ class _SearchPageState extends State<SearchPage> {
 }
 
 class SearchResTab extends StatefulWidget {
-  SearchResTab({Key? key, required this.gridLiquorList, required this.gridIngdList}) : super(key: key);
+  SearchResTab({Key? key, required this.gridLiquorList, required this.ingdList, required this.equipList}) : super(key: key);
 
   List<Liquor> gridLiquorList;
-  List<Ingredient> gridIngdList;
+  List<Ingredient> ingdList;
+  List<Equipment> equipList;
 
   @override
   _SearchResTabState createState() => _SearchResTabState();
@@ -333,7 +358,7 @@ class _SearchResTabState extends State<SearchResTab> with TickerProviderStateMix
   void initState() {
     super.initState();
     _tabController = TabController(
-        length: 4,
+        length: 5,
         vsync: this
     );
   }
@@ -360,6 +385,9 @@ class _SearchResTabState extends State<SearchResTab> with TickerProviderStateMix
         text: '재료',
       ),
       Tab(
+        text: '장비',
+      ),
+      Tab(
         text: '용어',
       ),
     ],
@@ -378,18 +406,21 @@ class _SearchResTabState extends State<SearchResTab> with TickerProviderStateMix
       body: TabBarView(
         controller: _tabController,
         children: <Widget>[
-          Center(
-            child: LiquorGridView(gridLiquorList: widget.gridLiquorList),
+          Center( // liquor
+            child: widget.gridLiquorList.length > 0 ? LiquorGridView(gridLiquorList: widget.gridLiquorList) : NoSearchRes()
           ),
-          Center(
+          Center( // cocktail
             child: Text("It's rainy here"),
           ),
-          Center(
-            child: Text("It's sunny here"),
+          Center( // ingredient
+            child: widget.ingdList.length > 0 ? IngdListView(ingdList: widget.ingdList) : NoSearchRes()
           ),
-          Center(
+          Center( // equipment
+            child: widget.equipList.length > 0 ? EquipListView(equipList: widget.equipList) : NoSearchRes(),
+          ),
+          Center( // word
             child: NoSearchRes(),
-          ),
+          )
         ],
       ),
       bottomNavigationBar: Container(height: 0.0,),
@@ -428,22 +459,58 @@ class _LiquorGridViewState extends State<LiquorGridView> {
         //color: Colors.amber[Random().nextInt(9) * 100],
         color: Colors.white,
         child: Container(
+          padding: EdgeInsets.all(10),
           height: MediaQuery.of(context).size.height * 0.4,
-          //height: 400,
           //alignment: Alignment.center,
           child: Column(
             children: [
-              Image.network(
-                //'http://tipsy.co.kr/svcmgr/api/image/1.tipsy',
-                makeImgUrl(widget.gridLiquorList[index].repImg, 300),
-                //widget.gridLiquorList[index].repImg,
-                height: MediaQuery.of(context).size.height * 0.17,
+              GestureDetector(
+                child: Image.network(
+                  makeImgUrl(widget.gridLiquorList[index].repImg, 300),
+                  height: MediaQuery.of(context).size.height * 0.17,
+                ),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => LiquorDetail(liquorId: widget.gridLiquorList[index].liquorId)),
+                  );
+              },
               ),
-              Text(widget.gridLiquorList[index].nameKr),
-              Text(widget.gridLiquorList[index].nameKr),
-              Text(widget.gridLiquorList[index].nameKr),
-              Text(widget.gridLiquorList[index].nameKr),
-              Text(widget.gridLiquorList[index].nameKr),
+
+              Padding(
+                padding: const EdgeInsets.fromLTRB(5, 10, 0, 0),
+                child: Row(
+                  children: [
+                    Text(widget.gridLiquorList[index].nameKr),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(5, 3, 0, 0),
+                child: Row(
+                  children: [
+                    Text(
+                      widget.gridLiquorList[index].nameEn,
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.grey
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.fromLTRB(5, 5, 0, 0),
+                child: Row(
+                  children: [
+                    Icon(
+                        Icons.star,
+                        color: Colors.yellow
+                    ),
+                    Text('4.5')
+                  ],
+                ),
+              )
             ],
           ),
         ),
