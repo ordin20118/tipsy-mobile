@@ -13,7 +13,9 @@ import 'package:tipsy_mobile/classes/util.dart';
 import 'package:tipsy_mobile/pages/collector/equip_view.dart';
 import 'package:http/http.dart' as http;
 
+import '../classes/word.dart';
 import 'collector/ingredient_view.dart';
+import 'collector/word_view.dart';
 
 
 enum SearchTarget {
@@ -99,6 +101,12 @@ Future<SearchResult> searchRequest(keyword, SearchTarget target, categLv, categI
       searchRes.equipmentList = equipList.equips;
     }
 
+    WordList wordList = new WordList();
+    if(wordListRes != null) {
+      wordList = WordList.fromJson(wordListRes);
+      searchRes.wordList = wordList.words;
+    }
+
     // print("검색 결과의 주류 개수:" + searchRes.liquorList.length.toString());
     // print("검색 결과의 재료 개수:" + searchRes.ingredientList.length.toString());
     // for(int i=0; i<searchRes.liquorList.length; i++) {
@@ -121,6 +129,7 @@ class _SearchPageState extends State<SearchPage> {
   List<Liquor> gridLiquorList = [];
   List<Ingredient> ingdList = [];
   List<Equipment> equipList = [];
+  List<Word> wordList = [];
 
   int _searchState = 0;
 
@@ -137,7 +146,7 @@ class _SearchPageState extends State<SearchPage> {
     if(_searchState == 0) {
       return NoSearchRes();
     } else if(_searchState == 1) {
-      return SearchResTab(gridLiquorList: gridLiquorList, ingdList: ingdList, equipList: equipList,);
+      return SearchResTab(gridLiquorList: gridLiquorList, ingdList: ingdList, equipList: equipList, wordList: wordList,);
     } else if(_searchState == 2) {
       return NoSearchRes();
     }
@@ -151,8 +160,10 @@ class _SearchPageState extends State<SearchPage> {
     print("liquor count: " + res.liquorList.length.toString());
     print("ingd count: " + res.ingredientList.length.toString());
     print("equip count: " + res.equipmentList.length.toString());
+    print("word count: " + res.wordList.length.toString());
 
-    if(res.liquorList.length <= 0 && res.ingredientList.length <= 0 && res.equipmentList.length <= 0) {
+    if(res.liquorList.length <= 0 && res.ingredientList.length <= 0
+        && res.equipmentList.length <= 0 && res.wordList.length <= 0) {
       setState(() {
         _searchState = 0;
       });
@@ -176,6 +187,11 @@ class _SearchPageState extends State<SearchPage> {
     equipList = [];
     for(Equipment e in res.equipmentList) {
       equipList.add(e);
+    }
+
+    wordList = [];
+    for(Word w in res.wordList) {
+      wordList.add(w);
     }
   }
 
@@ -342,11 +358,12 @@ class _SearchPageState extends State<SearchPage> {
 }
 
 class SearchResTab extends StatefulWidget {
-  SearchResTab({Key? key, required this.gridLiquorList, required this.ingdList, required this.equipList}) : super(key: key);
+  SearchResTab({Key? key, required this.gridLiquorList, required this.ingdList, required this.equipList, required this.wordList}) : super(key: key);
 
   List<Liquor> gridLiquorList;
   List<Ingredient> ingdList;
   List<Equipment> equipList;
+  List<Word> wordList;
 
   @override
   _SearchResTabState createState() => _SearchResTabState();
@@ -419,7 +436,7 @@ class _SearchResTabState extends State<SearchResTab> with TickerProviderStateMix
             child: widget.equipList.length > 0 ? EquipListView(equipList: widget.equipList) : NoSearchRes(),
           ),
           Center( // word
-            child: NoSearchRes(),
+            child: widget.wordList.length > 0 ? WordListView(wordList: widget.wordList) : NoSearchRes(),
           )
         ],
       ),
