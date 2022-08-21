@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:kakao_flutter_sdk_auth/kakao_flutter_sdk_auth.dart';
@@ -6,6 +9,8 @@ import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:kakao_flutter_sdk_talk/kakao_flutter_sdk_talk.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
+import 'package:tipsy_mobile/classes/util.dart';
+import 'package:tipsy_mobile/classes/user.dart';
 import 'package:tipsy_mobile/pages/home.dart';
 import 'dart:convert';
 import 'package:tipsy_mobile/pages/join_page.dart';
@@ -60,8 +65,8 @@ class _LoginPageState extends State<LoginPage> {
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   ),
                   child: Image.asset('assets/images/login_btn/kakao_login_medium_wide.png'),
-                  //onPressed: _isKakaoTalkInstalled ? _loginWithKakaoTalk : _loginWithKakaoAccount
-                  onPressed: goToMainPage
+                  onPressed: _isKakaoTalkInstalled ? _loginWithKakaoTalk : _loginWithKakaoAccount
+                  //onPressed: goToMainPage
               ),
               Container(
                 height: MediaQuery.of(context).size.height * 0.2,
@@ -84,6 +89,8 @@ class _LoginPageState extends State<LoginPage> {
     super.initState();
     print("Login Page initState()");
     initKakaoTalkInstalled();
+
+    // TODO: remove under test code ...
     _logoutFromKakao();
     _unlinkFromKakao();
   }
@@ -102,7 +109,7 @@ class _LoginPageState extends State<LoginPage> {
   void goToJoinPage() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => JoinPage(platform: 1, email: 'kimho2018@naver.com', nickname: '팡호', accessToken: '', refreshToken: '',)),
+      MaterialPageRoute(builder: (context) => JoinPage(platform: USER_PLATFORM_KAKAO, email: 'kimho2018@naver.com', nickname: '팡호', accessToken: '', refreshToken: '',)),
     );
   }
 
@@ -123,32 +130,45 @@ class _LoginPageState extends State<LoginPage> {
 
       // 회원 가입 절차
       // 1. 회원 여부 확인
-
       User user = await UserApi.instance.me();
       String? email = user.kakaoAccount?.email;
       String? nickname = user.kakaoAccount?.profile?.nickname;
 
-      print("[사용자의 EMAIL]: " + email!);
-      print("[사용자의 NICKNAME]: " + nickname!);
-
-      // api로 사용자 계정 유무 확인
-      // email, nickname
+      // api로 사용자 계정 유무 확인 - email
       bool isDup =  await checkEmailDuplicate(email);
-
-      print("isDup:" + isDup.toString());
 
       if(isDup) {
         print("이미 가입된 이메일 입니다.");
-        // TODO: 자동 로그인 처리
+
+        // 1. 서비스 토큰 발급
+        AccessToken token = await requestAccessToken(USER_PLATFORM_KAKAO, email!);
+
+        if(token != null && token.tokenHash.length > 0) {
+
+          // 2. 자동 로그인 처리
+          bool isLogin = await autoLogin(USER_PLATFORM_KAKAO, email!, token.tokenHash);
+
+          if(isLogin) {
+            final storage = new FlutterSecureStorage();
+            await storage.write(key:'accessToken', value:token.tokenHash);
+            await storage.write(key:'platform', value:USER_PLATFORM_KAKAO.toString());
+            await storage.write(key:'id', value:token.userId.toString());
+            await storage.write(key:'email', value:email);
+            goToMainPage();
+          } else {
+            throw Exception('Failed auto login.');
+          }
+        } else {
+          throw Exception('Failed isuue access token.');
+        }
 
       } else {
         print("가입할 수 있는 이메일 입니다.");
-        // 가입 페이지로 이동
+        // TODO: 가입 페이지로 이동 => 함수로 빼내기
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => JoinPage(platform: 1, email: email, nickname: nickname, accessToken: token.accessToken, refreshToken: token.refreshToken,)),
+          MaterialPageRoute(builder: (context) => JoinPage(platform: USER_PLATFORM_KAKAO, email: email ?? "", nickname: nickname ?? "", accessToken: token.accessToken, refreshToken: token.refreshToken,)),
         );
-
       }
 
     } catch(e) {
@@ -205,6 +225,7 @@ class _LoginPageState extends State<LoginPage> {
 
   // 자동로그인 여부 확인
   void _checkKakaoToken() {
+    // TODO
     // keychain에 저장되어 있는 정보가 있는지 확인
     // 플랫폼에 따라서 자동 로그인 절차 진행
     // 1. 카카오 로그인 연동일 경우

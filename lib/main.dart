@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:kakao_flutter_sdk_link/kakao_flutter_sdk_link.dart';
 import 'package:tipsy_mobile/pages/home.dart';
@@ -137,6 +139,15 @@ class _MainPageState extends State<MainPage> {
   void initState() {
     super.initState();
     print("Main Page initState()");
+
+    chekStorageData();
+  }
+
+  void chekStorageData() async {
+    final storage = new FlutterSecureStorage();
+    String accessToken = await storage.read(key: "accessToken") ?? "";
+    String email = await storage.read(key: "email") ?? "";
+    log("[AccessToken]:" + accessToken + "/[Email]:" + email);
   }
 
   @override

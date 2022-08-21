@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:tipsy_mobile/ui/form.dart';
 import 'package:tipsy_mobile/classes/user.dart';
+import 'package:tipsy_mobile/classes/util.dart';
 
 class JoinPage extends StatefulWidget {
   JoinPage({Key? key, required this.platform, required this.email, required this.nickname,
@@ -281,8 +282,19 @@ class _JoinPageState extends State<JoinPage> {
     print("[[Enter join function]]");
 
     // request post
-    String chckUrl = "http://www.tipsy.co.kr/svcmgr/api/user/join.tipsy";
-    final Uri url = Uri.parse(chckUrl);
+    //String joinUrl = "http://www.tipsy.co.kr/svcmgr/api/user/join.tipsy";
+    //String joinUrl = "http://192.168.0.45:8080/svcmgr/api/user/join.tipsy";
+    String joinUrl = "";
+    if(isLocal) {
+      joinUrl = API_URL_LOCAL;
+    } else {
+      joinUrl = API_URL_SERVER;
+    }
+    joinUrl = joinUrl + "/user/issueToken.tipsy";
+
+
+
+    final Uri url = Uri.parse(joinUrl);
 
     int gender = 0;
     if(_gender == Gender.male) {
@@ -311,7 +323,18 @@ class _JoinPageState extends State<JoinPage> {
 
     if (response.statusCode == 200) {
 
+
+      // 회원가입 결과 데이터 확인
+      String resString = response.body.toString();
+      var parsed = json.decode(resString);
+      var parsedData = parsed['data'];
+      print("parsed join result data: $parsedData");
+
       // TODO
+      // 0. 토큰 발급
+
+
+
       // 1.로그인 처리
       // 1-1.로그인 요청 (플랫폼의 엑세스 토큰으로)
       // 1-2.서비스 내부 엑세스 토큰 발급 받음

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tipsy_mobile/main.dart';
 import 'package:tipsy_mobile/pages/login_page.dart';
+import 'package:tipsy_mobile/classes/util.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class SplashPage extends StatefulWidget {
@@ -11,6 +12,8 @@ class SplashPage extends StatefulWidget {
 }
 
 class _SplashPageState extends State<SplashPage> {
+
+  static final storage = new FlutterSecureStorage();
 
   @override
   Widget build(BuildContext context) {
@@ -65,27 +68,40 @@ class _SplashPageState extends State<SplashPage> {
   void checkAutoLogin() async {
     final storage = new FlutterSecureStorage();
 
-    await storage.deleteAll();
+    //await storage.deleteAll();
     //await storage.write(key:'is_auto_login', value:'true');
 
-    String? isAutoLogin = await storage.read(key: 'is_auto_login');
-    if(isAutoLogin == 'true') {
-      print("메인 페이지로 이동");
-      // 메인 페이지로
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => MainPage()),
-      );
+    String? accessToken = await storage.read(key: "accessToken");
+    if(accessToken != null) {
+
+      // request auto login
+      String? platformStr = await storage.read(key: "platform");
+      String? email = await storage.read(key: "email");
+
+      if(platformStr == null || email == null) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => LoginPage()),
+        );
+      }
+
+      int platform = int.parse(platformStr!);
+      bool isLogin = await autoLogin(platform, email!, accessToken);
+
+      if(isLogin) {
+        // 메인 페이지로
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => MainPage()),
+        );
+      }
+
     } else {
       print("로그인 페이지로 이동");
-      // 로그인 페이지로
-      // Navigator.push(
-      //   context,
-      //   MaterialPageRoute(builder: (context) => LoginPage()),
-      // );
+      //로그인 페이지로
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => MainPage()),
+        MaterialPageRoute(builder: (context) => LoginPage()),
       );
     }
   }
