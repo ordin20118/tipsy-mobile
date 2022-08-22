@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:tipsy_mobile/main.dart';
 import 'package:tipsy_mobile/pages/login_page.dart';
@@ -61,14 +63,14 @@ class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
     super.initState();
-    print("Splash Page initState()");
+    log("Splash Page initState()");
     checkAutoLogin();
   }
 
   void checkAutoLogin() async {
     final storage = new FlutterSecureStorage();
 
-    //await storage.deleteAll();
+    await storage.deleteAll();
     //await storage.write(key:'is_auto_login', value:'true');
 
     String? accessToken = await storage.read(key: "accessToken");

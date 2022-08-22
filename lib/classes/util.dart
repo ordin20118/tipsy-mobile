@@ -1,12 +1,15 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter_config/flutter_config.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import 'package:tipsy_mobile/classes/user.dart';
+
+import '../main.dart';
 
 bool isLocal = true;
 const String API_URL_LOCAL = "http://192.168.0.45:8080/svcmgr/api";
@@ -37,6 +40,13 @@ String makeImgUrl(String filePath, int size) {
   return "http://tipsy.co.kr/svcmgr/api" + "/image/" + pathArr.last + ".tipsy?size=" + size.toString();
 }
 
+void goToMainPage(BuildContext context) {
+  Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) => MainPage()),
+  );
+}
+
 
 
 // request access token
@@ -50,9 +60,7 @@ Future<AccessToken> requestAccessToken(int platform, String email) async {
     reqUrl = API_URL_SERVER;
   }
   reqUrl = reqUrl + "/user/issueToken.tipsy";
-
   log("[Request acess token URL]:" + reqUrl);
-
   final Uri url = Uri.parse(reqUrl);
 
   var bodyData = {
@@ -71,6 +79,7 @@ Future<AccessToken> requestAccessToken(int platform, String email) async {
   if (response.statusCode == 200) {
 
     String resString = response.body.toString();
+    log("[REQ AccessToken RES]:" + resString);
     var parsed = json.decode(resString);
     var tokenObj = parsed['data'];
 
@@ -83,8 +92,6 @@ Future<AccessToken> requestAccessToken(int platform, String email) async {
 
 
 }
-
-
 
 // request auto login
 Future<bool> autoLogin(int platform, String email, String accessToken) async {
@@ -99,13 +106,10 @@ Future<bool> autoLogin(int platform, String email, String accessToken) async {
   } else {
     loginUrl = API_URL_SERVER;
   }
+
   loginUrl = loginUrl + "/user/login.tipsy";
-
   log("[Auto login URL]:" + loginUrl);
-
   final Uri url = Uri.parse(loginUrl);
-
-  print("URL: $url");
 
   var bodyData = {
     "platform": platform,
@@ -122,7 +126,29 @@ Future<bool> autoLogin(int platform, String email, String accessToken) async {
   );
 
   if (response.statusCode == 200) {
-    return true;
+
+    String bodyString = response.body.toString();
+
+    log("[AutoLogin RES]:" + bodyString);
+
+    var res = json.decode(bodyString);
+    var stateCode = res['state'];
+    if(stateCode == 0) {
+      var data = res['data'];
+      if(data != null) {
+        AccessToken token = new AccessToken.fromJson(data);
+        final storage = new FlutterSecureStorage();
+        await storage.write(key:'accessToken', value:token.tokenHash);
+        await storage.write(key:'platform', value:platform.toString());
+        await storage.write(key:'id', value:token.userId.toString());
+        await storage.write(key:'email', value:email);
+      }
+
+      return true;
+    } else {
+      return false;
+    }
+
   } else {
     throw Exception('Failed auto login.');
   }

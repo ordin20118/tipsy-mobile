@@ -87,7 +87,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
-    print("Login Page initState()");
+    log("Login Page initState()");
     initKakaoTalkInstalled();
 
     // TODO: remove under test code ...
@@ -113,13 +113,6 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  // for test
-  void goToMainPage() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => MainPage()),
-    );
-  }
 
   // 카카오톡으로 로그인
   void _loginWithKakaoTalk() async {
@@ -154,7 +147,7 @@ class _LoginPageState extends State<LoginPage> {
             await storage.write(key:'platform', value:USER_PLATFORM_KAKAO.toString());
             await storage.write(key:'id', value:token.userId.toString());
             await storage.write(key:'email', value:email);
-            goToMainPage();
+            goToMainPage(context);
           } else {
             throw Exception('Failed auto login.');
           }

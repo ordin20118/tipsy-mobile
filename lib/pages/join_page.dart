@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:tipsy_mobile/ui/form.dart';
@@ -290,9 +293,7 @@ class _JoinPageState extends State<JoinPage> {
     } else {
       joinUrl = API_URL_SERVER;
     }
-    joinUrl = joinUrl + "/user/issueToken.tipsy";
-
-
+    joinUrl = joinUrl + "/user/join.tipsy";
 
     final Uri url = Uri.parse(joinUrl);
 
@@ -323,31 +324,45 @@ class _JoinPageState extends State<JoinPage> {
 
     if (response.statusCode == 200) {
 
-
       // 회원가입 결과 데이터 확인
       String resString = response.body.toString();
       var parsed = json.decode(resString);
       var parsedData = parsed['data'];
-      print("parsed join result data: $parsedData");
+      log("parsed join result data: $parsedData");
 
       // TODO
-      // 0. 토큰 발급
+      // 1. 토큰 발급
+      AccessToken? token = null;
+      try {
+        token = await requestAccessToken(USER_PLATFORM_KAKAO, widget.email);
+      } catch(e) {
+        token = null;
+      }
+      
+      if(token != null && token.tokenHash.length > 0) {
 
+        // 2. 자동 로그인 처리
+        bool isLogin = await autoLogin(USER_PLATFORM_KAKAO, widget.email, token.tokenHash);
 
-
-      // 1.로그인 처리
-      // 1-1.로그인 요청 (플랫폼의 엑세스 토큰으로)
-      // 1-2.서비스 내부 엑세스 토큰 발급 받음
-      // 1-3. 로컬 저장소에 로그인 정보 저장
-      //  - 자동로그인 여부
-      //  - 자동로그인 플랫폼
-      //  - 계정ID => 대신에 서비스 내의 토큰
-      // 2.메인 페이지로 이동
+        if(isLogin) {
+          final storage = new FlutterSecureStorage();
+          await storage.write(key:'accessToken', value:token.tokenHash);
+          await storage.write(key:'platform', value:USER_PLATFORM_KAKAO.toString());
+          await storage.write(key:'id', value:token.userId.toString());
+          await storage.write(key:'email', value:widget.email);
+          goToMainPage(context);
+        } else {
+          throw Exception('Failed auto login.');
+        }
+      } else {
+        throw Exception('Failed isuue access token.');
+      }
 
       // TODO: Add loading icon
 
     } else {
       // TODO: toast
+      // 회원가입 실패에 대한 메시지
       print("" + response.body);
       throw Exception('Failed to join.');
     }
