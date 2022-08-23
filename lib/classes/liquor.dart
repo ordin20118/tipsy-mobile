@@ -68,7 +68,9 @@ class Liquor {
     // vintage
     // country_id
     // description
+    tmp._description = json['description'] != null ? json['description'] : "";
     // history
+    tmp._history = json['history'] != null ? json['history'] : "";
     // update_date
 
     return tmp;

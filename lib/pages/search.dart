@@ -120,7 +120,7 @@ Future<SearchResult> searchRequest(keyword, SearchTarget target, categLv, categI
 
     return searchRes;
   } else {
-    throw Exception('Failed to load liquor data.');
+    throw Exception('Failed to search data.');
   }
 }
 

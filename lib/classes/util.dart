@@ -12,8 +12,16 @@ import 'package:tipsy_mobile/classes/user.dart';
 import '../main.dart';
 
 bool isLocal = true;
-const String API_URL_LOCAL = "http://192.168.0.45:8080/svcmgr/api";
+const String API_URL_LOCAL = "http://192.168.219.101:8080/svcmgr/api";
 const String API_URL_SERVER = "http://www.tipsy.co.kr/svcmgr/api";
+
+String getApiUrl() {
+  if(isLocal) {
+    return API_URL_LOCAL;
+  } else {
+    return API_URL_SERVER;
+  }
+}
 
 void showToast(String message) {
   Fluttertoast.showToast(
@@ -53,13 +61,7 @@ void goToMainPage(BuildContext context) {
 Future<AccessToken> requestAccessToken(int platform, String email) async {
 
   print("#### [requestAccessToken] ####");
-  String reqUrl = "";
-  if(isLocal) {
-    reqUrl = API_URL_LOCAL;
-  } else {
-    reqUrl = API_URL_SERVER;
-  }
-  reqUrl = reqUrl + "/user/issueToken.tipsy";
+  String reqUrl = getApiUrl() + "/user/issueToken.tipsy";
   log("[Request acess token URL]:" + reqUrl);
   final Uri url = Uri.parse(reqUrl);
 
@@ -100,14 +102,7 @@ Future<bool> autoLogin(int platform, String email, String accessToken) async {
 
   print(FlutterConfig.get('API_URL'));
 
-  String loginUrl = "";
-  if(isLocal) {
-    loginUrl = API_URL_LOCAL;
-  } else {
-    loginUrl = API_URL_SERVER;
-  }
-
-  loginUrl = loginUrl + "/user/login.tipsy";
+  String loginUrl = getApiUrl() + "/user/login.tipsy";
   log("[Auto login URL]:" + loginUrl);
   final Uri url = Uri.parse(loginUrl);
 

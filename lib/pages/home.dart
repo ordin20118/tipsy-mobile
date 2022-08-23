@@ -57,6 +57,12 @@ class Home extends StatelessWidget {
                   ),
                   Column(
                     children: [
+                      // Expanded(
+                      //     child: CircleAvatar(
+                      //       backgroundImage: Image.asset('assets/images/11_300.png'),
+                      //       radius: 100,
+                      //     )
+                      // ),
                       Expanded(child: Image.asset('assets/images/11_300.png')),
                       Text(
                           '칵테일',
