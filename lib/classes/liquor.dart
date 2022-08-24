@@ -44,7 +44,6 @@ class Liquor {
         this._category2Name = category2Name, this._abv = abv, this._countryId = countryId,
         this._repImg = repImg, this._regDate = regDate;
 
-
   factory Liquor.fromJson(Map<String, dynamic> json) {
     Liquor tmp = Liquor.set(
         liquorId: json['liquor_id'],

@@ -1,8 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:math';
+import 'dart:developer';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/scheduler/ticker.dart';
+import 'package:get/get.dart';
+import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:tipsy_mobile/classes/liquor.dart';
 import 'package:tipsy_mobile/classes/equipment.dart';
 import 'package:tipsy_mobile/classes/ingredient.dart';
@@ -28,102 +31,6 @@ class SearchPage extends StatefulWidget {
   _SearchPageState createState() => _SearchPageState();
 }
 
-
-// search request function
-Future<SearchResult> searchRequest(keyword, SearchTarget target, categLv, categId) async {
-
-  print("#### [searchhLiquor] ####");
-  String searchUrl = "http://www.tipsy.co.kr/svcmgr/api/search.tipsy?target=";
-
-  if(target == SearchTarget.all) {
-    searchUrl += "all";
-  } else if(target == SearchTarget.liquor) {
-    searchUrl += "liquor";
-  } else if(target == SearchTarget.ingredient) {
-    searchUrl += "ingredient";
-  } else if(target == SearchTarget.equipment) {
-    searchUrl += "equipment";
-  }
-
-  if(keyword != null && keyword.length > 0) {
-    searchUrl += "&keyword=" + keyword;
-  }
-
-  if(categLv != null && categLv > 0) {
-    searchUrl += "&categLv=" + categLv;
-  }
-
-  if(categId != null && categId > 0) {
-    searchUrl += "&categId=" + categId;
-  }
-
-  final Uri url = Uri.parse(searchUrl);
-
-  print("URL: $url");
-
-  final response = await http.get(url);
-
-  if (response.statusCode == 200) {
-
-    String resString = response.body.toString();
-
-    // response{} => data{} => liquor_list[]
-    var parsed = json.decode(resString);
-
-    var parsedData = parsed['data'];
-    print("parsed data: $parsedData");
-
-    var liquorListRes = parsedData['liquor_list'];
-    var ingdListRes = parsedData['ingredient_list'];
-    var equipListRes = parsedData['equipment_list'];
-    var wordListRes = parsedData['word_list'];
-
-    //print("\n\nliquor list response: $liquorListRes");
-    //print("\n\ingredient list response: $ingdListRes");
-
-    SearchResult searchRes = new SearchResult();
-
-    LiquorList liquorList = new LiquorList();
-    if(liquorListRes != null) {
-      liquorList = LiquorList.fromJson(liquorListRes);
-      searchRes.liquorList = liquorList.liquors;
-    }
-
-    IngdList ingdList = new IngdList();
-    if(ingdListRes != null) {
-      ingdList = IngdList.fromJson(ingdListRes);
-      searchRes.ingredientList = ingdList.ingredients;
-    }
-
-    EquipList equipList = new EquipList();
-    if(equipListRes != null) {
-      equipList = EquipList.fromJson(equipListRes);
-      searchRes.equipmentList = equipList.equips;
-    }
-
-    WordList wordList = new WordList();
-    if(wordListRes != null) {
-      wordList = WordList.fromJson(wordListRes);
-      searchRes.wordList = wordList.words;
-    }
-
-    // print("검색 결과의 주류 개수:" + searchRes.liquorList.length.toString());
-    // print("검색 결과의 재료 개수:" + searchRes.ingredientList.length.toString());
-    // for(int i=0; i<searchRes.liquorList.length; i++) {
-    //   Liquor item = searchRes.liquorList[i];
-    //   print("[$i] " + item.nameKr);
-    // }
-    // for(int i=0; i<searchRes.ingredientList.length; i++) {
-    //   Ingredient item = searchRes.ingredientList[i];
-    //   print("[$i] " + item.nameKr);
-    // }
-
-    return searchRes;
-  } else {
-    throw Exception('Failed to search data.');
-  }
-}
-
 class _SearchPageState extends State<SearchPage> {
 
   List<Liquor> gridLiquorList = [];
@@ -131,10 +38,14 @@ class _SearchPageState extends State<SearchPage> {
   List<Equipment> equipList = [];
   List<Word> wordList = [];
 
+  var searchParam;
   int _searchState = 0;
 
   // 검색창 내용 controller
   TextEditingController searchTextController = TextEditingController();
+
+  // 검색 결과 controller
+  LiquorScrollController liquorScrollController = Get.put<LiquorScrollController>(LiquorScrollController());
 
   /*
     검색 상태에 따른 페이지 반환 함수
@@ -146,7 +57,8 @@ class _SearchPageState extends State<SearchPage> {
     if(_searchState == 0) {
       return NoSearchRes();
     } else if(_searchState == 1) {
-      return SearchResTab(gridLiquorList: gridLiquorList, ingdList: ingdList, equipList: equipList, wordList: wordList,);
+      return SearchResTab(liquorScrollController: liquorScrollController, ingdList: ingdList, equipList: equipList, wordList: wordList,);
+      //return SearchResTab(gridLiquorList: gridLiquorList, ingdList: ingdList, equipList: equipList, wordList: wordList,);
     } else if(_searchState == 2) {
       return NoSearchRes();
     }
@@ -155,12 +67,17 @@ class _SearchPageState extends State<SearchPage> {
 
   // 검색 실행
   submitSearch(keyword) async {
-    print("Search Keyord: " + keyword);
-    SearchResult res = await searchRequest(keyword, SearchTarget.all, null, null);
-    print("liquor count: " + res.liquorList.length.toString());
-    print("ingd count: " + res.ingredientList.length.toString());
-    print("equip count: " + res.equipmentList.length.toString());
-    print("word count: " + res.wordList.length.toString());
+    log("submitSearch() - start");
+    log("Search Keyord: " + keyword);
+    SearchResult res = await searchRequest(keyword, SearchTarget.all, null, null, 1);
+    log("liquor count: " + res.liquorList.length.toString());
+    log("ingd count: " + res.ingredientList.length.toString());
+    log("equip count: " + res.equipmentList.length.toString());
+    log("word count: " + res.wordList.length.toString());
+
+    setState((){
+      searchParam = SearchParam.set(keyword: keyword, target: SearchTarget.all.toString(), categLv: null, categId: null, nowPage: 1);
+    });
 
     if(res.liquorList.length <= 0 && res.ingredientList.length <= 0
         && res.equipmentList.length <= 0 && res.wordList.length <= 0) {
@@ -178,6 +95,9 @@ class _SearchPageState extends State<SearchPage> {
       Liquor item = res.liquorList[i];
       gridLiquorList.add(item);
     }
+    setState(() {
+      liquorScrollController.setData(gridLiquorList, searchParam);
+    });
 
     ingdList = [];
     for(Ingredient ingd in res.ingredientList) {
@@ -245,106 +165,6 @@ class _SearchPageState extends State<SearchPage> {
     );
   }
 
-
-
-  // Widget buildSearchResultScroll(BuildContext context) {
-  //   return CustomScrollView(
-  //       slivers: [
-  //         // SliverAppBar #1 - liquor
-  //         SliverAppBar(
-  //           automaticallyImplyLeading: false,
-  //           elevation: 5,
-  //           pinned: true,
-  //           backgroundColor: Colors.pink,
-  //           expandedHeight: 170.0,
-  //           flexibleSpace: FlexibleSpaceBar(
-  //             background: Container(
-  //               color: Colors.amber,
-  //               child: const Center(
-  //                   child: Icon(
-  //                     Icons.run_circle,
-  //                     size: 60,
-  //                     color: Colors.white,
-  //                   )),
-  //             ),
-  //             title: const Text(
-  //               'Liquor',
-  //               style: TextStyle(color: Colors.white),
-  //             ),
-  //           ),
-  //         ),
-  //         // SliverGrid #1
-  //         SliverGrid(
-  //           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-  //             crossAxisCount: 2,
-  //             mainAxisSpacing: 10,
-  //             crossAxisSpacing: 10,
-  //             childAspectRatio: 2.0,
-  //           ),
-  //           delegate: SliverChildBuilderDelegate((context, index) {
-  //               return Card(
-  //                 // generate ambers with random shades
-  //                 color: Colors.amber[Random().nextInt(9) * 100],
-  //                 child: Container(
-  //                   alignment: Alignment.center,
-  //                   child: Text(widget.gridLiquorList[index].nameKr),
-  //                 ),
-  //               );
-  //             },
-  //             childCount: gridLiquorList.length,
-  //           ),
-  //         ),
-  //         // SliverAppBar #2 - ingredient
-  //         SliverAppBar(
-  //           automaticallyImplyLeading: false,
-  //           elevation: 5,
-  //           pinned: true,
-  //           backgroundColor: Colors.green,
-  //           expandedHeight: 170.0,
-  //           flexibleSpace: FlexibleSpaceBar(
-  //             background: Container(
-  //               color: Colors.lightGreen,
-  //               child: const Center(
-  //                   child: Icon(
-  //                     Icons.run_circle,
-  //                     size: 60,
-  //                     color: Colors.white,
-  //                   )),
-  //             ),
-  //             title: const Text(
-  //               'Ingredient',
-  //               style: TextStyle(color: Colors.white),
-  //             ),
-  //           ),
-  //         ),
-  //         // SliverGrid #2 - ingredient
-  //         SliverGrid(
-  //           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-  //             crossAxisCount: 2,
-  //             mainAxisSpacing: 10,
-  //             crossAxisSpacing: 10,
-  //             childAspectRatio: 2.0,
-  //           ),
-  //           delegate: SliverChildBuilderDelegate(
-  //                 (context, index) {
-  //               return Card(
-  //                 // generate ambers with random shades
-  //                 color: Colors.amber[Random().nextInt(9) * 100],
-  //                 child: Container(
-  //                   alignment: Alignment.center,
-  //                   //child: Text(_gridItems[index]),
-  //                   child: Text('!'),
-  //                 ),
-  //               );
-  //             },
-  //             //childCount: _gridItems.length,
-  //             childCount: 1,
-  //           ),
-  //         ),
-  //       ]
-  //   );
-  // }
-
   @override
   void initState() {
     super.initState();
@@ -358,9 +178,10 @@ class _SearchPageState extends State<SearchPage> {
 }
 
 class SearchResTab extends StatefulWidget {
-  SearchResTab({Key? key, required this.gridLiquorList, required this.ingdList, required this.equipList, required this.wordList}) : super(key: key);
+  SearchResTab({Key? key, required this.liquorScrollController, required this.ingdList, required this.equipList, required this.wordList}) : super(key: key);
 
-  List<Liquor> gridLiquorList;
+  LiquorScrollController liquorScrollController;
+  //List<Liquor> gridLiquorList;
   List<Ingredient> ingdList;
   List<Equipment> equipList;
   List<Word> wordList;
@@ -374,10 +195,18 @@ class _SearchResTabState extends State<SearchResTab> with TickerProviderStateMix
   @override
   void initState() {
     super.initState();
+    log("[[ SearchResTab Init ]]");
     _tabController = TabController(
         length: 5,
         vsync: this
     );
+  }
+
+
+  @override
+  void activate() {
+    log("[[ SearchResTab - activate() ]]");
+    super.activate();
   }
 
   @override
@@ -424,7 +253,8 @@ class _SearchResTabState extends State<SearchResTab> with TickerProviderStateMix
         controller: _tabController,
         children: <Widget>[
           Center( // liquor
-            child: widget.gridLiquorList.length > 0 ? LiquorGridView(gridLiquorList: widget.gridLiquorList) : NoSearchRes()
+            //child: widget.gridLiquorList.length > 0 ? LiquorGridView(gridLiquorList: widget.gridLiquorList) : NoSearchRes()
+              child: widget.liquorScrollController.data.length > 0 ? LiquorGridView(liquorController: widget.liquorScrollController) : NoSearchRes()
           ),
           Center( // cocktail
             child: Text("It's rainy here"),
@@ -447,10 +277,56 @@ class _SearchResTabState extends State<SearchResTab> with TickerProviderStateMix
 }
 
 //class
-class LiquorGridView extends StatefulWidget {
-  LiquorGridView({Key? key, required this.gridLiquorList}) : super(key: key);
+class LiquorScrollController extends GetxController {
+  var scrollController = ScrollController().obs;
+  var data = <Liquor>[].obs;
+  var keyword = "";
+  var nowPage = 1;
+  var isLoading = false.obs;
+  var hasMore = true.obs;
+  var param;
 
-  List<Liquor> gridLiquorList;
+  // LiquorScrollController(List<Liquor> data, SearchParam param) {
+  //   this.data = data.obs;
+  //   this.param = param;
+  // }
+
+  void setData(List<Liquor> data, SearchParam param) {
+    this.data = data.obs;
+    this.param = param;
+  }
+
+  @override
+  void onInit() {
+    scrollController.value.addListener(() async {
+      // more load data
+      //log("[${scrollController.value.position.pixels}][${scrollController.value.position.maxScrollExtent}]");
+      if(scrollController.value.position.pixels ==
+          scrollController.value.position.maxScrollExtent && hasMore.value) {
+
+        log("[리스트의 끝입니다.]");
+
+        SearchResult res = await searchRequest(keyword, SearchTarget.all, null, null, ++nowPage);
+
+        log("[추가 로드된 개수]: ${res.liquorList.length}");
+        if(res.liquorList.length > 0) {
+          data.addAll(res.liquorList);
+          if(res.liquorList.length >= 10) {
+            hasMore = true.obs;
+          } else {
+            hasMore = false.obs;
+          }
+        }
+      }
+    });
+    super.onInit();
+  }
+}
+
+class LiquorGridView extends StatefulWidget {
+  LiquorGridView({Key? key, required this.liquorController}) : super(key: key);
+
+  LiquorScrollController liquorController;
 
   @override
   _LiquorGridViewState createState() => _LiquorGridViewState();
@@ -468,8 +344,32 @@ class _LiquorGridViewState extends State<LiquorGridView> {
     super.dispose();
   }
 
-  Widget liquorItemBuilder(context, index) {
+  @override
+  Widget build(BuildContext context) {
+    return Obx(
+        () => Container(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: GridView.builder(
+                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                    maxCrossAxisExtent: 200,
+                    //childAspectRatio: 3 / 2,
+                    childAspectRatio: 0.7,
+                    crossAxisSpacing: 7,
+                    mainAxisSpacing: 7
+                ),
+                controller: widget.liquorController.scrollController.value,
+                itemCount: widget.liquorController.data.length,
+                itemBuilder: (BuildContext context, index) {
+                  return liquorItemBuilder(context, index);
+                }
+            ),
+          ),
+        )
+    );
+  }
 
+  Widget liquorItemBuilder(context, index) {
     // http://tipsy.co.kr/svcmgr/api/image/1.tipsy
     return Card(
         // generate ambers with random shades
@@ -483,13 +383,13 @@ class _LiquorGridViewState extends State<LiquorGridView> {
             children: [
               GestureDetector(
                 child: Image.network(
-                  makeImgUrl(widget.gridLiquorList[index].repImg, 300),
+                  makeImgUrl(widget.liquorController.data[index].repImg, 300),
                   height: MediaQuery.of(context).size.height * 0.17,
                 ),
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => LiquorDetail(liquorId: widget.gridLiquorList[index].liquorId)),
+                    MaterialPageRoute(builder: (context) => LiquorDetail(liquorId: widget.liquorController.data[index].liquorId)),
                   );
               },
               ),
@@ -498,7 +398,7 @@ class _LiquorGridViewState extends State<LiquorGridView> {
                 padding: const EdgeInsets.fromLTRB(5, 10, 0, 0),
                 child: Row(
                   children: [
-                    Text(widget.gridLiquorList[index].nameKr),
+                    Text(widget.liquorController.data[index].nameKr),
                   ],
                 ),
               ),
@@ -507,7 +407,7 @@ class _LiquorGridViewState extends State<LiquorGridView> {
                 child: Row(
                   children: [
                     Text(
-                      widget.gridLiquorList[index].nameEn,
+                      widget.liquorController.data[index].nameEn,
                       style: TextStyle(
                         fontSize: 12,
                         color: Colors.grey
@@ -534,65 +434,116 @@ class _LiquorGridViewState extends State<LiquorGridView> {
       );
   }
 
-  // Widget liquorItemBuilder(context, index) {
-  //
-  //   // http://tipsy.co.kr/svcmgr/api/image/1.tipsy
-  //   return GestureDetector(
-  //     onTap: () {
-  //       Navigator.push(
-  //         context,
-  //         MaterialPageRoute(builder: (context) => LiquorDetail(liquorId: widget.gridLiquorList[index].liquorId)),
-  //       );
-  //     },
-  //     child: Card(
-  //       // generate ambers with random shades
-  //       color: Colors.amber[Random().nextInt(9) * 100],
-  //       child: Container(
-  //         //height: MediaQuery.of(context).size.height * 0.4,
-  //         height: 400,
-  //         //alignment: Alignment.center,
-  //         child: Column(
-  //           children: [
-  //             Image.network(
-  //               'http://tipsy.co.kr/svcmgr/api/image/1.tipsy',
-  //               //width: MediaQuery.of(context).size.width * 0.17,
-  //               height: MediaQuery.of(context).size.height * 0.1,
-  //             ),
-  //             Text(widget.gridLiquorList[index].nameKr),
-  //             Text(widget.gridLiquorList[index].nameKr),
-  //             Text(widget.gridLiquorList[index].nameKr),
-  //             Text(widget.gridLiquorList[index].nameKr),
-  //             Text(widget.gridLiquorList[index].nameKr),
-  //           ],
-  //         ),
-  //       ),
-  //     ),
-  //   );
-  // }
+}
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: GridView.builder(
-            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                maxCrossAxisExtent: 200,
-                //childAspectRatio: 3 / 2,
-                childAspectRatio: 0.7,
-                crossAxisSpacing: 7,
-                mainAxisSpacing: 7
-            ),
-            itemCount: widget.gridLiquorList.length,
-            itemBuilder: (BuildContext context, index) {
-              return liquorItemBuilder(context, index);
-            }
-        ),
-      ),
-    );
+
+
+// search request function
+Future<SearchResult> searchRequest(keyword, SearchTarget target, categLv, categId, nowPage) async {
+
+  log("#### [searchhLiquor] ####");
+  String searchUrl = "http://www.tipsy.co.kr/svcmgr/api/search.tipsy?target=";
+
+  if(target == SearchTarget.all) {
+    searchUrl += "all";
+  } else if(target == SearchTarget.liquor) {
+    searchUrl += "liquor";
+  } else if(target == SearchTarget.ingredient) {
+    searchUrl += "ingredient";
+  } else if(target == SearchTarget.equipment) {
+    searchUrl += "equipment";
+  }
+
+  if(keyword != null && keyword.length > 0) {
+    searchUrl += "&keyword=" + keyword;
+  }
+
+  if(categLv != null && categLv > 0) {
+    searchUrl += "&categLv=" + categLv;
+  }
+
+  if(categId != null && categId > 0) {
+    searchUrl += "&categId=" + categId;
+  }
+
+  if(nowPage != null && nowPage > 0) {
+    searchUrl += "&paging.nowPage=" + nowPage.toString();
+  }
+
+  final Uri url = Uri.parse(searchUrl);
+  log("[SEARCH UR:]:" + searchUrl);
+
+  final response = await http.get(url);
+  if (response.statusCode == 200) {
+
+    String resString = response.body.toString();
+    var parsed = json.decode(resString);
+    var parsedData = parsed['data'];
+    var liquorListRes = parsedData['liquor_list'];
+    var ingdListRes = parsedData['ingredient_list'];
+    var equipListRes = parsedData['equipment_list'];
+    var wordListRes = parsedData['word_list'];
+
+    SearchResult searchRes = new SearchResult();
+
+    LiquorList liquorList = new LiquorList();
+    if(liquorListRes != null) {
+      liquorList = LiquorList.fromJson(liquorListRes);
+      searchRes.liquorList = liquorList.liquors;
+    }
+
+    IngdList ingdList = new IngdList();
+    if(ingdListRes != null) {
+      ingdList = IngdList.fromJson(ingdListRes);
+      searchRes.ingredientList = ingdList.ingredients;
+    }
+
+    EquipList equipList = new EquipList();
+    if(equipListRes != null) {
+      equipList = EquipList.fromJson(equipListRes);
+      searchRes.equipmentList = equipList.equips;
+    }
+
+    WordList wordList = new WordList();
+    if(wordListRes != null) {
+      wordList = WordList.fromJson(wordListRes);
+      searchRes.wordList = wordList.words;
+    }
+
+    return searchRes;
+  } else {
+    throw Exception('Failed to search data.');
   }
 }
 
+class SearchParam {
+  var keyword;
+  var target;
+  var categLv;
+  var categId;
+  var nowPage;
+
+  SearchParam.set({
+    required String keyword,
+    required String target,
+    categLv,
+    categId,
+    nowPage,
+  }) : this.keyword = keyword, this.target = target, this.categLv = categLv,
+       this.categId = categId, this.nowPage = nowPage;
+
+  factory SearchParam.fromJson(Map<String, dynamic> json) {
+    SearchParam obj = SearchParam.set(
+      keyword: json['keyword'],
+      target: json['target'],
+      categLv: json['categ_lv'],
+      categId: json['categ_id'],
+      nowPage: json['now_page'],
+    );
+    return obj;
+  }
+
+}
 
 
 // 검색 결과 없음 Widget

@@ -12,7 +12,7 @@ import 'package:tipsy_mobile/classes/user.dart';
 import '../main.dart';
 
 bool isLocal = true;
-const String API_URL_LOCAL = "http://192.168.219.101:8080/svcmgr/api";
+const String API_URL_LOCAL = "http://192.168.0.21:8080/svcmgr/api";
 const String API_URL_SERVER = "http://www.tipsy.co.kr/svcmgr/api";
 
 String getApiUrl() {
@@ -35,8 +35,8 @@ void showToast(String message) {
 
 String makeImgUrl(String filePath, int size) {
 
-  print(FlutterConfig.get('API_URL'));
-  print(FlutterConfig.get('API_SUFFIX'));
+  //print(FlutterConfig.get('API_URL'));
+  //print(FlutterConfig.get('API_SUFFIX'));
   // String apiUrl = FlutterConfig.get('API_URL');
   // String apiSuffix = FlutterConfig.get('API_SUFFIX');
   // print(apiUrl + "/" + apiSuffix);

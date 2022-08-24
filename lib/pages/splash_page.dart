@@ -70,7 +70,7 @@ class _SplashPageState extends State<SplashPage> {
   void checkAutoLogin() async {
     final storage = new FlutterSecureStorage();
 
-    await storage.deleteAll();
+    //await storage.deleteAll();
     //await storage.write(key:'is_auto_login', value:'true');
 
     String? accessToken = await storage.read(key: "accessToken");

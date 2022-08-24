@@ -152,8 +152,10 @@ class _LiquorDetailState extends State<LiquorDetail> {
                 return Text('데이터를 불러오지 못했습니다.${snapshot.error}');
               }
               return Container(
-                  color: Colors.white,
-                  child: CircularProgressIndicator()
+                height: MediaQuery.of(context).size.height * 0.7,
+                child: Center(
+                    child: CircularProgressIndicator()
+                ),
               );
             }
           ),
