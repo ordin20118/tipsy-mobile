@@ -442,7 +442,7 @@ class _LiquorGridViewState extends State<LiquorGridView> {
 Future<SearchResult> searchRequest(keyword, SearchTarget target, categLv, categId, nowPage) async {
 
   log("#### [searchhLiquor] ####");
-  String searchUrl = "http://www.tipsy.co.kr/svcmgr/api/search.tipsy?target=";
+  String searchUrl = getApiUrl() + "/search.tipsy?target=";
 
   if(target == SearchTarget.all) {
     searchUrl += "all";

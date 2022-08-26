@@ -30,7 +30,7 @@ class _WordListViewState extends State<WordListView> {
       padding: EdgeInsets.all(10),
       height: MediaQuery.of(context).size.height * 0.15,
       child: Row(
-        //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: makeWordListItem(widget.wordList[index].repImg, widget.wordList[index].nameKr,
             widget.wordList[index].nameEn, widget.wordList[index].description, context)
       ),
@@ -69,34 +69,40 @@ class _WordListViewState extends State<WordListView> {
     }
 
     var nameTextWidget =
-        Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              nameKr+" ",
-              style: TextStyle(
+        SizedBox(
+          width: MediaQuery.of(context).size.width * 0.17,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                nameKr+" ",
+                style: TextStyle(
                   fontSize: 16,
-                  color: Colors.black
+                  color: Color(0xff005766),
+                ),
               ),
-            ),
-            Text(
-              nameEn,
-              style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.grey
-              ),
-            )
-          ],
+              SizedBox(height: 3),
+              Text(
+                nameEn,
+                style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.grey
+                ),
+              )
+            ],
+          ),
         );
     list.add(nameTextWidget);
 
+    list.add(SizedBox(width: 15));
+
     var descTextWidget = Expanded(
       child: Text(
-        "   " + desc,
+        desc,
         //overflow: TextOverflow.ellipsis,
         style: TextStyle(
             fontSize: 12,
-            color: Colors.grey
+            color: Colors.black54
         ),
       ),
     );

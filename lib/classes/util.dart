@@ -12,7 +12,7 @@ import 'package:tipsy_mobile/classes/user.dart';
 import '../main.dart';
 
 bool isLocal = true;
-const String API_URL_LOCAL = "http://192.168.0.21:8080/svcmgr/api";
+const String API_URL_LOCAL = "http://192.168.0.22:8080/svcmgr/api";
 const String API_URL_SERVER = "http://www.tipsy.co.kr/svcmgr/api";
 
 String getApiUrl() {

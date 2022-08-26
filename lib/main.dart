@@ -8,6 +8,7 @@ import 'package:kakao_flutter_sdk_link/kakao_flutter_sdk_link.dart';
 import 'package:tipsy_mobile/pages/home.dart';
 import 'package:tipsy_mobile/pages/search.dart';
 import 'package:tipsy_mobile/pages/splash_page.dart';
+import 'package:tipsy_mobile/pages/my_page.dart';
 import 'package:flutter_config/flutter_config.dart';
 
 void main() async {
@@ -50,17 +51,45 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
 
   int _selectedPageIndex = 0; // 선택된 페이지의 인덱스 번호
+  String _title = "TIPSY";
 
   List<Widget> _pageChildren = <Widget>[
     Home(),
     SecondRoute2(),
-    SecondRoute2()
+    MyPage()
   ];
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedPageIndex = index;
+      if(index == 2) {
+        _title = "마이페이지";
+      } else {
+        _title = "TIPSY";
+      }
     });
+  }
+
+  // test
+  List<Widget> getAppBarIcons(index) {
+    List<Widget> res = <Widget>[];
+    if(index == 2) {
+    } else {
+      res.add(
+          IconButton(
+            icon: Icon(Icons.search),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => SearchPage()),
+              );
+            },
+            color: Color(0xff005766),
+            iconSize: 30,
+          )
+      );
+    }
+    return res;
   }
 
   // main widget
@@ -70,21 +99,10 @@ class _MainPageState extends State<MainPage> {
       theme: ThemeData(fontFamily: 'NanumBarunGothic'),
       home: Scaffold(
         appBar: AppBar(
-            title: Text('TIPSY', style: TextStyle(color: Color(0xff005766), fontFamily: 'NanumBarunGothicBold')),
+            title: Text(_title, style: TextStyle(color: Color(0xff005766), fontFamily: 'NanumBarunGothicBold')),
             //backgroundColor: Color(0xff005766),
             backgroundColor: Color(0xffffffff),
-            actions: [
-              IconButton(icon: Icon(Icons.search),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => SearchPage()),
-                  );
-                },
-                color: Color(0xff005766),
-                iconSize: 30,
-              )
-            ]
+            actions: getAppBarIcons(_selectedPageIndex),
         ),
         body: _pageChildren.elementAt(_selectedPageIndex),
         bottomNavigationBar: BottomNavigationBar(
