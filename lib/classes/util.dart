@@ -6,13 +6,12 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter_config/flutter_config.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
 import 'package:tipsy_mobile/classes/user.dart';
-
+import 'package:tipsy_mobile/classes/ui_util.dart';
 import '../main.dart';
 
 bool isLocal = true;
-const String API_URL_LOCAL = "http://192.168.0.22:8080/svcmgr/api";
+const String API_URL_LOCAL = "http://192.168.219.101:8080/svcmgr/api";
 const String API_URL_SERVER = "http://www.tipsy.co.kr/svcmgr/api";
 
 String getApiUrl() {
