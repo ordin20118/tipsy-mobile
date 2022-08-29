@@ -54,6 +54,8 @@ class _SplashPageState extends State<SplashPage> {
   void initState() {
     super.initState();
     log("Splash Page initState()");
+
+    //setTestToken(); // just use test
     checkAutoLogin();
   }
 

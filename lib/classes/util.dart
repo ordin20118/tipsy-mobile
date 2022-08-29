@@ -14,6 +14,14 @@ bool isLocal = true;
 const String API_URL_LOCAL = "http://192.168.0.13:8080/svcmgr/api";
 const String API_URL_SERVER = "http://www.tipsy.co.kr/svcmgr/api";
 
+void setTestToken() async {
+  final storage = new FlutterSecureStorage();
+  await storage.write(key:'accessToken', value: 'AUTOmKFxUkmakDV9w8z/yLOxrbm0WwxgbNpsOS6HhoUAGNY=');
+  await storage.write(key:'platform', value: '1');
+  await storage.write(key:'id', value: '10');
+  await storage.write(key:'email', value:'kimho2018@naver.com');
+}
+
 String getApiUrl() {
   return isLocal ? API_URL_LOCAL : API_URL_SERVER;
 }
@@ -44,9 +52,6 @@ String makeImgUrl(String filePath, int size) {
 }
 
 
-
-
-
 // request access token
 Future<AccessToken> requestAccessToken(int platform, String email) async {
 
@@ -69,7 +74,6 @@ Future<AccessToken> requestAccessToken(int platform, String email) async {
   );
 
   if (response.statusCode == 200) {
-
     String resString = response.body.toString();
     log("[REQ AccessToken RES]:" + resString);
     var parsed = json.decode(resString);
@@ -77,12 +81,9 @@ Future<AccessToken> requestAccessToken(int platform, String email) async {
 
     AccessToken token = new AccessToken.fromJson(tokenObj);
     return token;
-
   } else {
     throw Exception('Failed issue login token.');
   }
-
-
 }
 
 // request auto login
@@ -128,12 +129,10 @@ Future<bool> autoLogin(int platform, String email, String accessToken) async {
         await storage.write(key:'id', value:token.userId.toString());
         await storage.write(key:'email', value:email);
       }
-
       return true;
     } else {
       return false;
     }
-
   } else {
     throw Exception('Failed auto login.');
   }
