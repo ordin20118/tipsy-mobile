@@ -7,6 +7,7 @@ import 'dart:convert';
 import 'package:tipsy_mobile/ui/form.dart';
 import 'package:tipsy_mobile/classes/user.dart';
 import 'package:tipsy_mobile/classes/util.dart';
+import 'package:tipsy_mobile/classes/ui_util.dart';
 
 class JoinPage extends StatefulWidget {
   JoinPage({Key? key, required this.platform, required this.email, required this.nickname,
@@ -45,6 +46,11 @@ class _JoinPageState extends State<JoinPage> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
+        leading: IconButton(icon: Icon(Icons.arrow_back_ios),
+          onPressed: () { Navigator.pop(context);},
+          color: Colors.black,
+          iconSize: 25,
+        ),
         titleSpacing: 3,
         title: Text(
           '회원가입',
@@ -52,13 +58,6 @@ class _JoinPageState extends State<JoinPage> {
         ),
         backgroundColor: Colors.white,
         actions: [],
-        leading: GestureDetector(
-          child: Icon( Icons.arrow_back_ios, color: Colors.black, ),
-          onTap: () {
-            Navigator.pop(context);
-          } ,
-        ),
-        leadingWidth: MediaQuery.of(context).size.width * 0.1,
       ),
       body: Container(
         height: MediaQuery.of(context).size.height * 0.9,

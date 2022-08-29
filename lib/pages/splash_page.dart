@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:tipsy_mobile/classes/ui_util.dart';
 import 'package:tipsy_mobile/main.dart';
 import 'package:tipsy_mobile/pages/login_page.dart';
 import 'package:tipsy_mobile/classes/util.dart';
@@ -21,18 +22,7 @@ class _SplashPageState extends State<SplashPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        elevation: 0,
-        titleSpacing: 3,
-        title: Text(''),
-        backgroundColor: Colors.white,
-        actions: [],
-        leading: GestureDetector(
-          child: Icon( Icons.arrow_back_ios, color: Colors.black, ),
-          onTap: () {
-            Navigator.pop(context);
-          } ,
-        ),
-        leadingWidth: MediaQuery.of(context).size.width * 0.1,
+          toolbarHeight: 0,
       ),
       body: Container(
         height: MediaQuery.of(context).size.height,
@@ -81,30 +71,29 @@ class _SplashPageState extends State<SplashPage> {
       String? email = await storage.read(key: "email");
 
       if(platformStr == null || email == null) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => LoginPage()),
-        );
+        goToLoginPage(context);
       }
 
       int platform = int.parse(platformStr!);
-      bool isLogin = await autoLogin(platform, email!, accessToken);
+
+      bool isLogin = false;
+      try{
+        isLogin = await autoLogin(platform, email!, accessToken);
+      } catch(e) {
+        goToLoginPage(context);
+      }
 
       if(isLogin) {
         // 메인 페이지로
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => MainPage()),
-        );
+        goToMainPage(context);
       }
 
     } else {
       print("로그인 페이지로 이동");
       //로그인 페이지로
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => LoginPage()),
-      );
+      goToLoginPage(context);
     }
   }
+
+
 }

@@ -9,6 +9,7 @@ import 'package:tipsy_mobile/pages/home.dart';
 import 'package:tipsy_mobile/pages/search.dart';
 import 'package:tipsy_mobile/pages/splash_page.dart';
 import 'package:tipsy_mobile/pages/my_page.dart';
+import 'package:tipsy_mobile/pages/setting_page.dart';
 import 'package:flutter_config/flutter_config.dart';
 
 void main() async {
@@ -73,6 +74,19 @@ class _MainPageState extends State<MainPage> {
   List<Widget> getAppBarIcons(index) {
     List<Widget> res = <Widget>[];
     if(index == 2) {
+      res.add(
+          IconButton(
+            icon: Icon(Icons.settings),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => SettingPage()),
+              );
+            },
+            color: Color(0xff005766),
+            iconSize: 22,
+          )
+      );
     } else {
       res.add(
           IconButton(

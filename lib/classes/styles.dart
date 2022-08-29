@@ -1,8 +1,18 @@
 import 'package:flutter/material.dart';
 
+TextStyle boldTextBlack = TextStyle(
+    color: Colors.black,
+    fontFamily: 'NanumBarunGothic'
+);
+
 TextStyle commonTextBlack = TextStyle(
     color: Colors.black,
     fontFamily: 'NanumBarunGothicLight'
+);
+
+TextStyle ultraLightTextBlack = TextStyle(
+    color: Colors.black,
+    fontFamily: 'NanumBarunGothicUltraLight'
 );
 
 TextStyle commonTextWhite = TextStyle(

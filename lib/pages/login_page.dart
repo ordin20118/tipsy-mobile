@@ -10,6 +10,7 @@ import 'package:kakao_flutter_sdk_talk/kakao_flutter_sdk_talk.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:tipsy_mobile/classes/util.dart';
+import 'package:tipsy_mobile/classes/ui_util.dart';
 import 'package:tipsy_mobile/classes/user.dart';
 import 'package:tipsy_mobile/pages/home.dart';
 import 'dart:convert';
@@ -136,10 +137,10 @@ class _LoginPageState extends State<LoginPage> {
         // 1. 서비스 토큰 발급
         AccessToken token = await requestAccessToken(USER_PLATFORM_KAKAO, email!);
 
-        if(token != null && token.tokenHash.length > 0) {
+        if(token != null && token.tokenHash.length > 0 && email != null) {
 
           // 2. 자동 로그인 처리
-          bool isLogin = await autoLogin(USER_PLATFORM_KAKAO, email!, token.tokenHash);
+          bool isLogin = await autoLogin(USER_PLATFORM_KAKAO, email, token.tokenHash);
 
           if(isLogin) {
             final storage = new FlutterSecureStorage();

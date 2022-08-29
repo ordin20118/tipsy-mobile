@@ -11,15 +11,11 @@ import 'package:tipsy_mobile/classes/ui_util.dart';
 import '../main.dart';
 
 bool isLocal = true;
-const String API_URL_LOCAL = "http://192.168.219.101:8080/svcmgr/api";
+const String API_URL_LOCAL = "http://192.168.0.13:8080/svcmgr/api";
 const String API_URL_SERVER = "http://www.tipsy.co.kr/svcmgr/api";
 
 String getApiUrl() {
-  if(isLocal) {
-    return API_URL_LOCAL;
-  } else {
-    return API_URL_SERVER;
-  }
+  return isLocal ? API_URL_LOCAL : API_URL_SERVER;
 }
 
 void showToast(String message) {
@@ -47,12 +43,7 @@ String makeImgUrl(String filePath, int size) {
   return "http://tipsy.co.kr/svcmgr/api" + "/image/" + pathArr.last + ".tipsy?size=" + size.toString();
 }
 
-void goToMainPage(BuildContext context) {
-  Navigator.push(
-    context,
-    MaterialPageRoute(builder: (context) => MainPage()),
-  );
-}
+
 
 
 

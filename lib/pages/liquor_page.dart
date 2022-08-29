@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:tipsy_mobile/classes/liquor.dart';
 import 'package:tipsy_mobile/classes/util.dart';
@@ -25,17 +24,21 @@ class _LiquorDetailState extends State<LiquorDetail> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
+        leading: IconButton(icon: Icon(Icons.arrow_back_ios),
+          onPressed: () { Navigator.pop(context);},
+          color: Colors.black,
+          iconSize: 25,
+        ),
         titleSpacing: 3,
         title: Text(''),
         backgroundColor: Colors.white,
-        actions: [],
-        leading: GestureDetector(
-          child: Icon( Icons.arrow_back_ios, color: Colors.black, ),
-          onTap: () {
-            Navigator.pop(context);
-          } ,
-        ),
-        leadingWidth: MediaQuery.of(context).size.width * 0.1,
+        actions: [
+          IconButton(icon: Icon(Icons.ios_share),
+            onPressed: () { Navigator.pop(context);},
+            color: Colors.black,
+            iconSize: 25,
+          )
+        ],
       ),
       body: Container(
         child: SingleChildScrollView(

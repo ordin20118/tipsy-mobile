@@ -124,6 +124,12 @@ class _SearchPageState extends State<SearchPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(icon: Icon(Icons.arrow_back_ios),
+          onPressed: () { Navigator.pop(context);},
+          color: Colors.black,
+          iconSize: 25,
+        ),
+        //leadingWidth: MediaQuery.of(context).size.width * 0.1,
         titleSpacing: 3,
         title: TextFormField(
           cursorHeight: 15,
@@ -150,13 +156,6 @@ class _SearchPageState extends State<SearchPage> {
         ),
         backgroundColor: Colors.white,
         actions: [],
-        leading: GestureDetector(
-          child: Icon( Icons.arrow_back_ios, color: Colors.black, ),
-          onTap: () {
-            Navigator.pop(context);
-          } ,
-        ),
-        leadingWidth: MediaQuery.of(context).size.width * 0.1,
       ),
       body: Container(
         child: selectWidget(),

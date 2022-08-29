@@ -184,10 +184,15 @@ class Home extends StatelessWidget {
                         borderRadius: const BorderRadius.all(const Radius.circular(10.0))
                     ),
                     elevation: 4.0, // 그림자 깊이
-                    child: SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.9,
-                      height: MediaQuery.of(context).size.height * 0.08,
-                      child: Center(child: Text('나만의 칵테일 등록하기', style: boxMenuWhite)),
+                    child: InkWell(
+                      onTap: () {
+                        goToCocktailRegistPage(context);
+                      },
+                      child: SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.9,
+                        height: MediaQuery.of(context).size.height * 0.08,
+                        child: Center(child: Text('나만의 칵테일 등록하기', style: boxMenuWhite)),
+                      ),
                     ),
                   ),
               ),
