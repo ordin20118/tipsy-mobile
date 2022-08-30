@@ -5,13 +5,15 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter_config/flutter_config.dart';
 import 'package:http/http.dart' as http;
+import 'package:tipsy_mobile/classes/recommand.dart';
 import 'dart:convert';
 import 'package:tipsy_mobile/classes/user.dart';
 import 'package:tipsy_mobile/classes/ui_util.dart';
+import 'package:tipsy_mobile/classes/word.dart';
 import '../main.dart';
 
 bool isLocal = true;
-const String API_URL_LOCAL = "http://192.168.0.13:8080/svcmgr/api";
+const String API_URL_LOCAL = "http://192.168.0.18:8080/svcmgr/api";
 const String API_URL_SERVER = "http://www.tipsy.co.kr/svcmgr/api";
 
 void setTestToken() async {
@@ -50,7 +52,6 @@ String makeImgUrl(String filePath, int size) {
   //return apiUrl + "/image/" + filePath + "_" + size.toString() + ".png" + apiSuffix;
   return "http://tipsy.co.kr/svcmgr/api" + "/image/" + pathArr.last + ".tipsy?size=" + size.toString();
 }
-
 
 // request access token
 Future<AccessToken> requestAccessToken(int platform, String email) async {
@@ -135,6 +136,49 @@ Future<bool> autoLogin(int platform, String email, String accessToken) async {
     }
   } else {
     throw Exception('Failed auto login.');
+  }
+}
+
+
+// request today word
+Future<Word> requestTodayWord() async {
+
+  print("#### [requestTodayWord] ####");
+  String reqUrl = getApiUrl() + "/word/random.tipsy";
+  log("[Request today word URL]:" + reqUrl);
+  final Uri url = Uri.parse(reqUrl);
+  final response = await http.get(url);
+
+  if (response.statusCode == 200) {
+    String resString = response.body.toString();
+    var parsed = json.decode(resString);
+    var listData = parsed['list'];
+    WordList wordList = new WordList.fromJson(listData);
+    return wordList.words.first;
+  } else {
+    throw Exception('Failed get today word.');
+  }
+}
+
+// request today recommand
+Future<Recommand> requestTodayRecommand() async {
+
+  print("#### [requestTodayRecommand] ####");
+  String reqUrl = getApiUrl() + "/recommand/today.tipsy";
+  log("[Request today recommand URL]:" + reqUrl);
+  final Uri url = Uri.parse(reqUrl);
+  final response = await http.get(url);
+
+  if (response.statusCode == 200) {
+    String resString = response.body.toString();
+    var parsed = json.decode(resString);
+    var data = parsed['data'];
+    log("shit");
+    Recommand recomm = new Recommand.fromJson(data);
+    log("shit end");
+    return recomm;
+  } else {
+    throw Exception('Failed get today recommand.');
   }
 }
 

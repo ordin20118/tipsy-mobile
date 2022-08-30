@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 
 class Word {
@@ -26,7 +28,7 @@ class Word {
         nameKr: json['name_kr'],
         nameEn: json['name_en'],
         description: json['description'],
-        repImg: json['rep_img'],
+        repImg: json['rep_img'] == null ? '' : json['rep_img'],
         regDate: DateTime.fromMillisecondsSinceEpoch(json['reg_date'] * 1000)
     );
 

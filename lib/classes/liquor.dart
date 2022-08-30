@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 
 class Liquor {
@@ -62,8 +64,11 @@ class Liquor {
     // set late variable
     // category3_id
     // category4_id
-    // category3_ame
-    // category4_ame
+    // category3_name
+    tmp._category3Name = json['category3_name'] != null ? json['category3_name'] : "";
+    // category4_name
+    tmp._category4Name = json['category4_name'] != null ? json['category4_name'] : "";
+
     // vintage
     // country_id
     // description
@@ -75,6 +80,21 @@ class Liquor {
     return tmp;
   }
 
+  String getLastCategoryName() {
+    String res = '';
+    if(_category4Name != "") {
+      res = _category4Name;
+    } else if(_category3Name != "") {
+      res = _category3Name;
+    } else if(_category2Name != "") {
+      res = _category2Name;
+    } else if(_category1Name != "") {
+      res = _category1Name;
+    }
+    return res;
+  }
+
+  // auto created setter & getter
   int get liquorId => _liquorId;
 
   set liquorId(int value) {

@@ -470,7 +470,7 @@ Future<SearchResult> searchRequest(keyword, SearchTarget target, categLv, categI
   }
 
   final Uri url = Uri.parse(searchUrl);
-  log("[SEARCH UR:]:" + searchUrl);
+  log("[SEARCH URL:]:" + searchUrl);
 
   final response = await http.get(url);
   if (response.statusCode == 200) {

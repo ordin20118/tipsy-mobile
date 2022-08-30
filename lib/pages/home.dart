@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:marquee/marquee.dart';
+import '../classes/recommand.dart';
 import '../classes/ui_util.dart';
+import '../classes/util.dart';
+import '../classes/word.dart';
 
-class Home extends StatelessWidget {
+class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
 
   static TextStyle boxMenuWhite = TextStyle(
@@ -14,6 +17,15 @@ class Home extends StatelessWidget {
       color: Color(0xff8748E1),
       fontWeight: FontWeight.bold
   );
+
+  @override
+  State<Home> createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+
+  late Future<Recommand> recommand;
+  late Future<Word> word;
 
   @override
   Widget build(BuildContext context) {
@@ -32,95 +44,185 @@ class Home extends StatelessWidget {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.8,
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(15.0),
-                            child: Text(
-                              "추천",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 14
+                child: FutureBuilder<Recommand>(
+                  future: recommand,
+                  builder: (context, snapshot) {
+                    if(snapshot.hasData) {
+                      return SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.8,
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(15.0),
+                                  child: Text(
+                                    "추천",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 14
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(width: MediaQuery.of(context).size.width * 0.5),
+                                IconButton(
+                                  icon: Icon(Icons.bookmark_border),
+                                  //icon: Icon(Icons.bookmark),
+                                  onPressed: () {
+
+                                  },
+                                  color: Colors.white,
+                                  iconSize: 30,
+                                )
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                SizedBox(
+                                  width: MediaQuery.of(context).size.width * 0.5,
+                                  height: MediaQuery.of(context).size.height * 0.4,
+                                  child: Image.network(
+                                    makeImgUrl(snapshot.data!.liquorList.first.repImg, 300),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(20, 0, 20, 5),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    snapshot.data!.liquorList.first.getLastCategoryName(),
+                                    style: TextStyle(
+                                        color: Colors.white60,
+                                        fontSize: 12
+                                    ),
+                                  )
+                                ],
                               ),
                             ),
-                          ),
-                          SizedBox(width: MediaQuery.of(context).size.width * 0.5),
-                          IconButton(
-                            icon: Icon(Icons.bookmark_border),
-                            //icon: Icon(Icons.bookmark),
-                            onPressed: () {
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(20, 0, 20, 7),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    snapshot.data!.liquorList.first.nameKr + " ",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 17
+                                    ),
+                                  ),
+                                  Text(
+                                    " " + snapshot.data!.liquorList.first.nameEn,
+                                    style: TextStyle(
+                                        color: Colors.white60,
+                                        fontSize: 13
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: makeStarUi(3),
+                              ),
+                            )
+                          ],
+                        ),
+                      );
+                    } else if(snapshot.hasError) {
+                      return Container(height: 0,);
+                    }
 
-                            },
-                            color: Colors.white,
-                            iconSize: 30,
+                    // loading ui
+                    return SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.8,
+                      child: Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(15.0),
+                                child: Text(
+                                  "추천",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 14
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: MediaQuery.of(context).size.width * 0.5),
+                              IconButton(
+                                icon: Icon(Icons.bookmark_border),
+                                //icon: Icon(Icons.bookmark),
+                                onPressed: () {
+                                },
+                                color: Colors.white,
+                                iconSize: 30,
+                              )
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SizedBox(
+                                //width: MediaQuery.of(context).size.width * 0.5,
+                                height: MediaQuery.of(context).size.height * 0.35,
+                                child: Center(child: CircularProgressIndicator()),
+                              ),
+                            ],
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(20, 0, 20, 5),
+                            child: Row(
+                              children: [
+                                Text(
+                                  '',
+                                  style: TextStyle(
+                                      color: Colors.white60,
+                                      fontSize: 15
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(20, 0, 20, 7),
+                            child: Row(
+                              children: [
+                                Text(
+                                  " ",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 19
+                                  ),
+                                ),
+                                Text(
+                                  " ",
+                                  style: TextStyle(
+                                      color: Colors.white60,
+                                      fontSize: 15
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: makeStarUi(3),
+                            ),
                           )
                         ],
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.5,
-                            height: MediaQuery.of(context).size.height * 0.35,
-                            child: Image.asset('assets/images/13_300.png'),
-                            // Expanded(
-                            //     child: Padding(
-                            //       padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                            //       child: Image.asset('assets/images/13_300.png'),
-                            //     )
-                            // ),
-                          ),
-                        ],
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(20, 0, 20, 5),
-                        child: Row(
-                          children: [
-                            Text(
-                              '위스키',
-                              style: TextStyle(
-                                  color: Colors.white60,
-                                  fontSize: 15
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(20, 0, 20, 7),
-                        child: Row(
-                          children: [
-                            Text(
-                              '잭다니엘 ',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 19
-                              ),
-                            ),
-                            Text(
-                              ' Jack Dinel',
-                              style: TextStyle(
-                                  color: Colors.white60,
-                                  fontSize: 15
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: makeStarUi(3),
-                        ),
-                      )
-                    ],
-                  ),
+                    );
+                  }
                 ),
               ),
               Padding(
@@ -138,42 +240,114 @@ class Home extends StatelessWidget {
                         ),
                       ],
                     ),
-
                   ],
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(15, 0, 10, 0),
-                child: Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(13),
-                    child: SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.8,
-                      child: Row(
-                        children: [
-                          Text(
-                            '체이서',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 18
+                child: FutureBuilder<Word> (
+                  future: word,
+                  builder: (context, snapshot) {
+                    if(snapshot.hasData){
+                      return Card(
+                        child: Padding(
+                          padding: const EdgeInsets.all(13),
+                          child: SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.8,
+                            child: Row(
+                              children: [
+                                Text(
+                                  snapshot.data!.nameKr,
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 18
+                                  ),
+                                ),
+                                SizedBox(width: MediaQuery.of(context).size.width * 0.02),
+                                Expanded(
+                                    child: Container(
+                                      //width: MediaQuery.of(context).size.width * 0.5,
+                                      height: 20,
+                                      child: Marquee(
+                                        text: snapshot.data!.description,
+                                        blankSpace: 100.0,
+                                        scrollAxis: Axis.horizontal,
+                                        velocity: 27.0,
+                                        accelerationDuration: Duration(seconds: 1),
+                                      ),
+                                    )
+                                ),
+                              ],
                             ),
                           ),
-                          SizedBox(width: MediaQuery.of(context).size.width * 0.02),
-                          Container(
-                            width: MediaQuery.of(context).size.width * 0.6,
-                            height: 20,
-                            child: Marquee(
-                              text: '독한 술이나 칵테일 뒤에 마시는 물이나 음료를 말한다.',
-                              blankSpace: 100.0,
-                              scrollAxis: Axis.horizontal,
-                              velocity: 27.0,
-                              accelerationDuration: Duration(seconds: 1),
+                        ),
+                      );
+                    } else if(snapshot.hasError) {
+                      return Card(
+                        child: Padding(
+                          padding: const EdgeInsets.all(13),
+                          child: SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.8,
+                            child: Row(
+                              children: [
+                                Text(
+                                  '체이서',
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 18
+                                  ),
+                                ),
+                                SizedBox(width: MediaQuery.of(context).size.width * 0.02),
+                                Container(
+                                  width: MediaQuery.of(context).size.width * 0.6,
+                                  height: 20,
+                                  child: Marquee(
+                                    text: '독한 술이나 칵테일 뒤에 마시는 물이나 음료를 말한다.',
+                                    blankSpace: 100.0,
+                                    scrollAxis: Axis.horizontal,
+                                    velocity: 27.0,
+                                    accelerationDuration: Duration(seconds: 1),
+                                  ),
+                                )
+                              ],
                             ),
-                          )
-                        ],
+                          ),
+                        ),
+                      );
+                    }
+
+                    return Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(13),
+                        child: SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.8,
+                          child: Row(
+                            children: [
+                              Text(
+                                ' ',
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 18
+                                ),
+                              ),
+                              SizedBox(width: MediaQuery.of(context).size.width * 0.02),
+                              Container(
+                                width: MediaQuery.of(context).size.width * 0.6,
+                                height: 20,
+                                child: Marquee(
+                                  text: '               ',
+                                  blankSpace: 100.0,
+                                  scrollAxis: Axis.horizontal,
+                                  velocity: 27.0,
+                                  accelerationDuration: Duration(seconds: 1),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
+                    );
+                  },
                 ),
               ),
               Padding(
@@ -191,7 +365,7 @@ class Home extends StatelessWidget {
                       child: SizedBox(
                         width: MediaQuery.of(context).size.width * 0.9,
                         height: MediaQuery.of(context).size.height * 0.08,
-                        child: Center(child: Text('나만의 칵테일 등록하기', style: boxMenuWhite)),
+                        child: Center(child: Text('나만의 칵테일 등록하기', style: Home.boxMenuWhite)),
                       ),
                     ),
                   ),
@@ -203,7 +377,6 @@ class Home extends StatelessWidget {
       ),
     );
   }
-
 
   Widget buildHomeScreenV1(BuildContext context) {
     return Container(
@@ -316,7 +489,7 @@ class Home extends StatelessWidget {
                                   ),
                                   elevation: 4.0, // 그림자 깊이
                                   child: Center(
-                                    child: Text('나의 술 지식 테스트', style: boxMenuPupple),
+                                    child: Text('나의 술 지식 테스트', style: Home.boxMenuPupple),
                                   ),
                                 )
                             ),
@@ -354,7 +527,7 @@ class Home extends StatelessWidget {
                 ),
                 elevation: 4.0, // 그림자 깊이
                 child: Center(
-                    child: Text('Top10 순위보기', style: boxMenuPupple)),
+                    child: Text('Top10 순위보기', style: Home.boxMenuPupple)),
               )
           ),
         ),
@@ -369,7 +542,7 @@ class Home extends StatelessWidget {
                   ),
                   elevation: 4.0, // 그림자 깊이
                   child: Center(
-                    child: Text('MBTI', style: boxMenuWhite),
+                    child: Text('MBTI', style: Home.boxMenuWhite),
                   )
               )
           ),
@@ -378,4 +551,15 @@ class Home extends StatelessWidget {
     );
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    recommand = requestTodayRecommand();
+    word = requestTodayWord();
+  }
 }
