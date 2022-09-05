@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
@@ -12,6 +13,8 @@ import 'package:tipsy_mobile/pages/my_page.dart';
 import 'package:tipsy_mobile/pages/setting_page.dart';
 import 'package:flutter_config/flutter_config.dart';
 
+import 'classes/ui_util.dart';
+
 void main() async {
   KakaoSdk.init(nativeAppKey: '87257d8db7512fd56ca5157564988776');
 
@@ -19,6 +22,9 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized(); // Required by FlutterConfig
   await FlutterConfig.loadEnvVariables();
   print(FlutterConfig.get('API_URL'));
+
+  final cameras = await availableCameras();
+  log(cameras.toString());
 
   runApp(
     MaterialApp(
@@ -55,20 +61,9 @@ class _MainPageState extends State<MainPage> {
 
   List<Widget> _pageChildren = <Widget>[
     Home(),
-    SecondRoute2(),
+    CreateMenuPage(),
     MyPage()
   ];
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedPageIndex = index;
-      if(index == 2) {
-        _title = "마이페이지";
-      } else {
-        _title = "TIPSY";
-      }
-    });
-  }
 
   // test
   List<Widget> getAppBarIcons(index) {
@@ -133,34 +128,20 @@ class _MainPageState extends State<MainPage> {
               label: "마이페이지",
             ),
           ],
-          selectedLabelStyle: TextStyle(fontWeight: FontWeight.bold,fontSize: 11),
+          selectedLabelStyle: TextStyle(fontSize: 13),
           selectedItemColor: Color(0xdd005766),
-          onTap: _onItemTapped,
-          // onTap: (int index) {
-          //   print("INDEX is $index");
-          //   _selectedPageIndex = index;
-          //   switch (index) {
-          //     case 0:
-          //       // Navigator.push(
-          //       //   context,
-          //       //   MaterialPageRoute(builder: (context) => SecondRoute()),
-          //       // );
-          //       break;
-          //     case 1:
-          //       Navigator.push(
-          //         context,
-          //         MaterialPageRoute(builder: (context) => SecondRoute()),
-          //       );
-          //       break;
-          //     case 2:
-          //       Navigator.push(
-          //         context,
-          //         MaterialPageRoute(builder: (context) => SecondRoute()),
-          //       );
-          //       break;
-          //   }
-          // },
-
+          //unselectedItemColor: Colors.grey,
+          currentIndex: _selectedPageIndex,
+          onTap: (int index) {
+            setState(() {
+              _selectedPageIndex = index;
+              if(index == 2) {
+                _title = "마이페이지";
+              } else {
+                _title = "TIPSY";
+              }
+            });
+          },
         ),
       ),
     );
@@ -210,15 +191,37 @@ class SecondRoute extends StatelessWidget {
   }
 }
 
-class SecondRoute2 extends StatelessWidget {
+class CreateMenuPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: SingleChildScrollView(
         child: Column(
-          children: [Text("This is second page.")],
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Card(
+                  color: Color(0xffC98AFF),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: const BorderRadius.all(const Radius.circular(10.0))
+                  ),
+                  elevation: 4.0, // 그림자 깊이
+                  child: InkWell(
+                    onTap: () {
+                      goToCameraPage(context);
+                    },
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.7,
+                      height: MediaQuery.of(context).size.height * 0.08,
+                      child: Center(child: Text('사진으로 주류 찾기', style: Home.boxMenuWhite)),
+                    ),
+                  ),
+                ),
+              ],
+            )
+          ],
         ),
-      ),
     );
   }
 }

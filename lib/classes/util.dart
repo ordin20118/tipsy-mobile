@@ -13,7 +13,7 @@ import 'package:tipsy_mobile/classes/word.dart';
 import '../main.dart';
 
 bool isLocal = true;
-const String API_URL_LOCAL = "http://192.168.0.18:8080/svcmgr/api";
+const String API_URL_LOCAL = "http://192.168.0.10:8080/svcmgr/api";
 const String API_URL_SERVER = "http://www.tipsy.co.kr/svcmgr/api";
 
 void setTestToken() async {
@@ -26,16 +26,6 @@ void setTestToken() async {
 
 String getApiUrl() {
   return isLocal ? API_URL_LOCAL : API_URL_SERVER;
-}
-
-void showToast(String message) {
-  Fluttertoast.showToast(
-    fontSize: 13,
-    msg: '   $message   ',
-    backgroundColor: Colors.black,
-    toastLength: Toast.LENGTH_SHORT,
-    gravity: ToastGravity.BOTTOM,
-  );
 }
 
 String makeImgUrl(String filePath, int size) {
@@ -53,26 +43,55 @@ String makeImgUrl(String filePath, int size) {
   return "http://tipsy.co.kr/svcmgr/api" + "/image/" + pathArr.last + ".tipsy?size=" + size.toString();
 }
 
+Future<http.Response> requestGET(path) async {
+
+  // get access token
+  final storage = new FlutterSecureStorage();
+  String? accessToken = await storage.read(key: "accessToken");
+
+  String reqUrl = getApiUrl() + path;
+  log("[Request GET URL]:" + reqUrl);
+  final Uri url = Uri.parse(reqUrl);
+  final response = await http.get(
+    url,
+    headers: <String, String> {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + accessToken!
+    },
+  );
+  return response;
+}
+
+Future<http.Response> requestPOST(path, data) async {
+
+  final storage = new FlutterSecureStorage();
+  String? accessToken = await storage.read(key: "accessToken");
+
+  String reqUrl = getApiUrl() + path;
+  log("[Request POST URL]:" + reqUrl);
+  final Uri url = Uri.parse(reqUrl);
+  final response = await http.post(
+    url,
+    headers: <String, String> {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + accessToken!
+    },
+    body: json.encode(data),
+  );
+  return response;
+}
+
 // request access token
 Future<AccessToken> requestAccessToken(int platform, String email) async {
 
   print("#### [requestAccessToken] ####");
-  String reqUrl = getApiUrl() + "/user/issueToken.tipsy";
-  log("[Request acess token URL]:" + reqUrl);
-  final Uri url = Uri.parse(reqUrl);
-
+  String reqUrl = "/user/issueToken.tipsy";
   var bodyData = {
     "platform": platform,
     "email": email
   };
 
-  http.Response response = await http.post(
-    url,
-    headers: <String, String> {
-      'Content-Type': 'application/json',
-    },
-    body: json.encode(bodyData),
-  );
+  final response = await requestPOST(reqUrl, bodyData);
 
   if (response.statusCode == 200) {
     String resString = response.body.toString();
@@ -91,31 +110,18 @@ Future<AccessToken> requestAccessToken(int platform, String email) async {
 Future<bool> autoLogin(int platform, String email, String accessToken) async {
 
   print("#### [autoLogin] ####");
-
-  print(FlutterConfig.get('API_URL'));
-
-  String loginUrl = getApiUrl() + "/user/login.tipsy";
-  log("[Auto login URL]:" + loginUrl);
-  final Uri url = Uri.parse(loginUrl);
-
+  String loginUrl = "/user/login.tipsy";
   var bodyData = {
     "platform": platform,
     "email": email,
     "access_token": accessToken
   };
 
-  http.Response response = await http.post(
-    url,
-    headers: <String, String> {
-      'Content-Type': 'application/json',
-    },
-    body: json.encode(bodyData),
-  );
+  final response = await requestPOST(loginUrl, bodyData);
 
   if (response.statusCode == 200) {
 
     String bodyString = response.body.toString();
-
     log("[AutoLogin RES]:" + bodyString);
 
     var res = json.decode(bodyString);
@@ -144,10 +150,7 @@ Future<bool> autoLogin(int platform, String email, String accessToken) async {
 Future<Word> requestTodayWord() async {
 
   print("#### [requestTodayWord] ####");
-  String reqUrl = getApiUrl() + "/word/random.tipsy";
-  log("[Request today word URL]:" + reqUrl);
-  final Uri url = Uri.parse(reqUrl);
-  final response = await http.get(url);
+  final response = await requestGET("/word/random.tipsy");
 
   if (response.statusCode == 200) {
     String resString = response.body.toString();
@@ -164,18 +167,13 @@ Future<Word> requestTodayWord() async {
 Future<Recommand> requestTodayRecommand() async {
 
   print("#### [requestTodayRecommand] ####");
-  String reqUrl = getApiUrl() + "/recommand/today.tipsy";
-  log("[Request today recommand URL]:" + reqUrl);
-  final Uri url = Uri.parse(reqUrl);
-  final response = await http.get(url);
+  final response = await requestGET("/recommand/today.tipsy");
 
   if (response.statusCode == 200) {
     String resString = response.body.toString();
     var parsed = json.decode(resString);
     var data = parsed['data'];
-    log("shit");
     Recommand recomm = new Recommand.fromJson(data);
-    log("shit end");
     return recomm;
   } else {
     throw Exception('Failed get today recommand.');

@@ -441,7 +441,7 @@ class _LiquorGridViewState extends State<LiquorGridView> {
 Future<SearchResult> searchRequest(keyword, SearchTarget target, categLv, categId, nowPage) async {
 
   log("#### [searchhLiquor] ####");
-  String searchUrl = getApiUrl() + "/search.tipsy?target=";
+  String searchUrl = "/search.tipsy?target=";
 
   if(target == SearchTarget.all) {
     searchUrl += "all";
@@ -469,10 +469,8 @@ Future<SearchResult> searchRequest(keyword, SearchTarget target, categLv, categI
     searchUrl += "&paging.nowPage=" + nowPage.toString();
   }
 
-  final Uri url = Uri.parse(searchUrl);
-  log("[SEARCH URL:]:" + searchUrl);
+  final response = await requestGET(searchUrl);
 
-  final response = await http.get(url);
   if (response.statusCode == 200) {
 
     String resString = response.body.toString();

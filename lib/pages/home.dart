@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:marquee/marquee.dart';
 import '../classes/recommand.dart';
@@ -108,14 +110,21 @@ class _HomeState extends State<Home> {
                               child: Row(
                                 children: [
                                   Text(
-                                    snapshot.data!.liquorList.first.nameKr + " ",
+                                    snapshot.data!.liquorList.first.nameKr,
                                     style: TextStyle(
                                         color: Colors.white,
                                         fontSize: 17
                                     ),
                                   ),
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(20, 0, 20, 7),
+                              child: Row(
+                                children: [
                                   Text(
-                                    " " + snapshot.data!.liquorList.first.nameEn,
+                                    snapshot.data!.liquorList.first.nameEn,
                                     style: TextStyle(
                                         color: Colors.white60,
                                         fontSize: 13
@@ -559,6 +568,7 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
+    log("home page initState()");
     recommand = requestTodayRecommand();
     word = requestTodayWord();
   }
