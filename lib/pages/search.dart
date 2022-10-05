@@ -16,6 +16,7 @@ import 'package:tipsy_mobile/classes/util.dart';
 import 'package:tipsy_mobile/pages/collector/equip_view.dart';
 import 'package:http/http.dart' as http;
 
+import '../classes/ui_util.dart';
 import '../classes/word.dart';
 import 'collector/ingredient_view.dart';
 import 'collector/word_view.dart';
@@ -303,9 +304,9 @@ class LiquorScrollController extends GetxController {
       if(scrollController.value.position.pixels ==
           scrollController.value.position.maxScrollExtent && hasMore.value) {
 
-        log("[리스트의 끝입니다.]");
+        log("[리스트의 끝입니다.] - keyword:[" + param.keyword+"]");
 
-        SearchResult res = await searchRequest(keyword, SearchTarget.all, null, null, ++nowPage);
+        SearchResult res = await searchRequest(param.keyword, SearchTarget.all, null, null, ++nowPage);
 
         log("[추가 로드된 개수]: ${res.liquorList.length}");
         if(res.liquorList.length > 0) {
@@ -381,10 +382,7 @@ class _LiquorGridViewState extends State<LiquorGridView> {
           child: Column(
             children: [
               GestureDetector(
-                child: Image.network(
-                  makeImgUrl(widget.liquorController.data[index].repImg, 300),
-                  height: MediaQuery.of(context).size.height * 0.17,
-                ),
+                child: makeImgWidget(context, widget.liquorController.data[index].repImg, 300, MediaQuery.of(context).size.height * 0.17),
                 onTap: () {
                   Navigator.push(
                     context,
@@ -397,7 +395,9 @@ class _LiquorGridViewState extends State<LiquorGridView> {
                 padding: const EdgeInsets.fromLTRB(5, 10, 0, 0),
                 child: Row(
                   children: [
-                    Text(widget.liquorController.data[index].nameKr),
+                    Expanded(
+                      child: Text(widget.liquorController.data[index].nameKr),
+                    ),
                   ],
                 ),
               ),
@@ -405,12 +405,29 @@ class _LiquorGridViewState extends State<LiquorGridView> {
                 padding: const EdgeInsets.fromLTRB(5, 3, 0, 0),
                 child: Row(
                   children: [
-                    Text(
-                      widget.liquorController.data[index].nameEn,
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey
-                      ),
+                    // Expanded(
+                    //     child: Text(
+                    //       widget.liquorController.data[index].nameEn,
+                    //       style: TextStyle(
+                    //           fontSize: 12,
+                    //           color: Colors.grey
+                    //       ),
+                    //     )
+                    // ),
+                    Flexible(
+                        child: RichText(
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            strutStyle: StrutStyle(fontSize: 8.0),
+                            text: TextSpan(
+                              text: widget.liquorController.data[index].nameEn,
+                              style: TextStyle(
+                                fontSize: 11.0,
+                                color: Colors.grey,
+                                fontFamily: 'NanumBarunGothicLight',
+                              ),
+                            )
+                        ),
                     ),
                   ],
                 ),

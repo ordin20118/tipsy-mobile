@@ -12,8 +12,8 @@ import 'package:tipsy_mobile/classes/ui_util.dart';
 import 'package:tipsy_mobile/classes/word.dart';
 import '../main.dart';
 
-bool isLocal = true;
-const String API_URL_LOCAL = "http://192.168.0.10:8080/svcmgr/api";
+bool isLocal = false;
+const String API_URL_LOCAL = "http://192.168.219.101:8080/svcmgr/api";
 const String API_URL_SERVER = "http://www.tipsy.co.kr/svcmgr/api";
 
 void setTestToken() async {
@@ -24,12 +24,21 @@ void setTestToken() async {
   await storage.write(key:'email', value:'kimho2018@naver.com');
 }
 
+String makeText(String text) {
+  StringBuffer sb = new StringBuffer();
+  List textArr = text.split("\\n");
+  for (String line in textArr) {
+    line = line.trim();
+    sb.write(line + "\n");
+  }
+  return sb.toString();
+}
+
 String getApiUrl() {
   return isLocal ? API_URL_LOCAL : API_URL_SERVER;
 }
 
 String makeImgUrl(String filePath, int size) {
-
   //print(FlutterConfig.get('API_URL'));
   //print(FlutterConfig.get('API_SUFFIX'));
   // String apiUrl = FlutterConfig.get('API_URL');
@@ -43,11 +52,16 @@ String makeImgUrl(String filePath, int size) {
   return "http://tipsy.co.kr/svcmgr/api" + "/image/" + pathArr.last + ".tipsy?size=" + size.toString();
 }
 
+
+
+
 Future<http.Response> requestGET(path) async {
 
   // get access token
   final storage = new FlutterSecureStorage();
   String? accessToken = await storage.read(key: "accessToken");
+
+  //log("[AccessToken]:"+accessToken!);
 
   String reqUrl = getApiUrl() + path;
   log("[Request GET URL]:" + reqUrl);

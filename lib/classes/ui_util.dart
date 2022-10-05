@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import '../main.dart';
+import '../classes/util.dart';
 import '../pages/camera_page.dart';
 import '../pages/login_page.dart';
 import '../pages/cocktail_regist_page.dart';
@@ -63,3 +64,21 @@ void goToCameraPage(BuildContext context) async {
   );
 }
 
+
+Image makeImgWidget(context, String filePath, int size, height) {
+
+  List<String> pathArr = filePath.split("/");
+
+  if(filePath.length == 0) {
+    return Image.asset(
+      'assets/images/default_image.png',
+      height: MediaQuery.of(context).size.height * 0.17,
+    );
+  } else {
+    return Image.network(
+      makeImgUrl(filePath, size),
+      height: height,
+    );
+  }
+
+}

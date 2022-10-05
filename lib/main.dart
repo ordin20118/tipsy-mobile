@@ -169,28 +169,6 @@ class _MainPageState extends State<MainPage> {
 
 }
 
-
-
-class SecondRoute extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Second Route"),
-      ),
-      body: Center(
-        child: RaisedButton(
-          onPressed: () {
-            // 눌렀을 때 첫 번째 route로 되돌아 갑니다.
-            Navigator.pop(context);
-          },
-          child: Text('Go back!'),
-        ),
-      ),
-    );
-  }
-}
-
 class CreateMenuPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -202,7 +180,7 @@ class CreateMenuPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Card(
-                  color: Color(0xffC98AFF),
+                  color: Color(0xff005766),
                   shape: RoundedRectangleBorder(
                       borderRadius: const BorderRadius.all(const Radius.circular(10.0))
                   ),
@@ -219,7 +197,30 @@ class CreateMenuPage extends StatelessWidget {
                   ),
                 ),
               ],
-            )
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Card(
+                  color: Color(0xffC98AFF),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: const BorderRadius.all(const Radius.circular(10.0))
+                  ),
+                  elevation: 4.0, // 그림자 깊이
+                  child: InkWell(
+                    onTap: () {
+                      goToCocktailRegistPage(context);
+                    },
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.7,
+                      height: MediaQuery.of(context).size.height * 0.08,
+                      child: Center(child: Text('나만의 칵테일 등록하기', style: Home.boxMenuWhite)),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+
           ],
         ),
     );

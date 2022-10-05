@@ -65,16 +65,19 @@ class Liquor {
     // category3_id
     // category4_id
     // category3_name
-    tmp._category3Name = json['category3_name'] != null ? json['category3_name'] : "";
+    tmp._category3Name = json['category3_name'] ?? "";
     // category4_name
-    tmp._category4Name = json['category4_name'] != null ? json['category4_name'] : "";
+    tmp._category4Name = json['category4_name'] ?? "";
 
     // vintage
     // country_id
+
     // description
-    tmp._description = json['description'] != null ? json['description'] : "";
+    tmp._description = json['description'] ?? "";
+
     // history
-    tmp._history = json['history'] != null ? json['history'] : "";
+    tmp._history = json['history'] ?? "";
+
     // update_date
 
     return tmp;

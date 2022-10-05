@@ -85,9 +85,7 @@ class _HomeState extends State<Home> {
                                 SizedBox(
                                   width: MediaQuery.of(context).size.width * 0.5,
                                   height: MediaQuery.of(context).size.height * 0.4,
-                                  child: Image.network(
-                                    makeImgUrl(snapshot.data!.liquorList.first.repImg, 300),
-                                  ),
+                                  child: makeImgWidget(context, snapshot.data!.liquorList.first.repImg, 300, MediaQuery.of(context).size.height * 0.17),
                                 ),
                               ],
                             ),

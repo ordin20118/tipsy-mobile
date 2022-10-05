@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:tipsy_mobile/classes/liquor.dart';
 import 'package:tipsy_mobile/classes/util.dart';
+import 'package:tipsy_mobile/classes/ui_util.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -54,10 +55,11 @@ class _LiquorDetailState extends State<LiquorDetail> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Image.network(
-                            makeImgUrl(snapshot.data!.repImg, 300),
-                            height: MediaQuery.of(context).size.height * 0.3,
-                          ),
+                          makeImgWidget(context, snapshot.data!.repImg, 300, MediaQuery.of(context).size.height * 0.3),
+                          // Image.network(
+                          //   makeImgUrl(snapshot.data!.repImg, 300),
+                          //   height: MediaQuery.of(context).size.height * 0.3,
+                          // ),
                         ],
                       ),
                     ),
@@ -145,7 +147,7 @@ class _LiquorDetailState extends State<LiquorDetail> {
                                 color: Colors.black54
                               ),
                             ),
-                          )
+                          ),
                         ],
                       ),
                     )
@@ -170,16 +172,29 @@ class _LiquorDetailState extends State<LiquorDetail> {
 
   // request liquor get API
   Future<Liquor> loadLiquorInfo(int liquorId) async {
-    print("#### [getLiquorInfo] ####");
-    String reqUrl = getApiUrl() + "/liquor.tipsy?liquorId=" + liquorId.toString();
-    final Uri url = Uri.parse(reqUrl);
+    print("#### [getLiquorInfo] ####" + liquorId.toString());
+    String reqUrl = "/liquor.tipsy?liquorId=" + liquorId.toString();
+    final response = await requestGET(reqUrl);
 
-    final response = await http.get(url);
     if(response.statusCode == 200) {
       String resString = response.body.toString();
       var resJson = json.decode(resString);
       var liquorJson = resJson['data']['item'];
+
       Liquor tmp = Liquor.fromJson(liquorJson);
+
+      print("[getLiquorInfo] desc:" + tmp.description);
+      print("[getLiquorInfo] history:" + tmp.history);
+      // TODO: null check
+      if(tmp.description != null) {
+        tmp.description = makeText(tmp.description);
+      }
+
+      if(tmp.history != null) {
+        tmp.history = makeText(tmp.history);
+      }
+
+
       return tmp;
     } else {
       throw Exception('Failed to load liquor data.');
