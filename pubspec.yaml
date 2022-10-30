@@ -44,6 +44,7 @@ dependencies:
   path_provider: ^2.0.11
   path: ^1.8.1
   dio: ^4.0.6
+  getwidget: ^3.0.1
 
   http: 0.13.4
   image_cropper: ^2.0.3

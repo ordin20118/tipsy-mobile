@@ -16,6 +16,7 @@ bool isLocal = false;
 const String API_URL_LOCAL = "http://192.168.219.101:8080/svcmgr/api";
 const String API_URL_SERVER = "http://www.tipsy.co.kr/svcmgr/api";
 
+
 void setTestToken() async {
   final storage = new FlutterSecureStorage();
   await storage.write(key:'accessToken', value: 'AUTOmKFxUkmakDV9w8z/yLOxrbm0WwxgbNpsOS6HhoUAGNY=');

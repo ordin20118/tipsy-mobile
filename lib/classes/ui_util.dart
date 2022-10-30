@@ -8,6 +8,48 @@ import '../classes/util.dart';
 import '../pages/camera_page.dart';
 import '../pages/login_page.dart';
 import '../pages/cocktail_regist_page.dart';
+import '../pages/join_page.dart';
+
+const List<String> cocktailColors = [
+  "#FFFAED7D",
+  "#FF584B00",
+  "#FFFF0000",
+  "#FFFF5E00",
+  "#FF662500",
+  "#FFF6F6F8",
+  "#FF86E57F",
+  "#FF2F9D27",
+  "#FFFFE400",
+  "#FF1E0000",
+  "#FF008299",
+  "#FFFFB2D9",
+  "#FFFAF4C0",
+  "#FF80F2CA",
+  "#FFDFE182",
+];
+
+class HexColor extends Color {
+  static int _getColorFromHex(String hexColor) {
+    hexColor = hexColor.toUpperCase().replaceAll("#", "");
+    if (hexColor.length == 6) {
+      hexColor = "FF" + hexColor;
+    }
+    return int.parse(hexColor, radix: 16);
+  }
+
+  HexColor(final String hexColor) : super(_getColorFromHex(hexColor));
+}
+
+
+TextStyle boxMenuWhite = TextStyle(
+    color: Colors.white,
+    fontWeight: FontWeight.bold
+);
+
+TextStyle boxMenuPupple = TextStyle(
+    color: Color(0xff8748E1),
+    fontWeight: FontWeight.bold
+);
 
 List<Widget> makeStarUi(int count) {
   List<Widget> res = <Widget>[];
@@ -51,6 +93,15 @@ void goToCocktailRegistPage(BuildContext context) {
   Navigator.push(
     context,
     MaterialPageRoute(builder: (context) => CocktailRegistPage()),
+  );
+}
+
+// TODO: For Test
+void goToJoinPage(BuildContext context) {
+  Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) => JoinPage(platform: 0, email: '', nickname: ''
+                                                    ,accessToken: '', refreshToken: '',)),
   );
 }
 

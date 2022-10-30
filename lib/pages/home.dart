@@ -377,7 +377,26 @@ class _HomeState extends State<Home> {
                     ),
                   ),
               ),
-
+              Padding(
+                padding: const EdgeInsets.fromLTRB(15, 20, 10, 0),
+                child: Card(
+                  color: Color(0xffC98AFF),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: const BorderRadius.all(const Radius.circular(10.0))
+                  ),
+                  elevation: 4.0, // 그림자 깊이
+                  child: InkWell(
+                    onTap: () {
+                      goToJoinPage(context);
+                    },
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.9,
+                      height: MediaQuery.of(context).size.height * 0.08,
+                      child: Center(child: Text('Join Page', style: Home.boxMenuWhite)),
+                    ),
+                  ),
+                ),
+              ),
             ]
           ),
         ),
