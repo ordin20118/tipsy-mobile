@@ -6,8 +6,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import '../main.dart';
 import '../classes/util.dart';
 import '../pages/camera_page.dart';
+import '../pages/cocktail/cocktail_regist_page.dart';
 import '../pages/login_page.dart';
-import '../pages/cocktail_regist_page.dart';
 import '../pages/join_page.dart';
 
 const List<String> cocktailColors = [

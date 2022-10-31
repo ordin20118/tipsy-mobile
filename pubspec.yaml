@@ -39,12 +39,18 @@ dependencies:
   image_picker: ^0.8.5+3
   get: ^4.6.5
   marquee: ^2.2.3
-  camera: ^0.10.0
   permission_handler: ^10.0.0
   path_provider: ^2.0.11
   path: ^1.8.1
   dio: ^4.0.6
   getwidget: ^3.0.1
+  #camera: ^0.10.0
+  camera:
+    git:
+      url: https://github.com/flutter/plugins
+      path: packages/camera/camera
+      ref: 9e46048ad2e1f085c1e8f6c77391fa52025e681f
+
 
   http: 0.13.4
   image_cropper: ^2.0.3
@@ -53,7 +59,7 @@ dependencies:
   kakao_flutter_sdk_talk: ^1.1.1 # 카카오톡(소셜, 메시지)
   kakao_flutter_sdk_story: ^1.1.1 # 카카오스토리
   kakao_flutter_sdk_link: ^1.1.1 # 카카오톡 공유
-  firebase_auth: ^3.11.1
+  #firebase_auth: ^3.11.1
 #  kakao_flutter_sdk_navi: ^1.1.1 # 카카오내비
 
 dev_dependencies:

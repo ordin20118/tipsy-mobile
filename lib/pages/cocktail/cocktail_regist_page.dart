@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:tipsy_mobile/classes/styles.dart';
@@ -7,7 +8,8 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:getwidget/getwidget.dart';
 
-import 'join_page.dart';
+import '../join_page.dart';
+import '../cocktail/select_ingd_type_page.dart';
 import 'package:tipsy_mobile/classes/util.dart';
 import 'package:tipsy_mobile/classes/ui_util.dart';
 
@@ -252,6 +254,13 @@ class _CocktailRegistPageState extends State<CocktailRegistPage> {
                               fontSize: 16
                           ),
                         ),
+                        GFButton(
+                          onPressed: (){
+                            _navigateAndDisplaySelection(context);
+                          },
+                          text: "재료 추가",
+                          shape: GFButtonShape.square,
+                        ),
                       ],
                     ),
                     // TODO: Add Button for ingredients
@@ -314,6 +323,16 @@ class _CocktailRegistPageState extends State<CocktailRegistPage> {
       bottomNavigationBar: Container(height: 0),
     );
   }
+
+
+  // SelectionScreen을 띄우고 navigator.pop으로부터 결과를 기다리는 메서드
+  _navigateAndDisplaySelection(BuildContext context) async {
+    final result = await showCupertinoModalPopup(context: context, builder:
+        (context) => SelectIngdTypePage()
+    );
+    print("팝업에서 받은 결과:" + result.toString());
+  }
+
 
   @override
   void dispose() {

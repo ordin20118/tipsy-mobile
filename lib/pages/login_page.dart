@@ -91,9 +91,21 @@ class _LoginPageState extends State<LoginPage> {
     log("Login Page initState()");
     initKakaoTalkInstalled();
 
+
     // TODO: remove under test code ...
+    registTestUser();
     _logoutFromKakao();
     _unlinkFromKakao();
+  }
+
+  // TODO: remove
+  void registTestUser() async {
+    final storage = new FlutterSecureStorage();
+    await storage.write(key:'accessToken', value:'AUTOmKFxUkmakDV9w8z/yLOxrbm0WwxgbNpsOS6HhoUAGNY=');
+    await storage.write(key:'platform', value:USER_PLATFORM_KAKAO.toString());
+    //await storage.write(key:'id', value:token.userId.toString());
+    await storage.write(key:'email', value:'kimho2018@naver.com');
+    goToMainPage(context);
   }
 
   // 카카오톡 존재 여부 초기화
@@ -180,13 +192,14 @@ class _LoginPageState extends State<LoginPage> {
   // 카카오계정으로 로그인
   void _loginWithKakaoAccount() async {
     try {
+      print('웹에서 카카오톡 로그인');
       OAuthToken token = await UserApi.instance.loginWithKakaoAccount();
       print('카카오계정으로 로그인 성공 ${token.accessToken}/${token.refreshToken}');
+
     } catch(e) {
       print('카카오계정으로 로그인 실패 $e');
-      print("토스트 띄우기");
       Fluttertoast.showToast(
-          msg: "This is Center Short Toast",
+          msg: "카카오톡 로그인 실패",
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.CENTER,
           timeInSecForIosWeb: 2,
@@ -194,7 +207,6 @@ class _LoginPageState extends State<LoginPage> {
           textColor: Colors.white,
           fontSize: 16.0
       );
-      print("토스트 띄우기2");
     }
   }
 

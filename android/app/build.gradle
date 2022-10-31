@@ -45,7 +45,8 @@ android {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "com.tipsy.tipsy_mobile"
         //minSdkVersion flutter.minSdkVersion
-        minSdkVersion 21
+        compileSdkVersion 33    // custom line
+        minSdkVersion 21        // custom line
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName

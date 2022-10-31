@@ -48,7 +48,7 @@ class _SettingPageState extends State<SettingPage> {
                         fontFamily: 'NanumBarunGothicUltraLight'
                       ),
                     ),
-                    SizedBox(width: MediaQuery.of(context).size.width * 0.6),
+                    SizedBox(width: MediaQuery.of(context).size.width * 0.59),
                     IconButton(icon: Icon(Icons.arrow_forward_ios),
                       onPressed: () {},
                       color: Colors.black,
@@ -76,7 +76,7 @@ class _SettingPageState extends State<SettingPage> {
                           fontFamily: 'NanumBarunGothicUltraLight'
                       ),
                     ),
-                    SizedBox(width: MediaQuery.of(context).size.width * 0.6),
+                    SizedBox(width: MediaQuery.of(context).size.width * 0.59),
                     IconButton(icon: Icon(Icons.arrow_forward_ios),
                       onPressed: () {},
                       color: Colors.black,
