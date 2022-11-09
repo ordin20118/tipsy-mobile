@@ -1,4 +1,4 @@
-package com.tipsy.tipsy_mobile
+package co.kr.tipsy.mobile
 
 import io.flutter.embedding.android.FlutterActivity
 

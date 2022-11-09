@@ -202,7 +202,6 @@ class _SearchResTabState extends State<SearchResTab> with TickerProviderStateMix
     );
   }
 
-
   @override
   void activate() {
     log("[[ SearchResTab - activate() ]]");

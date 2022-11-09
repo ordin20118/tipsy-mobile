@@ -24,33 +24,6 @@ class _IngdListViewState extends State<IngdListView> {
     super.dispose();
   }
 
-  Widget ingdItemBuilder(context, index) {
-    return Container(
-      color: Colors.white,
-      padding: EdgeInsets.all(10),
-      height: MediaQuery.of(context).size.height * 0.15,
-      child: Row(
-        //alignment: Alignment.center,
-        children: [
-          Image.network(
-            makeImgUrl(widget.ingdList[index].repImg, 300),
-            height: MediaQuery.of(context).size.height * 0.13,
-          ),
-          Padding(
-            padding: EdgeInsets.all(10),
-            child: Text(
-              widget.ingdList[index].nameEn,
-              style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.grey
-              ),
-            ),
-          ),
-        ]
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -69,4 +42,32 @@ class _IngdListViewState extends State<IngdListView> {
       ),
     );
   }
+
+  Widget ingdItemBuilder(context, index) {
+    return Container(
+      color: Colors.white,
+      padding: EdgeInsets.all(10),
+      height: MediaQuery.of(context).size.height * 0.15,
+      child: Row(
+        //alignment: Alignment.center,
+          children: [
+            Image.network(
+              makeImgUrl(widget.ingdList[index].repImg, 300),
+              height: MediaQuery.of(context).size.height * 0.13,
+            ),
+            Padding(
+              padding: EdgeInsets.all(10),
+              child: Text(
+                widget.ingdList[index].nameEn,
+                style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.grey
+                ),
+              ),
+            ),
+          ]
+      ),
+    );
+  }
+
 }

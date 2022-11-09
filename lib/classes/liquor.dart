@@ -6,7 +6,6 @@ class Liquor {
   int _liquorId;
   String _nameKr;
   String _nameEn;
-
   int _category1Id;
   int _category2Id;
   late int _category3Id;
@@ -15,16 +14,12 @@ class Liquor {
   String _category2Name;
   late String _category3Name;
   late String _category4Name;
-
   late String _description;
   late String _history;
-
   late int _vintage;
   double _abv;
   late int _countryId;
-
   String _repImg;
-
   DateTime _regDate;
   late DateTime _updateDate;
 
