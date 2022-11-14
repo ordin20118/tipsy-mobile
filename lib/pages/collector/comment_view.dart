@@ -60,10 +60,20 @@ class _CommentListViewState extends State<CommentListView> {
       color: Colors.white,
       padding: EdgeInsets.all(10),
       height: MediaQuery.of(context).size.height * 0.08,
-      child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: makeCommentListItem(commentList[index].userNickname, commentList[index].comment,
-              commentList[index].regDate, context)
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: Color(0x77CFA636),
+            width:1,
+          ),
+          borderRadius: BorderRadius.circular(20),
+          color: Color(0x77CFA636),
+        ),
+        child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: makeCommentListItem(commentList[index].userNickname, commentList[index].comment,
+                commentList[index].regDate, context)
+        ),
       ),
     );
   }

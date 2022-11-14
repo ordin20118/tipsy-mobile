@@ -7,6 +7,7 @@ import 'package:tipsy_mobile/classes/ui_util.dart';
 import 'package:tipsy_mobile/pages/collector/comment_view.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:getwidget/getwidget.dart';
 
 class LiquorDetail extends StatefulWidget {
   const LiquorDetail({Key? key, required this.liquorId}) : super(key: key);
@@ -37,6 +38,11 @@ class _LiquorDetailState extends State<LiquorDetail> {
         title: Text(''),
         backgroundColor: Colors.white,
         actions: [
+          IconButton(icon: Icon(Icons.bookmark_border),
+            onPressed: () { Navigator.pop(context);},
+            color: Colors.black,
+            iconSize: 25,
+          ),
           IconButton(icon: Icon(Icons.ios_share),
             onPressed: () { Navigator.pop(context);},
             color: Colors.black,
@@ -84,7 +90,7 @@ class _LiquorDetailState extends State<LiquorDetail> {
                                         child: Text(
                                           snapshot.data!.nameKr,
                                           style: TextStyle(
-                                            fontSize: 22,
+                                            fontSize: 18,
                                             fontFamily: 'NanumBarunGothicLight',
                                           ),
                                         ),
@@ -99,7 +105,7 @@ class _LiquorDetailState extends State<LiquorDetail> {
                                         child: Text(
                                           snapshot.data!.nameEn,
                                           style: TextStyle(
-                                            fontSize: 16,
+                                            fontSize: 13,
                                             color: Colors.grey,
                                             fontFamily: 'NanumBarunGothicLight',
                                           ),
@@ -107,10 +113,107 @@ class _LiquorDetailState extends State<LiquorDetail> {
                                       ),
                                     ],
                                   ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.fromLTRB(6, 0, 6, 8),
+                                        child: Text(
+                                          "국가 | ",
+                                          style: TextStyle(
+                                            fontSize: 11,
+                                            fontFamily: 'NanumBarunGothicLight',
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.fromLTRB(6, 0, 6, 8),
+                                        child: Text(
+                                          snapshot.data!.countryName,
+                                          style: TextStyle(
+                                            fontSize: 11,
+                                            fontFamily: 'NanumBarunGothicLight',
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.fromLTRB(6, 0, 6, 8),
+                                        child: Text(
+                                          "도수 | ",
+                                          style: TextStyle(
+                                            fontSize: 11,
+                                            fontFamily: 'NanumBarunGothicLight',
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.fromLTRB(6, 0, 6, 8),
+                                        child: Text(
+                                          snapshot.data!.abv.toString() + "%",
+                                          style: TextStyle(
+                                            fontSize: 11,
+                                            fontFamily: 'NanumBarunGothicLight',
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.fromLTRB(6, 0, 0, 8),
+                                        child: Icon(
+                                          Icons.star,
+                                          color: Colors.yellow,
+                                          size: 13,
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.fromLTRB(6, 0, 6, 8),
+                                        child: Text(
+                                          "평점 나오는 곳",
+                                          style: TextStyle(
+                                            fontSize: 11,
+                                            fontFamily: 'NanumBarunGothicLight',
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 10,),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Card(
+                                        color: Color(0xff005766),
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius: const BorderRadius.all(const Radius.circular(10.0))
+                                        ),
+                                        elevation: 4.0, // 그림자 깊이
+                                        child: InkWell(
+                                          onTap: () {
+                                            goToCocktailRegistPage(context);
+                                          },
+                                          child: SizedBox(
+                                            width: MediaQuery.of(context).size.width * 0.8,
+                                            height: MediaQuery.of(context).size.height * 0.07,
+                                            child: Center(child: Text('평가하기', style: boxMenuWhite)),
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  ),
                                 ],
                               ),
                             ),
                             Container(  // description
+                              width: MediaQuery.of(context).size.width,
                               padding: EdgeInsets.all(15),
                               color: Colors.white,
                               child: Column(
@@ -164,6 +267,7 @@ class _LiquorDetailState extends State<LiquorDetail> {
                         return Text('데이터를 불러오지 못했습니다.${snapshot.error}');
                       }
                       return Container(
+                        width: MediaQuery.of(context).size.width,
                         height: MediaQuery.of(context).size.height * 0.7,
                         child: Center(
                             child: CircularProgressIndicator()

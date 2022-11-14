@@ -45,7 +45,6 @@ class Comment {
     );
 
     // set late variable
-    // description
     // update_date
 
 

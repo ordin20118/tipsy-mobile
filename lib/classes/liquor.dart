@@ -19,6 +19,11 @@ class Liquor {
   late int _vintage;
   double _abv;
   late int _countryId;
+  late String _countryName;
+
+  int _ratingCnt;
+  double _ratingAvg;
+
   String _repImg;
   DateTime _regDate;
   late DateTime _updateDate;
@@ -33,12 +38,15 @@ class Liquor {
     required String category2Name,
     required double abv,
     required int countryId,
+    required int ratingCnt,
+    required double ratingAvg,
     required String repImg,
     required DateTime regDate,
   }) : this._liquorId = liquorId, this._nameKr = nameKr,
         this._nameEn = nameEn, this._category1Id = category1Id,
         this._category2Id = category2Id, this._category1Name = category1Name,
         this._category2Name = category2Name, this._abv = abv, this._countryId = countryId,
+        this._ratingCnt = ratingCnt, this._ratingAvg = ratingAvg,
         this._repImg = repImg, this._regDate = regDate;
 
   factory Liquor.fromJson(Map<String, dynamic> json) {
@@ -52,6 +60,8 @@ class Liquor {
         category2Name: json['category2_name'],
         abv: json['abv'],
         countryId: json['country_id'],
+        ratingCnt: json['rating_cnt'],
+        ratingAvg: json['rating_avg'],
         repImg: json['rep_img'],
         regDate: DateTime.fromMillisecondsSinceEpoch(json['reg_date'] * 1000)
     );
@@ -65,7 +75,11 @@ class Liquor {
     tmp._category4Name = json['category4_name'] ?? "";
 
     // vintage
+    tmp._vintage = json['vintage'] ?? 0;
+
     // country_id
+    tmp._countryId = json['country_id'] ?? 0;
+    tmp._countryName = json['country_name'] ?? "";
 
     // description
     tmp._description = json['description'] ?? "";
@@ -205,6 +219,12 @@ class Liquor {
 
   set updateDate(DateTime value) {
     _updateDate = value;
+  }
+
+  String get countryName => _countryName;
+
+  set countryName(String value) {
+    _countryName = value;
   }
 }
 
