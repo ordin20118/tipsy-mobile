@@ -133,6 +133,13 @@ Image makeImgWidget(context, String filePath, int size, height) {
   }
 }
 
+
+/**
+ * 공백 박스 만들기
+ * Parameter
+ * Color color: 박스의 배경이될 색상
+ * Float heightRatio: 박스의 세로 비율(기기의 세로 * ratio을 설정해준다.)
+ */
 class BlankView extends StatefulWidget {
   const BlankView({Key? key, required Color this.color, required this.heightRatio}) : super(key: key);
 

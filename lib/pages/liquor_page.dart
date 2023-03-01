@@ -264,61 +264,8 @@ class _LiquorDetailState extends State<LiquorDetail> {
                   ),
                 ],
               ),
-              Row(
-                children: [
-                  FutureBuilder<List<Comment>>(
-                      future: commentList,
-                      builder: (context, snapshot) {
-                        if(snapshot.hasData) {
-                          return Column(
-                            children: [
-                              Container(  // description
-                                padding: EdgeInsets.all(0),
-                                width: MediaQuery.of(context).size.width,
-                                height: MediaQuery.of(context).size.height * 0.34,
-                                color: Colors.white,
-                                child: Column(
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          "Comments",
-                                          style: TextStyle(
-                                            fontSize: 20,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    BlankView(color: Colors.white, heightRatio: 0.03),
-                                    // TODO: ListView
-                                    Padding(
-                                      padding: const EdgeInsets.all(0.0),
-                                      child: CommentListView(commentList:snapshot.data),
-                                    ),
-                                  ],
-                                ),
-                              )
-                            ],
-                          );
-                        } else if(snapshot.hasError) {
-                          return Text(
-                            '데이터를 불러오지 못했습니다.${snapshot.error}',
-                            style: TextStyle(
-                              fontSize: 7
-                            ),
-                          );
-                        }
-                        return Container(
-                          height: MediaQuery.of(context).size.height * 0.7,
-                          child: Center(
-                              child: CircularProgressIndicator()
-                          ),
-                        );
-                      }
-                  ),
-                ],
-              )
+              // TODO: add comment preview view
+              CommentPreView(commentList: commentList, contentId: widget.liquorId, contentType: 100),
             ],
           ),
         ),
@@ -403,6 +350,128 @@ class _CustomTextViewState extends State<CustomTextView> {
           ),
         ),
       ),
+    );
+  }
+}
+
+
+/**
+ * Comment UI
+ */
+class CommentPreView extends StatefulWidget {
+  const CommentPreView({Key? key, required this.commentList, required this.contentId, required this.contentType}) : super(key: key);
+
+  final commentList;
+  final contentId;
+  final contentType;
+
+
+  @override
+  _CommentPreViewState createState() => _CommentPreViewState();
+}
+
+class _CommentPreViewState extends State<CommentPreView> {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        // TODO: 총 댓글 수 + 댓글 리스트 페이지 이동 버튼 추가
+        Container(
+          child: FutureBuilder<List<Comment>>(
+            future: widget.commentList,
+            builder: (context, snapshot) {
+              if(snapshot.hasData) {
+                return Column(
+                  children: [
+                    Container(  // description
+                      padding: EdgeInsets.all(0),
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height * 0.42,
+                      color: Colors.white,
+                      child: Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "Comments",
+                                style: TextStyle(
+                                  fontSize: 20,
+                                ),
+                              ),
+                            ],
+                          ),
+                          BlankView(color: Colors.white, heightRatio: 0.03),
+                          // TODO: ListView
+                          Padding(
+                            padding: const EdgeInsets.all(0.0),
+                            child: CommentListView(commentList:snapshot.data),
+                          ),
+                          Container(
+                            height: MediaQuery.of(context).size.height * 0.07,
+                            padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
+                            color: Colors.white,
+                            child: // TODO: 댓글 입력란 추가
+                            // TextField(
+                            //   keyboardType: TextInputType.multiline,
+                            //   minLines: 1,
+                            //   maxLines: null,
+                            //   decoration: InputDecoration(
+                            //     labelText: '댓글',
+                            //     hintText: '댓글을 입력해주세요.',
+                            //   ),
+                            // ),
+                            Row(
+                              children: [
+                                Flexible(
+                                  child: TextField(
+                                    keyboardType: TextInputType.multiline,
+                                    minLines: 1,
+                                    maxLines: null,
+                                    decoration: InputDecoration(
+                                      //labelText: '댓글',
+                                      hintText: '댓글을 입력해주세요.',
+                                      border: OutlineInputBorder(),
+                                      focusedBorder: OutlineInputBorder(),
+                                    ),
+                                    style: TextStyle(
+                                      fontSize: 13
+                                    ),
+                                  )
+                                ),
+                                Container(
+                                  margin: const EdgeInsets.symmetric(horizontal: 4.0),
+                                  child: IconButton(
+                                      icon: Icon(Icons.send),
+                                      onPressed: () => print("ayy")
+                                  ),
+                                ),
+                              ],
+                            )
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                );
+              } else if(snapshot.hasError) {
+                return Text(
+                  '데이터를 불러오지 못했습니다.${snapshot.error}',
+                  style: TextStyle(
+                      fontSize: 7
+                  ),
+                );
+              }
+              return Container(
+                height: MediaQuery.of(context).size.height * 0.7,
+                child: Center(
+                    child: CircularProgressIndicator()
+                ),
+              );
+            }
+            ),
+        ),
+      ],
     );
   }
 }
