@@ -131,5 +131,30 @@ Image makeImgWidget(context, String filePath, int size, height) {
       height: height,
     );
   }
-
 }
+
+class BlankView extends StatefulWidget {
+  const BlankView({Key? key, required Color this.color, required this.heightRatio}) : super(key: key);
+
+  final Color color;
+  final heightRatio;
+
+  @override
+  _BlankViewState createState() => _BlankViewState();
+}
+
+class _BlankViewState extends State<BlankView> {
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height * widget.heightRatio,
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: widget.color,
+        ),
+      ),
+    );
+  }
+}
+

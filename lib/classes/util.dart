@@ -1,4 +1,5 @@
 import 'dart:developer';
+//import 'dart:html';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -11,9 +12,10 @@ import 'package:tipsy_mobile/classes/user.dart';
 import 'package:tipsy_mobile/classes/ui_util.dart';
 import 'package:tipsy_mobile/classes/word.dart';
 import '../main.dart';
+import 'comment.dart';
 
 bool isLocal = true;
-const String API_URL_LOCAL = "http://192.168.219.101:8080/svcmgr/api";
+const String API_URL_LOCAL = "http://192.168.219.106:8080/svcmgr/api";
 const String API_URL_SERVER = "http://www.tipsy.co.kr/svcmgr/api";
 
 
@@ -192,6 +194,30 @@ Future<Recommand> requestTodayRecommand() async {
     return recomm;
   } else {
     throw Exception('Failed get today recommand.');
+  }
+}
+
+Future<List<Comment>> loadCommentInfo(int contentId, int contentType) async {
+  print("#### [loadCommentInfo] ####" + contentId.toString());
+  String reqUrl = "/comments.tipsy?contentId=" + contentId.toString()
+                  + "&contentType=" + contentType.toString() + "&state=0&paging.perPage=3";
+  final response = await requestGET(reqUrl);
+
+  if(response.statusCode == 200) {
+    String resString = response.body.toString();
+    var resJson = json.decode(resString);
+    var commentListJson = resJson['list'];
+
+    List<Comment> tmp = [];
+    try{
+      tmp = CommentList.fromJson(commentListJson).comments;
+    } catch(e) {
+      log("" + e.toString());
+    }
+
+    return tmp;
+  } else {
+    throw Exception('Failed to load liquor comments data.');
   }
 }
 

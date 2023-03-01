@@ -212,6 +212,9 @@ class _LiquorDetailState extends State<LiquorDetail> {
                                 ],
                               ),
                             ),
+
+                            BlankView(color: Colors.white, heightRatio: 0.05),
+
                             Container(  // description
                               width: MediaQuery.of(context).size.width,
                               padding: EdgeInsets.all(15),
@@ -222,42 +225,26 @@ class _LiquorDetailState extends State<LiquorDetail> {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Text(
-                                        "Description",
+                                        snapshot.data!.description.trim().length > 0 ? "Description" : "",
                                         style: TextStyle(
                                           fontSize: 20,
                                         ),
                                       ),
                                     ],
                                   ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(15.0),
-                                    child: Text(
-                                      snapshot.data!.description,
-                                      style: TextStyle(
-                                        color: Colors.black54
-                                      ),
-                                    ),
-                                  ),
+                                  snapshot.data!.description.trim().length > 0 ? CustomTextView(historyText: snapshot.data!.description) : BlankView(color: Colors.white, heightRatio: 0.05),
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Text(
-                                        "History",
+                                        snapshot.data!.history.trim().length > 0 ? "History" : "",
                                         style: TextStyle(
                                           fontSize: 20,
                                         ),
                                       ),
                                     ],
                                   ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(15.0),
-                                    child: Text(
-                                      snapshot.data!.history,
-                                      style: TextStyle(
-                                        color: Colors.black54
-                                      ),
-                                    ),
-                                  ),
+                                  snapshot.data!.history.trim().length > 0 ? CustomTextView(historyText: snapshot.data!.history) : BlankView(color: Colors.white, heightRatio: 0.05),
                                 ],
                               ),
                             )
@@ -288,7 +275,7 @@ class _LiquorDetailState extends State<LiquorDetail> {
                               Container(  // description
                                 padding: EdgeInsets.all(0),
                                 width: MediaQuery.of(context).size.width,
-                                height: MediaQuery.of(context).size.height * 0.3,
+                                height: MediaQuery.of(context).size.height * 0.34,
                                 color: Colors.white,
                                 child: Column(
                                   children: [
@@ -303,6 +290,7 @@ class _LiquorDetailState extends State<LiquorDetail> {
                                         ),
                                       ],
                                     ),
+                                    BlankView(color: Colors.white, heightRatio: 0.03),
                                     // TODO: ListView
                                     Padding(
                                       padding: const EdgeInsets.all(0.0),
@@ -354,6 +342,7 @@ class _LiquorDetailState extends State<LiquorDetail> {
 
       print("[getLiquorInfo] desc:" + tmp.description);
       print("[getLiquorInfo] history:" + tmp.history);
+      print("[getLiquorInfo] history lenth:" + tmp.history.length.toString());
       // TODO: null check
       if(tmp.description != null) {
         tmp.description = makeText(tmp.description);
@@ -363,7 +352,6 @@ class _LiquorDetailState extends State<LiquorDetail> {
         tmp.history = makeText(tmp.history);
       }
 
-
       return tmp;
     } else {
       throw Exception('Failed to load liquor data.');
@@ -372,27 +360,8 @@ class _LiquorDetailState extends State<LiquorDetail> {
 
 
   // request comments of liquor get API
-  Future<List<Comment>> loadCommentInfo(int liquorId) async {
-    print("#### [loadCommentInfo] ####" + liquorId.toString());
-    String reqUrl = "/comments.tipsy?contentId=" + liquorId.toString() + "&contentType=100&state=0&paging.perPage=3";
-    final response = await requestGET(reqUrl);
-
-    if(response.statusCode == 200) {
-      String resString = response.body.toString();
-      var resJson = json.decode(resString);
-      var commentListJson = resJson['list'];
-
-      List<Comment> tmp = [];
-      try{
-        tmp = CommentList.fromJson(commentListJson).comments;
-      } catch(e) {
-        log("" + e.toString());
-      }
-
-      return tmp;
-    } else {
-      throw Exception('Failed to load liquor comments data.');
-    }
+  Future<List<Comment>> loadLiquorComment(int liquorId) async {
+    return loadCommentInfo(liquorId, 100);
   }
 
   @override
@@ -403,9 +372,37 @@ class _LiquorDetailState extends State<LiquorDetail> {
   @override
   void initState() {
     super.initState();
-    print("주류 상세 페이지" + widget.liquorId.toString());
+    print("주류 상세 페이지 - liquorId:" + widget.liquorId.toString());
     liquor = loadLiquorInfo(widget.liquorId);
-    commentList = loadCommentInfo(widget.liquorId);
+    commentList = loadLiquorComment(widget.liquorId);
   }
 
+}
+
+
+// 동적 UI 생성
+class CustomTextView extends StatefulWidget {
+  const CustomTextView({Key? key, required this.historyText}) : super(key: key);
+
+  final String historyText;
+
+  @override
+  _CustomTextViewState createState() => _CustomTextViewState();
+}
+
+class _CustomTextViewState extends State<CustomTextView> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Padding(
+        padding: const EdgeInsets.all(15.0),
+        child: Text(
+          widget.historyText,
+          style: TextStyle(
+              color: Colors.black54
+          ),
+        ),
+      ),
+    );
+  }
 }
