@@ -149,6 +149,8 @@ class _LoginPageState extends State<LoginPage> {
         // 1. 서비스 토큰 발급
         AccessToken token = await requestAccessToken(USER_PLATFORM_KAKAO, email!);
 
+        print("[액세스 토큰 발급]: $token");
+
         if(token != null && token.tokenHash.length > 0 && email != null) {
 
           // 2. 자동 로그인 처리
