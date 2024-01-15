@@ -17,7 +17,7 @@ class JoinPage extends StatefulWidget {
   final String email;
   final String nickname;
   final String accessToken;
-  final String refreshToken;
+  final String? refreshToken;
 
   bool isAge = false;
   bool isNick = false;
@@ -263,7 +263,7 @@ class _JoinPageState extends State<JoinPage> {
     ageController.text = _age;
 
     print("회원가입 화면" + widget.email + "/" + widget.nickname);
-    print("회원가입 화면" + widget.accessToken + "/" + widget.refreshToken);
+    print("회원가입 화면" + widget.accessToken + "/" + widget.refreshToken!);
   }
 
   // 입력사항 확인

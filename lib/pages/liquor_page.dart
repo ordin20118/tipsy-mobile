@@ -440,7 +440,7 @@ class _CommentPreViewState extends State<CommentPreView> {
                                   )
                                 ),
                                 Container(
-                                  margin: const EdgeInsets.symmetric(horizontal: 4.0),
+                                  margin: const EdgeInsets.symmetric(horizontal: 1.0),
                                   child: IconButton(
                                       icon: Icon(Icons.send),
                                       onPressed: () => print("ayy")

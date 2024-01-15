@@ -14,9 +14,9 @@ import 'package:tipsy_mobile/classes/word.dart';
 import '../main.dart';
 import 'comment.dart';
 
-bool isLocal = true;
-const String API_URL_LOCAL = "http://192.168.219.106:8080/svcmgr/api";
-const String API_URL_SERVER = "http://www.tipsy.co.kr/svcmgr/api";
+bool isLocal = true ;
+const String API_URL_LOCAL = "http://192.168.1.93:8080/svcmgr/api";
+const String API_URL_SERVER = "https://www.tipsy.co.kr/svcmgr/api";
 
 
 void setTestToken() async {
