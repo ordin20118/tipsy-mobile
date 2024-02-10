@@ -14,10 +14,19 @@ import 'package:tipsy_mobile/classes/word.dart';
 import '../main.dart';
 import 'comment.dart';
 
-bool isLocal = true ;
-const String API_URL_LOCAL = "http://192.168.1.93:8080/svcmgr/api";
+bool isLocal = false;
+const String API_URL_LOCAL = "http://192.168.200.171:8080/svcmgr/api";
 const String API_URL_SERVER = "https://www.tipsy.co.kr/svcmgr/api";
 
+String getAPIHost() {
+  String url = "";
+  if(isLocal) {
+    url = API_URL_LOCAL;
+  } else {
+    url = API_URL_SERVER;
+  }
+  return url;
+}
 
 void setTestToken() async {
   final storage = new FlutterSecureStorage();
@@ -101,12 +110,14 @@ Future<http.Response> requestPOST(path, data) async {
 // request access token
 Future<AccessToken> requestAccessToken(int platform, String email) async {
 
-  print("#### [requestAccessToken] ####");
+  log("#### [requestAccessToken] ####");
   String reqUrl = "/user/issueToken.tipsy";
   var bodyData = {
     "platform": platform,
     "email": email
   };
+
+  log("[request access token] data:$bodyData");
 
   final response = await requestPOST(reqUrl, bodyData);
 
@@ -158,8 +169,16 @@ Future<bool> autoLogin(int platform, String email, String accessToken) async {
       return false;
     }
   } else {
-    throw Exception('Failed auto login.');
+    return false;
+    //throw Exception('Failed auto login.');
   }
+}
+
+Future<bool> logout(BuildContext context) async {
+  print("#### [logout] ####");
+  final storage = new FlutterSecureStorage();
+  await storage.deleteAll();
+  return true;
 }
 
 

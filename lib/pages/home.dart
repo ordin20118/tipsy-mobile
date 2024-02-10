@@ -36,7 +36,8 @@ class _HomeState extends State<Home> {
 
   Widget buildHomeScreenV2(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(10, 30, 10, 20),
+      padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+      color: Color(0x33eaeaea),
       child: SingleChildScrollView(
         child: Center(
           child: Column(
@@ -60,14 +61,14 @@ class _HomeState extends State<Home> {
                                 Padding(
                                   padding: const EdgeInsets.all(15.0),
                                   child: Text(
-                                    "추천",
+                                    "오늘의 추천 술",
                                     style: TextStyle(
                                         color: Colors.white,
                                         fontSize: 14
                                     ),
                                   ),
                                 ),
-                                SizedBox(width: MediaQuery.of(context).size.width * 0.5),
+                                SizedBox(width: MediaQuery.of(context).size.width * 0.3),
                                 IconButton(
                                   icon: Icon(Icons.bookmark_border),
                                   //icon: Icon(Icons.bookmark),
@@ -85,7 +86,7 @@ class _HomeState extends State<Home> {
                                 SizedBox(
                                   width: MediaQuery.of(context).size.width * 0.5,
                                   height: MediaQuery.of(context).size.height * 0.4,
-                                  child: makeImgWidget(context, snapshot.data!.liquorList.first.repImg, 300, MediaQuery.of(context).size.height * 0.17),
+                                  child: makeImgWidget(context, snapshot.data!.liquorList.first.repImgUrl, 300, MediaQuery.of(context).size.height * 0.17),
                                 ),
                               ],
                             ),
@@ -107,11 +108,17 @@ class _HomeState extends State<Home> {
                               padding: const EdgeInsets.fromLTRB(20, 0, 20, 7),
                               child: Row(
                                 children: [
-                                  Text(
-                                    snapshot.data!.liquorList.first.nameKr,
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 17
+                                  Flexible(
+                                    child: RichText(
+                                      overflow: TextOverflow.ellipsis,
+                                      strutStyle: StrutStyle(fontSize: 8.0),
+                                      text: TextSpan(
+                                        text: snapshot.data!.liquorList.first.nameKr,
+                                        style: TextStyle(
+                                          fontSize: 17.0,
+                                          color: Colors.white,
+                                        ),
+                                      )
                                     ),
                                   ),
                                 ],
@@ -121,13 +128,26 @@ class _HomeState extends State<Home> {
                               padding: const EdgeInsets.fromLTRB(20, 0, 20, 7),
                               child: Row(
                                 children: [
-                                  Text(
-                                    snapshot.data!.liquorList.first.nameEn,
-                                    style: TextStyle(
-                                        color: Colors.white60,
-                                        fontSize: 13
+                                  // Text(
+                                  //   snapshot.data!.liquorList.first.nameEn,
+                                  //   style: TextStyle(
+                                  //       color: Colors.white60,
+                                  //       fontSize: 13
+                                  //   ),
+                                  // )
+                                  Flexible(
+                                    child: RichText(
+                                      overflow: TextOverflow.ellipsis,
+                                      strutStyle: StrutStyle(fontSize: 8.0),
+                                      text: TextSpan(
+                                        text: snapshot.data!.liquorList.first.nameEn,
+                                        style: TextStyle(
+                                          fontSize: 13.0,
+                                          color: Colors.white60,
+                                        ),
+                                      )
                                     ),
-                                  )
+                                  ),
                                 ],
                               ),
                             ),
@@ -156,14 +176,14 @@ class _HomeState extends State<Home> {
                               Padding(
                                 padding: const EdgeInsets.all(15.0),
                                 child: Text(
-                                  "추천",
+                                  "오늘의 추천 술",
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 14
                                   ),
                                 ),
                               ),
-                              SizedBox(width: MediaQuery.of(context).size.width * 0.5),
+                              SizedBox(width: MediaQuery.of(context).size.width * 0.3),
                               IconButton(
                                 icon: Icon(Icons.bookmark_border),
                                 //icon: Icon(Icons.bookmark),
@@ -377,26 +397,6 @@ class _HomeState extends State<Home> {
                     ),
                   ),
               ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(15, 20, 10, 0),
-                child: Card(
-                  color: Color(0xffC98AFF),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: const BorderRadius.all(const Radius.circular(10.0))
-                  ),
-                  elevation: 4.0, // 그림자 깊이
-                  child: InkWell(
-                    onTap: () {
-                      goToJoinPage(context);
-                    },
-                    child: SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.9,
-                      height: MediaQuery.of(context).size.height * 0.08,
-                      child: Center(child: Text('Join Page', style: Home.boxMenuWhite)),
-                    ),
-                  ),
-                ),
-              ),
             ]
           ),
         ),
@@ -580,12 +580,14 @@ class _HomeState extends State<Home> {
   @override
   void dispose() {
     super.dispose();
+    log("home page dispose()");
   }
 
   @override
   void initState() {
     super.initState();
     log("home page initState()");
+
     recommand = requestTodayRecommand();
     word = requestTodayWord();
   }

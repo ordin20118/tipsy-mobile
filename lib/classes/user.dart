@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 
 const int USER_PLATFORM_INTERNAL = 0;
 const int USER_PLATFORM_KAKAO = 1;
+const int USER_PLATFORM_NAVER = 2;
+const int USER_PLATFORM_APPLE = 3;
 
 enum Gender {
   male, female

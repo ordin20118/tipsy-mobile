@@ -98,11 +98,11 @@ void goToCocktailRegistPage(BuildContext context) {
 
 // TODO: For Test
 void goToJoinPage(BuildContext context) {
-  Navigator.push(
-    context,
-    MaterialPageRoute(builder: (context) => JoinPage(platform: 0, email: '', nickname: ''
-                                                    ,accessToken: '', refreshToken: '',)),
-  );
+  // Navigator.push(
+  //   context,
+  //   MaterialPageRoute(builder: (context) => JoinPage(platform: 0, email: '', nickname: ''
+  //                                                   ,accessToken: '', refreshToken: '',)),
+  // );
 }
 
 // TODO
@@ -116,18 +116,15 @@ void goToCameraPage(BuildContext context) async {
 }
 
 
-Image makeImgWidget(context, String filePath, int size, height) {
-
-  List<String> pathArr = filePath.split("/");
-
-  if(filePath.length == 0) {
+Image makeImgWidget(context, String fileUrl, int size, height) {
+  if(fileUrl.length == 0) {
     return Image.asset(
       'assets/images/default_image.png',
       height: MediaQuery.of(context).size.height * 0.17,
     );
   } else {
     return Image.network(
-      makeImgUrl(filePath, size),
+      fileUrl,
       height: height,
     );
   }

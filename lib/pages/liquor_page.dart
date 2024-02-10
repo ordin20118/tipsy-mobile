@@ -68,7 +68,7 @@ class _LiquorDetailState extends State<LiquorDetail> {
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  makeImgWidget(context, snapshot.data!.repImg, 300, MediaQuery.of(context).size.height * 0.3),
+                                  makeImgWidget(context, snapshot.data!.repImgUrl, 300, MediaQuery.of(context).size.height * 0.3),
                                   // Image.network(
                                   //   makeImgUrl(snapshot.data!.repImg, 300),
                                   //   height: MediaQuery.of(context).size.height * 0.3,

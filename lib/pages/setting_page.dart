@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
+import 'package:tipsy_mobile/classes/ui_util.dart';
 import 'package:tipsy_mobile/classes/util.dart';
 import 'package:tipsy_mobile/classes/styles.dart';
 import 'package:http/http.dart' as http;
@@ -50,7 +51,12 @@ class _SettingPageState extends State<SettingPage> {
                     ),
                     SizedBox(width: MediaQuery.of(context).size.width * 0.59),
                     IconButton(icon: Icon(Icons.arrow_forward_ios),
-                      onPressed: () {},
+                      onPressed: () async {
+                        bool isLogout = await logout(context);
+                        if(isLogout) {
+                          goToLoginPage(context);
+                        }
+                      },
                       color: Colors.black,
                       iconSize: 18,
                     )

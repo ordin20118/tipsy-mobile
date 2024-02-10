@@ -381,7 +381,7 @@ class _LiquorGridViewState extends State<LiquorGridView> {
           child: Column(
             children: [
               GestureDetector(
-                child: makeImgWidget(context, widget.liquorController.data[index].repImg, 300, MediaQuery.of(context).size.height * 0.17),
+                child: makeImgWidget(context, widget.liquorController.data[index].repImgUrl, 300, MediaQuery.of(context).size.height * 0.17),
                 onTap: () {
                   Navigator.push(
                     context,
@@ -394,8 +394,23 @@ class _LiquorGridViewState extends State<LiquorGridView> {
                 padding: const EdgeInsets.fromLTRB(5, 10, 0, 0),
                 child: Row(
                   children: [
-                    Expanded(
-                      child: Text(widget.liquorController.data[index].nameKr),
+                    // Expanded(
+                    //   child: Text(widget.liquorController.data[index].nameKr),
+                    // ),
+                    Flexible(
+                      child: RichText(
+                          overflow: TextOverflow.ellipsis,
+                          //maxLines: 1,
+                          strutStyle: StrutStyle(fontSize: 8.0),
+                          text: TextSpan(
+                            text: widget.liquorController.data[index].nameKr,
+                            style: TextStyle(
+                              fontSize: 13.0,
+                              color: Colors.black,
+                              fontFamily: 'NanumBarunGothicBold',
+                            ),
+                          )
+                      ),
                     ),
                   ],
                 ),
@@ -416,7 +431,7 @@ class _LiquorGridViewState extends State<LiquorGridView> {
                     Flexible(
                         child: RichText(
                             overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
+                            //maxLines: 1,
                             strutStyle: StrutStyle(fontSize: 8.0),
                             text: TextSpan(
                               text: widget.liquorController.data[index].nameEn,
@@ -436,10 +451,17 @@ class _LiquorGridViewState extends State<LiquorGridView> {
                 child: Row(
                   children: [
                     Icon(
-                        Icons.star,
-                        color: Colors.yellow
+                      Icons.star,
+                      color: Colors.yellow,
+                      size: 13, // 아이콘 크기 조절
                     ),
-                    Text('4.5')
+                    Text(
+                        '4.5',
+                        style: TextStyle(
+                          fontSize: 10, // 텍스트 크기 조절
+                          // 추가적인 텍스트 스타일 속성들을 설정할 수 있습니다.
+                        )
+                    )
                   ],
                 ),
               )

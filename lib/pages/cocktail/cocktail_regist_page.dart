@@ -56,7 +56,7 @@ class _CocktailRegistPageState extends State<CocktailRegistPage> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => JoinPage(platform:1, email:'111', nickname: '222', accessToken: '333', refreshToken: '444')),
+                MaterialPageRoute(builder: (context) => JoinPage(platform:1, socialId: '', email:'111')),
               );
             },
             color: Color(0xff005766),

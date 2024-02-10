@@ -25,6 +25,7 @@ class Liquor {
   double _ratingAvg;
 
   String _repImg;
+  String _repImgUrl;
   DateTime _regDate;
   late DateTime _updateDate;
 
@@ -41,13 +42,15 @@ class Liquor {
     required int ratingCnt,
     required double ratingAvg,
     required String repImg,
+    required String repImgUrl,
     required DateTime regDate,
   }) : this._liquorId = liquorId, this._nameKr = nameKr,
         this._nameEn = nameEn, this._category1Id = category1Id,
         this._category2Id = category2Id, this._category1Name = category1Name,
         this._category2Name = category2Name, this._abv = abv, this._countryId = countryId,
         this._ratingCnt = ratingCnt, this._ratingAvg = ratingAvg,
-        this._repImg = repImg, this._regDate = regDate;
+        this._repImg = repImg, this._repImgUrl = repImgUrl, this._regDate = regDate;
+
 
   factory Liquor.fromJson(Map<String, dynamic> json) {
     Liquor tmp = Liquor.set(
@@ -63,6 +66,7 @@ class Liquor {
         ratingCnt: json['rating_cnt'],
         ratingAvg: json['rating_avg'],
         repImg: json['rep_img'],
+        repImgUrl: json['rep_img_url'],
         regDate: DateTime.fromMillisecondsSinceEpoch(json['reg_date'] * 1000)
     );
 
@@ -201,6 +205,12 @@ class Liquor {
 
   set repImg(String value) {
     _repImg = value;
+  }
+
+  String get repImgUrl => _repImgUrl;
+
+  set repImgUrl(String value) {
+    _repImgUrl = value;
   }
 
   int get countryId => _countryId;

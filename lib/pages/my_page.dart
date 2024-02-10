@@ -32,5 +32,11 @@ class _MyPageState extends State<MyPage> {
       ),
     );
   }
+
+  @override
+  void initState() {
+    super.initState();
+    log("my page initState()");
+  }
 }
 

@@ -10,14 +10,11 @@ import 'package:tipsy_mobile/classes/util.dart';
 import 'package:tipsy_mobile/classes/ui_util.dart';
 
 class JoinPage extends StatefulWidget {
-  JoinPage({Key? key, required this.platform, required this.email, required this.nickname,
-                            required this.accessToken, required this.refreshToken}) : super(key: key);
+  JoinPage({Key? key, required this.platform, required this.socialId, required this.email}) : super(key: key);
 
   final int platform;
+  final String socialId;
   final String email;
-  final String nickname;
-  final String accessToken;
-  final String? refreshToken;
 
   bool isAge = false;
   bool isNick = false;
@@ -37,6 +34,7 @@ class _JoinPageState extends State<JoinPage> {
 
   bool _canSubmit = false;
 
+  final emailController = TextEditingController();
   final nickController = TextEditingController();
   final ageController = TextEditingController();
 
@@ -69,8 +67,21 @@ class _JoinPageState extends State<JoinPage> {
             child: Column(
               children: [
                 TextFormField(
-                  enabled: false,
-                  initialValue: _email,
+                  enabled: true,
+                  controller: emailController,
+                  //initialValue: _email,
+                  autovalidateMode: AutovalidateMode.always,
+                  onSaved: (value) {
+                    setState(() {
+                      _email = value as String;
+                    });
+                  },
+                  validator: (value) {
+                    if(value == null || value.isEmpty) {
+                      return '이메일을 입력해주세요.';
+                    }
+                    return null;
+                  },
                   style: TextStyle(
                       color: Colors.grey
                   ),
@@ -245,6 +256,7 @@ class _JoinPageState extends State<JoinPage> {
 
   @override
   void dispose() {
+    emailController.dispose();
     nickController.dispose();
     ageController.dispose();
     super.dispose();
@@ -255,15 +267,16 @@ class _JoinPageState extends State<JoinPage> {
     super.initState();
 
     _email = widget.email;
-    _nickname = widget.nickname;
 
+    emailController.addListener(validateForm);
     nickController.addListener(validateForm);
     ageController.addListener(validateForm);
+    emailController.text = _email;
     nickController.text = _nickname;
     ageController.text = _age;
 
-    print("회원가입 화면" + widget.email + "/" + widget.nickname);
-    print("회원가입 화면" + widget.accessToken + "/" + widget.refreshToken!);
+    // print("회원가입 화면" + widget.email + "/" + widget.nickname);
+    // print("회원가입 화면" + widget.accessToken + "/" + widget.refreshToken!);
   }
 
   // 입력사항 확인
@@ -280,19 +293,10 @@ class _JoinPageState extends State<JoinPage> {
 
   // 가입 요청
   void join() async {
-
-    print("[[Enter join function]]");
-
     // request post
-    //String joinUrl = "http://www.tipsy.co.kr/svcmgr/api/user/join.tipsy";
-    //String joinUrl = "http://192.168.0.45:8080/svcmgr/api/user/join.tipsy";
     String joinUrl = "";
-    if(isLocal) {
-      joinUrl = API_URL_LOCAL;
-    } else {
-      joinUrl = API_URL_SERVER;
-    }
-    joinUrl = joinUrl + "/user/join.tipsy";
+    String apiHost = getAPIHost();
+    joinUrl = apiHost + "/user/join.tipsy";
 
     final Uri url = Uri.parse(joinUrl);
 
@@ -305,14 +309,14 @@ class _JoinPageState extends State<JoinPage> {
 
     var bodyData = {
       "platform": widget.platform,
+      "social_id": widget.socialId,
       "email": _email,
       "nickname": _nickname,
       "age": _age,
-      "gender": gender,
-      "access_token": widget.accessToken,
-      "refresh_token": widget.refreshToken
+      "gender": gender
     };
 
+    log("Join Body Data:[${bodyData}]");
     http.Response response = await http.post(
       url,
       headers: <String, String> {
@@ -333,7 +337,7 @@ class _JoinPageState extends State<JoinPage> {
       // 1. 토큰 발급
       AccessToken? token = null;
       try {
-        token = await requestAccessToken(USER_PLATFORM_KAKAO, widget.email);
+        token = await requestAccessToken(widget.platform, _email);
       } catch(e) {
         token = null;
       }
@@ -341,12 +345,12 @@ class _JoinPageState extends State<JoinPage> {
       if(token != null && token.tokenHash.length > 0) {
 
         // 2. 자동 로그인 처리
-        bool isLogin = await autoLogin(USER_PLATFORM_KAKAO, widget.email, token.tokenHash);
+        bool isLogin = await autoLogin(widget.platform, widget.email, token.tokenHash);
 
         if(isLogin) {
           final storage = new FlutterSecureStorage();
           await storage.write(key:'accessToken', value:token.tokenHash);
-          await storage.write(key:'platform', value:USER_PLATFORM_KAKAO.toString());
+          await storage.write(key:'platform', value:widget.platform.toString());
           await storage.write(key:'id', value:token.userId.toString());
           await storage.write(key:'email', value:widget.email);
           goToMainPage(context);

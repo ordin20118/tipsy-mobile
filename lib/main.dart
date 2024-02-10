@@ -60,11 +60,7 @@ class _MainPageState extends State<MainPage> {
   int _selectedPageIndex = 0; // 선택된 페이지의 인덱스 번호
   String _title = "TIPSY";
 
-  List<Widget> _pageChildren = <Widget>[
-    Home(),
-    CreateMenuPage(),
-    MyPage()
-  ];
+  List<Widget> _pageChildren = <Widget>[];
 
   // test
   List<Widget> getAppBarIcons(index) {
@@ -114,36 +110,41 @@ class _MainPageState extends State<MainPage> {
             actions: getAppBarIcons(_selectedPageIndex),
         ),
         body: _pageChildren.elementAt(_selectedPageIndex),
-        bottomNavigationBar: BottomNavigationBar(
-          items: [
-            new BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: "홈",
-            ),
-            new BottomNavigationBarItem(
-              icon: Icon(Icons.add_circle_outline),
-              label: "new",
-            ),
-            new BottomNavigationBarItem(
-              icon: Icon(Icons.person),
-              label: "마이페이지",
-            ),
-          ],
-          selectedLabelStyle: TextStyle(fontSize: 13),
-          selectedItemColor: Color(0xdd005766),
-          //unselectedItemColor: Colors.grey,
-          currentIndex: _selectedPageIndex,
-          onTap: (int index) {
-            setState(() {
-              _selectedPageIndex = index;
-              if(index == 2) {
-                _title = "마이페이지";
-              } else {
-                _title = "TIPSY";
-              }
-            });
-          },
-        ),
+        bottomNavigationBar: Container(
+          decoration: BoxDecoration(
+            border: Border(top: BorderSide(color: Color(0xffEAEAEA), width: 1.0)), // 라인효과
+          ),
+          child: BottomNavigationBar(
+            items: [
+              new BottomNavigationBarItem(
+                icon: Icon(Icons.home),
+                label: "홈",
+              ),
+              new BottomNavigationBarItem(
+                icon: Icon(Icons.add_circle_outline),
+                label: "new",
+              ),
+              new BottomNavigationBarItem(
+                icon: Icon(Icons.person),
+                label: "마이페이지",
+              ),
+            ],
+            selectedLabelStyle: TextStyle(fontSize: 13),
+            selectedItemColor: Color(0xdd005766),
+            //unselectedItemColor: Colors.grey,
+            currentIndex: _selectedPageIndex,
+            onTap: (int index) {
+              setState(() {
+                _selectedPageIndex = index;
+                if(index == 2) {
+                  _title = "마이페이지";
+                } else {
+                  _title = "TIPSY";
+                }
+              });
+            },
+          ),
+        )
       ),
     );
   }
@@ -152,6 +153,14 @@ class _MainPageState extends State<MainPage> {
   void initState() {
     super.initState();
     print("Main Page initState()");
+
+    // TODO: init _pageChildren
+    Home home = Home();
+    _pageChildren.add(home);
+    CreateMenuPage createMenuPage = CreateMenuPage();
+    _pageChildren.add(createMenuPage);
+    MyPage myPage = MyPage();
+    _pageChildren.add(myPage);
 
     chekStorageData();
   }
@@ -166,6 +175,7 @@ class _MainPageState extends State<MainPage> {
   @override
   void dispose() {
     super.dispose();
+    print("Main Page dispose()");
   }
 
 }
@@ -181,7 +191,7 @@ class CreateMenuPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Card(
-                  color: Color(0xff005766),
+                  color: Color.fromRGBO(246, 246, 246, 1.0),
                   shape: RoundedRectangleBorder(
                       borderRadius: const BorderRadius.all(const Radius.circular(10.0))
                   ),

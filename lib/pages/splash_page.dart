@@ -88,11 +88,14 @@ class _SplashPageState extends State<SplashPage> {
       if(isLogin) {
         // 메인 페이지로
         goToMainPage(context);
+      } else {
+        // 로그인 페이지로
+        goToLoginPage(context);
       }
 
     } else {
       print("로그인 페이지로 이동");
-      //로그인 페이지로
+      // 로그인 페이지로
       goToLoginPage(context);
     }
   }

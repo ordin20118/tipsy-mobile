@@ -3,18 +3,22 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:kakao_flutter_sdk_auth/kakao_flutter_sdk_auth.dart';
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 import 'package:kakao_flutter_sdk_talk/kakao_flutter_sdk_talk.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+import 'package:the_apple_sign_in/the_apple_sign_in.dart';
 import 'package:tipsy_mobile/classes/util.dart';
 import 'package:tipsy_mobile/classes/ui_util.dart';
 import 'package:tipsy_mobile/classes/user.dart';
 import 'package:tipsy_mobile/pages/home.dart';
 import 'dart:convert';
 import 'package:tipsy_mobile/pages/join_page.dart';
+import 'package:the_apple_sign_in/the_apple_sign_in.dart' as AppleScope;
 
 import '../main.dart';
 
@@ -69,6 +73,22 @@ class _LoginPageState extends State<LoginPage> {
                   onPressed: _isKakaoTalkInstalled ? _loginWithKakaoTalk : _loginWithKakaoAccount
                   //onPressed: goToMainPage
               ),
+              InkWell(
+                  onTap: () {},
+                  child: AppleSignInButton(
+                    onPressed: appleLogin,
+                  ),
+                  // child: ElevatedButton(
+                  //     style: ElevatedButton.styleFrom(
+                  //       padding: EdgeInsets.all(0.0),
+                  //       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  //     ),
+                  //     child: Image.asset('assets/images/login_btn/apple_login_button.png'),
+                  //     onPressed: () async {
+                  //       await appleLogin();
+                  //     }
+                  // )
+              ),
               Container(
                 height: MediaQuery.of(context).size.height * 0.2,
               )
@@ -89,13 +109,28 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     super.initState();
     log("Login Page initState()");
-    initKakaoTalkInstalled();
 
-
+    // initKakaoTalkInstalled();
+    checkAutoLogin();
     // TODO: remove under test code ...
-    registTestUser();
-    _logoutFromKakao();
-    _unlinkFromKakao();
+    // registTestUser();
+    // _logoutFromKakao();
+    // _unlinkFromKakao();
+  }
+
+  // 자동 로그인 데이터 확인
+  void checkAutoLogin() async {
+    final storage = new FlutterSecureStorage();
+    String? platform = await storage.read(key: 'platform');
+    String? accessToken = await storage.read(key: 'accessToken');
+    String? email = await storage.read(key: 'email');
+
+    if(accessToken != null && platform != null && email != null) {
+      bool isLogin = await autoLogin(int.parse(platform), email, accessToken);
+      if(isLogin) {
+        goToMainPage(context);
+      }
+    }
   }
 
   // TODO: remove
@@ -119,10 +154,11 @@ class _LoginPageState extends State<LoginPage> {
 
   // for test
   // 함수를 하나로 통일해서 파라미터를 받자
-  void goToJoinPage() {
+  void goToJoinPage(int platform, String socialId, String email) {
+    log("[goToJoinPage] platform:${platform}/socialId:${socialId}/email:${email}");
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => JoinPage(platform: USER_PLATFORM_KAKAO, email: 'kimho2018@naver.com', nickname: '팡호', accessToken: '', refreshToken: '',)),
+      MaterialPageRoute(builder: (context) => JoinPage(platform: platform, socialId: socialId, email: email)),
     );
   }
 
@@ -173,10 +209,10 @@ class _LoginPageState extends State<LoginPage> {
       } else {
         print("가입할 수 있는 이메일 입니다.");
         // TODO: 가입 페이지로 이동 => 함수로 빼내기
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => JoinPage(platform: USER_PLATFORM_KAKAO, email: email ?? "", nickname: nickname ?? "", accessToken: token.accessToken, refreshToken: token.refreshToken,)),
-        );
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(builder: (context) => JoinPage(platform: USER_PLATFORM_KAKAO, email: email ?? "", nickname: nickname ?? "", accessToken: token.accessToken, refreshToken: token.refreshToken,)),
+        // );
       }
 
     } catch(e) {
@@ -195,8 +231,17 @@ class _LoginPageState extends State<LoginPage> {
   void _loginWithKakaoAccount() async {
     try {
       print('웹에서 카카오톡 로그인');
-      OAuthToken token = await UserApi.instance.loginWithKakaoAccount();
-      print('카카오계정으로 로그인 성공 ${token.accessToken}/${token.refreshToken}');
+
+      // 카카오톡 설치 유무 확인
+      if(await isKakaoTalkInstalled()) {  // 카카오톡 설치됨
+        // 카카오로 로그인: 웹
+        OAuthToken token = await UserApi.instance.loginWithKakaoAccount();
+        print('카카오계정으로 로그인 성공 ${token.accessToken}/${token.refreshToken}');
+      } else {                            // 카카오톡 설치 안됨
+        // 카카오 계정으로 로그인
+        // OAuthToken token = await UserApi.instance.loginWithKakaoAccount();
+        // print('카카오계정으로 로그인 성공 ${token.accessToken}/${token.refreshToken}');
+      }
 
     } catch(e) {
       print('카카오계정으로 로그인 실패 $e');
@@ -282,4 +327,89 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
+
+  Future<bool> checkSocialUser(platform, socialId) async {
+    print("#### [checkSocialUser] ####//platform:"+platform+"/socialId:"+socialId);
+    String chckUrl = "http://www.tipsy.co.kr/svcmgr/api/user/social_user.tipsy";
+    final Uri url = Uri.parse(chckUrl);
+
+    var bodyData = {
+      "platform": platform,
+      "socialId": socialId
+    };
+
+    http.Response response = await http.post(
+      url,
+      headers: <String, String> {
+        'Content-Type': 'application/json',
+      },
+      body: json.encode(bodyData),
+    );
+
+    if (response.statusCode == 200) {
+
+      String resString = response.body.toString();
+      var parsed = null;
+      try {
+        parsed = json.decode(resString);
+      } catch(e) {
+        print(e);
+      }
+
+      var isDuplicated = parsed['state'];
+
+      if(isDuplicated == 0) {
+        return true;
+      } else if(isDuplicated == 1) {
+        return false;
+      } else {
+        throw Exception('Failed to check social user.');
+      }
+
+    } else {
+      throw Exception('Failed to check social user.');
+    }
+  }
+
+
+  Future<void> appleLogin() async {
+    if(await SignInWithApple.isAvailable()) {
+
+      try {
+        final result = await SignInWithApple.getAppleIDCredential(
+          scopes: [
+            AppleIDAuthorizationScopes.email,
+            AppleIDAuthorizationScopes.fullName,
+          ],
+        );
+
+        // print('로그인 결과 : state:${result.state}');
+        // print('로그인 결과 : email:${result.email}');
+        // print('로그인 결과 : familyName:${result.familyName}');
+        // print('로그인 결과 : givenName:${result.givenName}');
+        // print('로그인 결과 : authorizationCode:${result.authorizationCode}');
+        // print('로그인 결과 : identityToken:${result.identityToken}');
+
+        Map<String, dynamic> decodedToken = JwtDecoder.decode(result.identityToken.toString());
+
+        log('로그인 결과 : sub:${decodedToken['sub']}');
+
+
+        // TODO: 회원 가입 여부 확인
+        bool hasUser = await checkSocialUser(USER_PLATFORM_APPLE, decodedToken['sub']);
+        if(hasUser) {
+          log("[이미 소셜 사용자 존재]");
+          goToMainPage(context);
+        } else {
+          // 회원가입 페이지 이동
+          goToJoinPage(USER_PLATFORM_APPLE, decodedToken['sub'], "");
+        }
+      } catch (e) {
+        // 다른 예외에 대한 처리
+        log('Sign in with Apple Error: $e');
+      }
+    } else {
+      log('애플 로그인을 지원하지 않는 기기입니다.');
+    }
+  }
 }
