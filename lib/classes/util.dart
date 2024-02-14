@@ -14,8 +14,8 @@ import 'package:tipsy_mobile/classes/word.dart';
 import '../main.dart';
 import 'comment.dart';
 
-bool isLocal = false;
-const String API_URL_LOCAL = "http://192.168.200.171:8080/svcmgr/api";
+bool isLocal = true;
+const String API_URL_LOCAL = "http://192.168.219.108:8080/svcmgr/api";
 const String API_URL_SERVER = "https://www.tipsy.co.kr/svcmgr/api";
 
 String getAPIHost() {
@@ -92,29 +92,35 @@ Future<http.Response> requestPOST(path, data) async {
 
   final storage = new FlutterSecureStorage();
   String? accessToken = await storage.read(key: "accessToken");
+  if(accessToken == null) {
+    accessToken = "";
+  }
 
   String reqUrl = getApiUrl() + path;
   log("[Request POST URL]:" + reqUrl);
   final Uri url = Uri.parse(reqUrl);
+
   final response = await http.post(
     url,
     headers: <String, String> {
       'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + accessToken!
+      'Authorization': 'Bearer ' + accessToken
     },
     body: json.encode(data),
   );
+
   return response;
 }
 
 // request access token
-Future<AccessToken> requestAccessToken(int platform, String email) async {
+Future<AccessToken> requestAccessToken(int platform, String email, String socialId) async {
 
   log("#### [requestAccessToken] ####");
   String reqUrl = "/user/issueToken.tipsy";
   var bodyData = {
     "platform": platform,
-    "email": email
+    "email": email,
+    "social_id": socialId
   };
 
   log("[request access token] data:$bodyData");

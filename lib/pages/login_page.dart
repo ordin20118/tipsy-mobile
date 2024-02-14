@@ -1,5 +1,5 @@
 import 'dart:developer';
-
+import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -32,9 +32,13 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
 
   bool _isKakaoTalkInstalled = false;
-
   @override
   Widget build(BuildContext context) {
+    // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    //   statusBarColor: Colors.black,
+    // ));
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
+
     return Container(
       height: MediaQuery.of(context).size.height,
       width: MediaQuery.of(context).size.width,
@@ -43,62 +47,212 @@ class _LoginPageState extends State<LoginPage> {
             image: AssetImage('assets/images/login_background.jpg'),
             fit: BoxFit.cover,
             colorFilter: ColorFilter.mode(
-                Colors.black.withOpacity(0.8),
+                Colors.black.withOpacity(0.6),
                 BlendMode.dstATop
             )
         ),
       ),
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        appBar: AppBar(toolbarHeight: 0,),
-        body: Container(
-          child: Column(
-            children: [
-              Container(
-                height: MediaQuery.of(context).size.height * 0.6,
-                child: Center(
-                  child: Text('Tipsy', style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 60,
-                  ),),
+      child: Container(
+        child: Column(
+          children: [
+            Container(
+              height: MediaQuery.of(context).size.height * 0.23,
+            ),
+            Container(
+              //height: MediaQuery.of(context).size.height * 0.5,
+              child: Center(
+                child: DefaultTextStyle(
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 60,
+                    fontWeight: FontWeight.bold,
+                    shadows: [
+                      Shadow(
+                        offset: Offset(2.0, 2.0),
+                        blurRadius: 8.0,
+                        color: Colors.black.withOpacity(0.9),
+                      ),
+                    ],
+                  ), child: Text('Tipsy'),
                 ),
               ),
-              //kakao_login_medium_wide
-              ElevatedButton(
+            ),
+            Container(
+              height: MediaQuery.of(context).size.height * 0.05,
+            ),
+            Container(
+              child: Center(
+                child: DefaultTextStyle(
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    shadows: [
+                      Shadow(
+                        offset: Offset(2.0, 2.0),
+                        blurRadius: 8.0,
+                        color: Colors.black.withOpacity(1.0),
+                      ),
+                    ],
+                  ), child: Text(
+                    '팁씨와 함께 건강한\n주류 문화를 만들어 보세요!',
+                    textAlign: TextAlign.center,
+                ),
+                ),
+              ),
+            ),
+            Container(
+              height: MediaQuery.of(context).size.height * 0.2,
+            ),
+            Container(
+              height: MediaQuery.of(context).size.height * 0.06,
+              width: MediaQuery.of(context).size.width * 0.8,
+              child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    backgroundColor: Colors.yellow,
                     padding: EdgeInsets.all(0.0),
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   ),
-                  child: Image.asset('assets/images/login_btn/kakao_login_medium_wide.png'),
-                  onPressed: _isKakaoTalkInstalled ? _loginWithKakaoTalk : _loginWithKakaoAccount
-                  //onPressed: goToMainPage
-              ),
-              InkWell(
-                  onTap: () {},
-                  child: AppleSignInButton(
-                    onPressed: appleLogin,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                          'assets/images/logo/kakaotalk_logo_small_ov.png',
+                          width: 50.0,
+                          height: 50.0
+                      ),
+                      SizedBox(width: 8.0),
+                      Text(
+                        '카카오 로그인',
+                        style: TextStyle(
+                          fontSize: 15.0,
+                          color: Colors.black
+                        ),
+                      )
+                    ],
                   ),
-                  // child: ElevatedButton(
-                  //     style: ElevatedButton.styleFrom(
-                  //       padding: EdgeInsets.all(0.0),
-                  //       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  //     ),
-                  //     child: Image.asset('assets/images/login_btn/apple_login_button.png'),
-                  //     onPressed: () async {
-                  //       await appleLogin();
-                  //     }
-                  // )
+                  onPressed: _isKakaoTalkInstalled ? _loginWithKakaoTalk : _loginWithKakaoAccount
               ),
-              Container(
-                height: MediaQuery.of(context).size.height * 0.2,
-              )
-            ],
-          ),
+            ),
+            Container(
+              height: MediaQuery.of(context).size.height * 0.01,
+            ),
+            Container(
+              height: MediaQuery.of(context).size.height * 0.06,
+              width: MediaQuery.of(context).size.width * 0.8,
+              child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    backgroundColor: Colors.black,
+                    padding: EdgeInsets.all(0.0),
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                          'assets/images/logo/apple_logo_white_1x.png',
+                          width: 50.0,
+                          height: 50.0
+                      ),
+                      SizedBox(width: 8.0),
+                      Text(
+                        'Sign in with Apple',
+                        style: TextStyle(fontSize: 18.0),
+                      )
+                    ],
+                  ),
+                  onPressed: () async {
+                    await appleLogin();
+                  }
+              ),
+            ),
+          ],
         ),
-        bottomNavigationBar: Container(height: 0,),
       ),
     );
   }
+  // @override
+  // Widget build(BuildContext context) {
+  //   // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+  //   //   statusBarColor: Colors.black,
+  //   // ));
+  //   return Container(
+  //     height: MediaQuery.of(context).size.height,
+  //     width: MediaQuery.of(context).size.width,
+  //     decoration: BoxDecoration(
+  //       image: DecorationImage(
+  //           image: AssetImage('assets/images/login_background.jpg'),
+  //           fit: BoxFit.cover,
+  //           colorFilter: ColorFilter.mode(
+  //               Colors.black.withOpacity(0.8),
+  //               BlendMode.dstATop
+  //           )
+  //       ),
+  //     ),
+  //     child: Scaffold(
+  //       backgroundColor: Colors.transparent,
+  //       appBar: AppBar(
+  //         systemOverlayStyle: SystemUiOverlayStyle.dark,
+  //         toolbarHeight: 0,
+  //       ),
+  //       body: Container(
+  //         child: Column(
+  //           children: [
+  //             Container(
+  //               height: MediaQuery.of(context).size.height * 0.6,
+  //               child: Center(
+  //                 child: Text('Tipsy',
+  //                   style: TextStyle(
+  //                     color: Colors.white,
+  //                     fontSize: 60,
+  //                     shadows: [
+  //                       Shadow(
+  //                         offset: Offset(2.0, 2.0),
+  //                         blurRadius: 5.0,
+  //                         color: Colors.black.withOpacity(0.9),
+  //                       ),
+  //                     ],
+  //                 ),),
+  //               ),
+  //             ),
+  //             //kakao_login_medium_wide
+  //             ElevatedButton(
+  //                 style: ElevatedButton.styleFrom(
+  //                   padding: EdgeInsets.all(0.0),
+  //                   tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+  //                 ),
+  //                 child: Image.asset('assets/images/login_btn/kakao_login_medium_wide.png'),
+  //                 onPressed: _isKakaoTalkInstalled ? _loginWithKakaoTalk : _loginWithKakaoAccount
+  //                 //onPressed: goToMainPage
+  //             ),
+  //             InkWell(
+  //                 onTap: () {},
+  //                 child: AppleSignInButton(
+  //                   onPressed: appleLogin,
+  //                 ),
+  //                 // child: ElevatedButton(
+  //                 //     style: ElevatedButton.styleFrom(
+  //                 //       padding: EdgeInsets.all(0.0),
+  //                 //       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+  //                 //     ),
+  //                 //     child: Image.asset('assets/images/login_btn/apple_login_button.png'),
+  //                 //     onPressed: () async {
+  //                 //       await appleLogin();
+  //                 //     }
+  //                 // )
+  //             ),
+  //             Container(
+  //               height: MediaQuery.of(context).size.height * 0.2,
+  //             )
+  //           ],
+  //         ),
+  //       ),
+  //       bottomNavigationBar: Container(height: 0,),
+  //     ),
+  //   );
+  // }
 
   @override
   void dispose() {
@@ -183,7 +337,7 @@ class _LoginPageState extends State<LoginPage> {
         print("이미 가입된 이메일 입니다.");
 
         // 1. 서비스 토큰 발급
-        AccessToken token = await requestAccessToken(USER_PLATFORM_KAKAO, email!);
+        AccessToken token = await requestAccessToken(USER_PLATFORM_KAKAO, email!, '');
 
         print("[액세스 토큰 발급]: $token");
 
@@ -193,11 +347,6 @@ class _LoginPageState extends State<LoginPage> {
           bool isLogin = await autoLogin(USER_PLATFORM_KAKAO, email, token.tokenHash);
 
           if(isLogin) {
-            final storage = new FlutterSecureStorage();
-            await storage.write(key:'accessToken', value:token.tokenHash);
-            await storage.write(key:'platform', value:USER_PLATFORM_KAKAO.toString());
-            await storage.write(key:'id', value:token.userId.toString());
-            await storage.write(key:'email', value:email);
             goToMainPage(context);
           } else {
             throw Exception('Failed auto login.');
@@ -329,13 +478,14 @@ class _LoginPageState extends State<LoginPage> {
 
 
   Future<bool> checkSocialUser(platform, socialId) async {
-    print("#### [checkSocialUser] ####//platform:"+platform+"/socialId:"+socialId);
-    String chckUrl = "http://www.tipsy.co.kr/svcmgr/api/user/social_user.tipsy";
+    print("#### [checkSocialUser] #### / platform:"+platform.toString()+"/socialId:"+socialId);
+    String host = getAPIHost();
+    String chckUrl = host + "/user/social_user.tipsy";
     final Uri url = Uri.parse(chckUrl);
 
     var bodyData = {
       "platform": platform,
-      "socialId": socialId
+      "social_id": socialId
     };
 
     http.Response response = await http.post(
@@ -349,6 +499,7 @@ class _LoginPageState extends State<LoginPage> {
     if (response.statusCode == 200) {
 
       String resString = response.body.toString();
+      print("[checkSocialUser]:" + resString);
       var parsed = null;
       try {
         parsed = json.decode(resString);
@@ -356,12 +507,10 @@ class _LoginPageState extends State<LoginPage> {
         print(e);
       }
 
-      var isDuplicated = parsed['state'];
+      var data = parsed['data'];
 
-      if(isDuplicated == 0) {
-        return true;
-      } else if(isDuplicated == 1) {
-        return false;
+      if(data != null) {
+        return data;
       } else {
         throw Exception('Failed to check social user.');
       }
@@ -395,12 +544,31 @@ class _LoginPageState extends State<LoginPage> {
         log('로그인 결과 : sub:${decodedToken['sub']}');
 
 
-        // TODO: 회원 가입 여부 확인
+        // 회원 가입 여부 확인
         bool hasUser = await checkSocialUser(USER_PLATFORM_APPLE, decodedToken['sub']);
         if(hasUser) {
           log("[이미 소셜 사용자 존재]");
-          goToMainPage(context);
+
+          // 1. 서비스 토큰 발급
+          AccessToken token = await requestAccessToken(USER_PLATFORM_APPLE, '', decodedToken['sub']);
+
+          print("[액세스 토큰 발급]: $token");
+
+          if(token != null && token.tokenHash.length > 0 && token.email != null) {
+
+            // 2. 자동 로그인 처리
+            bool isLogin = await autoLogin(USER_PLATFORM_APPLE, token.email, token.tokenHash);
+
+            if(isLogin) {
+              goToMainPage(context);
+            } else {
+              throw Exception('Failed auto login.');
+            }
+          } else {
+            throw Exception('Failed isuue access token.');
+          }
         } else {
+          log("[회원가입 페이지 이동]");
           // 회원가입 페이지 이동
           goToJoinPage(USER_PLATFORM_APPLE, decodedToken['sub'], "");
         }

@@ -337,7 +337,7 @@ class _JoinPageState extends State<JoinPage> {
       // 1. 토큰 발급
       AccessToken? token = null;
       try {
-        token = await requestAccessToken(widget.platform, _email);
+        token = await requestAccessToken(widget.platform, _email, '');
       } catch(e) {
         token = null;
       }
@@ -361,7 +361,7 @@ class _JoinPageState extends State<JoinPage> {
         throw Exception('Failed isuue access token.');
       }
 
-      // TODO: Add loading icon
+      // TODO: Add loading logo
 
     } else {
       // TODO: toast
