@@ -36,7 +36,7 @@ class _HomeState extends State<Home> {
 
   Widget buildHomeScreenV2(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+      padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
       color: Color(0x33eaeaea),
       child: SingleChildScrollView(
         child: Center(
@@ -72,9 +72,7 @@ class _HomeState extends State<Home> {
                                 IconButton(
                                   icon: Icon(Icons.bookmark_border),
                                   //icon: Icon(Icons.bookmark),
-                                  onPressed: () {
-
-                                  },
+                                  onPressed: () {},
                                   color: Colors.white,
                                   iconSize: 30,
                                 )
@@ -253,7 +251,7 @@ class _HomeState extends State<Home> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.fromLTRB(30, 20, 10, 3),
+                padding: const EdgeInsets.fromLTRB(30, 20, 10, 0),
                 child: Column(
                   children: [
                     Row(
@@ -271,7 +269,7 @@ class _HomeState extends State<Home> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.fromLTRB(15, 0, 10, 0),
+                padding: const EdgeInsets.fromLTRB(13, 0, 13, 13),
                 child: FutureBuilder<Word> (
                   future: word,
                   builder: (context, snapshot) {
@@ -280,7 +278,7 @@ class _HomeState extends State<Home> {
                         child: Padding(
                           padding: const EdgeInsets.all(13),
                           child: SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.8,
+                            width: MediaQuery.of(context).size.width * 0.85,
                             child: Row(
                               children: [
                                 Text(
@@ -314,7 +312,7 @@ class _HomeState extends State<Home> {
                         child: Padding(
                           padding: const EdgeInsets.all(13),
                           child: SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.8,
+                            width: MediaQuery.of(context).size.width * 0.85,
                             child: Row(
                               children: [
                                 Text(
@@ -378,7 +376,7 @@ class _HomeState extends State<Home> {
                 ),
               ),
               Padding(
-                  padding: const EdgeInsets.fromLTRB(15, 20, 10, 0),
+                  padding: const EdgeInsets.fromLTRB(13, 10, 13, 0),
                   child: Card(
                     color: Color(0xffC98AFF),
                     shape: RoundedRectangleBorder(
@@ -390,7 +388,7 @@ class _HomeState extends State<Home> {
                         goToCocktailRegistPage(context);
                       },
                       child: SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.9,
+                        width: MediaQuery.of(context).size.width * 0.95,
                         height: MediaQuery.of(context).size.height * 0.08,
                         child: Center(child: Text('나만의 칵테일 등록하기', style: Home.boxMenuWhite)),
                       ),

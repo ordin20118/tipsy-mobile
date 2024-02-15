@@ -32,6 +32,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
 
   bool _isKakaoTalkInstalled = false;
+
   @override
   Widget build(BuildContext context) {
     // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -173,86 +174,6 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
-  // @override
-  // Widget build(BuildContext context) {
-  //   // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-  //   //   statusBarColor: Colors.black,
-  //   // ));
-  //   return Container(
-  //     height: MediaQuery.of(context).size.height,
-  //     width: MediaQuery.of(context).size.width,
-  //     decoration: BoxDecoration(
-  //       image: DecorationImage(
-  //           image: AssetImage('assets/images/login_background.jpg'),
-  //           fit: BoxFit.cover,
-  //           colorFilter: ColorFilter.mode(
-  //               Colors.black.withOpacity(0.8),
-  //               BlendMode.dstATop
-  //           )
-  //       ),
-  //     ),
-  //     child: Scaffold(
-  //       backgroundColor: Colors.transparent,
-  //       appBar: AppBar(
-  //         systemOverlayStyle: SystemUiOverlayStyle.dark,
-  //         toolbarHeight: 0,
-  //       ),
-  //       body: Container(
-  //         child: Column(
-  //           children: [
-  //             Container(
-  //               height: MediaQuery.of(context).size.height * 0.6,
-  //               child: Center(
-  //                 child: Text('Tipsy',
-  //                   style: TextStyle(
-  //                     color: Colors.white,
-  //                     fontSize: 60,
-  //                     shadows: [
-  //                       Shadow(
-  //                         offset: Offset(2.0, 2.0),
-  //                         blurRadius: 5.0,
-  //                         color: Colors.black.withOpacity(0.9),
-  //                       ),
-  //                     ],
-  //                 ),),
-  //               ),
-  //             ),
-  //             //kakao_login_medium_wide
-  //             ElevatedButton(
-  //                 style: ElevatedButton.styleFrom(
-  //                   padding: EdgeInsets.all(0.0),
-  //                   tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-  //                 ),
-  //                 child: Image.asset('assets/images/login_btn/kakao_login_medium_wide.png'),
-  //                 onPressed: _isKakaoTalkInstalled ? _loginWithKakaoTalk : _loginWithKakaoAccount
-  //                 //onPressed: goToMainPage
-  //             ),
-  //             InkWell(
-  //                 onTap: () {},
-  //                 child: AppleSignInButton(
-  //                   onPressed: appleLogin,
-  //                 ),
-  //                 // child: ElevatedButton(
-  //                 //     style: ElevatedButton.styleFrom(
-  //                 //       padding: EdgeInsets.all(0.0),
-  //                 //       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-  //                 //     ),
-  //                 //     child: Image.asset('assets/images/login_btn/apple_login_button.png'),
-  //                 //     onPressed: () async {
-  //                 //       await appleLogin();
-  //                 //     }
-  //                 // )
-  //             ),
-  //             Container(
-  //               height: MediaQuery.of(context).size.height * 0.2,
-  //             )
-  //           ],
-  //         ),
-  //       ),
-  //       bottomNavigationBar: Container(height: 0,),
-  //     ),
-  //   );
-  // }
 
   @override
   void dispose() {
