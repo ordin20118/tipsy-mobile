@@ -1,5 +1,5 @@
 import 'dart:developer';
-
+import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:tipsy_mobile/classes/ui_util.dart';
 import 'package:tipsy_mobile/main.dart';
@@ -20,28 +20,23 @@ class _SplashPageState extends State<SplashPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-          toolbarHeight: 0,
-      ),
-      body: Container(
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
-        decoration: BoxDecoration(
-          image: DecorationImage(
-              image: AssetImage('assets/images/login_background.jpg'),
-              fit: BoxFit.cover
-          ),
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
+    return Container(
+      height: MediaQuery.of(context).size.height,
+      width: MediaQuery.of(context).size.width,
+      decoration: BoxDecoration(
+        image: DecorationImage(
+            image: AssetImage('assets/images/login_background.jpg'),
+            fit: BoxFit.cover
         ),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
+      ),
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
 
-            ],
-          ),
+          ],
         ),
       ),
-      bottomNavigationBar: Container(height: 0.0),
     );
   }
 
@@ -73,6 +68,7 @@ class _SplashPageState extends State<SplashPage> {
       String? email = await storage.read(key: "email");
 
       if(platformStr == null || email == null) {
+        log("[Splash Page]: 자동 로그인 정보 없음");
         goToLoginPage(context);
       }
 
@@ -87,14 +83,16 @@ class _SplashPageState extends State<SplashPage> {
 
       if(isLogin) {
         // 메인 페이지로
+        log("[Splash Page]: 자동 로그인 성공");
         goToMainPage(context);
       } else {
         // 로그인 페이지로
+        log("[Splash Page]: 자동 로그인 실패");
         goToLoginPage(context);
       }
 
     } else {
-      print("로그인 페이지로 이동");
+      log("[Splash Page]: 자동 로그인 정보 없음");
       // 로그인 페이지로
       goToLoginPage(context);
     }

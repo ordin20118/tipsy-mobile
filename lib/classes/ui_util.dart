@@ -9,6 +9,7 @@ import '../pages/camera_page.dart';
 import '../pages/cocktail/cocktail_regist_page.dart';
 import '../pages/login_page.dart';
 import '../pages/join_page.dart';
+import '../pages/recommand/recommand_page.dart';
 
 const List<String> cocktailColors = [
   "#FFFAED7D",
@@ -86,6 +87,13 @@ void goToMainPage(BuildContext context) {
   Navigator.push(
     context,
     MaterialPageRoute(builder: (context) => MainPage()),
+  );
+}
+
+void goToRecommandPage(BuildContext context) {
+  Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) => RecommandPage()),
   );
 }
 

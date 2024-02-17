@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:tipsy_mobile/classes/util.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-
+import '../classes/ui_util.dart';
 import '../classes/styles.dart';
 
 
@@ -72,6 +72,28 @@ class _MyPageState extends State<MyPage> {
               width: MediaQuery.of(context).size.width * 1.0,
               height: MediaQuery.of(context).size.height * 0.11,
               child: buildMyPageCenterMenu(context),
+            ),
+            Container(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(13, 10, 13, 0),
+                child: Card(
+                  color: Color(0xffC98AFF),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: const BorderRadius.all(const Radius.circular(10.0))
+                  ),
+                  elevation: 4.0, // 그림자 깊이
+                  child: InkWell(
+                    onTap: () {
+                      goToCocktailRegistPage(context);
+                    },
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.95,
+                      height: MediaQuery.of(context).size.height * 0.08,
+                      child: Center(child: Text('나만의 칵테일 등록하기', style: boxMenuWhite)),
+                    ),
+                  ),
+                ),
+              ),
             ),
           ],
         ),

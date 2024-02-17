@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
@@ -30,6 +31,7 @@ void main() async {
   runApp(
     MaterialApp(
       title: 'Main',
+      debugShowCheckedModeBanner: false,
       home: MyApp(),
     ),
   );
@@ -40,7 +42,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [SystemUiOverlay.top]);
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         fontFamily: 'NanumBarunGothicBold'
       ),
@@ -58,9 +62,8 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
 
   int _selectedPageIndex = 0; // 선택된 페이지의 인덱스 번호
-  String _title = "TIPSY";
-
-  List<Widget> _pageChildren = <Widget>[];
+  String _title = "";
+  String _subTitle = "";
 
   // test
   List<Widget> getAppBarIcons(index) {
@@ -101,15 +104,64 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(fontFamily: 'NanumBarunGothic'),
+      theme: ThemeData(
+        primaryColor: Colors.teal,
+        primarySwatch: Colors.teal,
+        // primarySwatch: MaterialColor(0xFF009688, {
+        //   50: Color(0xFFE0F2F1),
+        //   100: Color(0xFFB2DFDB),
+        //   200: Color(0xFF80CBC4),
+        //   300: Color(0xFF4DB6AC),
+        //   400: Color(0xFF26A69A),
+        //   500: Color(0xFF009688),
+        //   600: Color(0xFF00897B),
+        //   700: Color(0xFF00796B),
+        //   800: Color(0xFF00695C),
+        //   900: Color(0xFF004D40),
+        // }),
+        fontFamily: 'NanumBarunGothic',
+        appBarTheme: AppBarTheme(
+          shadowColor: Colors.black
+        )
+      ),
       home: Scaffold(
         appBar: AppBar(
-            title: Text(_title, style: TextStyle(color: Color(0xff005766), fontFamily: 'NanumBarunGothicBold')),
-            //backgroundColor: Color(0xff005766),
-            backgroundColor: Color(0xffffffff),
-            actions: getAppBarIcons(_selectedPageIndex),
+          title: Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(_title, style: TextStyle(color: Color(0xff005766), fontFamily: 'NanumBarunGothicBold')),
+              SizedBox(width: MediaQuery.of(context).size.width * 0.015,),
+              Text(
+                _subTitle,
+                style: TextStyle(
+                  color: Color(0xff005766),
+                  fontFamily: 'NanumBarunGothicBold',
+                  fontSize: 13
+                )
+              )
+            ],
+          ),
+          backgroundColor: Color(0xffffffff),
+          actions: getAppBarIcons(_selectedPageIndex),
+          centerTitle: false,
+          elevation: 0.1,
         ),
-        body: _pageChildren.elementAt(_selectedPageIndex),
+        body: Stack(
+          children: [
+            Offstage(
+              offstage: _selectedPageIndex != 0,
+              child: const Home(),
+            ),
+            Offstage(
+              offstage: _selectedPageIndex != 1,
+              child: CreateMenuPage(),
+            ),
+            Offstage(
+              offstage: _selectedPageIndex != 2,
+              child: const MyPage(),
+            ),
+          ],
+        ),
         bottomNavigationBar: Container(
           decoration: BoxDecoration(
             border: Border(top: BorderSide(color: Color(0xffEAEAEA), width: 1.0)), // 라인효과
@@ -138,8 +190,10 @@ class _MainPageState extends State<MainPage> {
                 _selectedPageIndex = index;
                 if(index == 2) {
                   _title = "마이페이지";
+                  _subTitle = "";
                 } else {
-                  _title = "TIPSY";
+                  _title = "Tipsy";
+                  _subTitle = "건강한 술 생활";
                 }
               });
             },
@@ -153,15 +207,6 @@ class _MainPageState extends State<MainPage> {
   void initState() {
     super.initState();
     print("Main Page initState()");
-
-    // TODO: init _pageChildren
-    Home home = Home();
-    _pageChildren.add(home);
-    CreateMenuPage createMenuPage = CreateMenuPage();
-    _pageChildren.add(createMenuPage);
-    MyPage myPage = MyPage();
-    _pageChildren.add(myPage);
-
     chekStorageData();
   }
 

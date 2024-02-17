@@ -197,7 +197,7 @@ class _SearchResTabState extends State<SearchResTab> with TickerProviderStateMix
     super.initState();
     log("[[ SearchResTab Init ]]");
     _tabController = TabController(
-        length: 5,
+        length: 2,
         vsync: this
     );
   }
@@ -226,15 +226,15 @@ class _SearchResTabState extends State<SearchResTab> with TickerProviderStateMix
       Tab(
         text: '칵테일',
       ),
-      Tab(
-        text: '재료',
-      ),
-      Tab(
-        text: '장비',
-      ),
-      Tab(
-        text: '용어',
-      ),
+      // Tab(
+      //   text: '재료',
+      // ),
+      // Tab(
+      //   text: '장비',
+      // ),
+      // Tab(
+      //   text: '용어',
+      // ),
     ],
   );
 
@@ -256,17 +256,17 @@ class _SearchResTabState extends State<SearchResTab> with TickerProviderStateMix
               child: widget.liquorScrollController.data.length > 0 ? LiquorGridView(liquorController: widget.liquorScrollController) : NoSearchRes()
           ),
           Center( // cocktail
-            child: Text("It's rainy here"),
+            child: Text("칵테일 검색은 준비중입니다.🥲"),
           ),
-          Center( // ingredient
-            child: widget.ingdList.length > 0 ? IngdListView(ingdList: widget.ingdList) : NoSearchRes()
-          ),
-          Center( // equipment
-            child: widget.equipList.length > 0 ? EquipListView(equipList: widget.equipList) : NoSearchRes(),
-          ),
-          Center( // word
-            child: widget.wordList.length > 0 ? WordListView(wordList: widget.wordList) : NoSearchRes(),
-          )
+          // Center( // ingredient
+          //   child: widget.ingdList.length > 0 ? IngdListView(ingdList: widget.ingdList) : NoSearchRes()
+          // ),
+          // Center( // equipment
+          //   child: widget.equipList.length > 0 ? EquipListView(equipList: widget.equipList) : NoSearchRes(),
+          // ),
+          // Center( // word
+          //   child: widget.wordList.length > 0 ? WordListView(wordList: widget.wordList) : NoSearchRes(),
+          // )
         ],
       ),
       bottomNavigationBar: Container(height: 0.0,),
