@@ -108,7 +108,6 @@ class _MyPageState extends State<MyPage> {
   }
 
   Future<String> fetchUserData() async {
-    log("[fetchUserData]");
     await Future.delayed(Duration(seconds: 1));
     return "Hello, Flutter!";
   }

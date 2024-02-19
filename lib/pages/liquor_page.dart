@@ -9,6 +9,8 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:getwidget/getwidget.dart';
 
+import '../ui/TipsyLoadingIndicator.dart';
+
 class LiquorDetail extends StatefulWidget {
   const LiquorDetail({Key? key, required this.liquorId}) : super(key: key);
 
@@ -169,6 +171,7 @@ class _LiquorDetailState extends State<LiquorDetail> {
                                       ),
                                     ],
                                   ),
+                                  // rating avg
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
@@ -183,7 +186,7 @@ class _LiquorDetailState extends State<LiquorDetail> {
                                       Padding(
                                         padding: const EdgeInsets.fromLTRB(6, 0, 6, 8),
                                         child: Text(
-                                          "평점 나오는 곳",
+                                          snapshot.data!.ratingAvg.toString(),
                                           style: TextStyle(
                                             fontSize: 11,
                                             fontFamily: 'NanumBarunGothicLight',
@@ -263,7 +266,7 @@ class _LiquorDetailState extends State<LiquorDetail> {
                         width: MediaQuery.of(context).size.width,
                         height: MediaQuery.of(context).size.height * 0.7,
                         child: Center(
-                            child: CircularProgressIndicator()
+                            child: TipsyLoadingIndicator()
                         ),
                       );
                     }
@@ -471,7 +474,7 @@ class _CommentPreViewState extends State<CommentPreView> {
               return Container(
                 height: MediaQuery.of(context).size.height * 0.7,
                 child: Center(
-                    child: CircularProgressIndicator()
+                    child: TipsyLoadingIndicator()
                 ),
               );
             }

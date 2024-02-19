@@ -7,6 +7,7 @@ import '../classes/recommand.dart';
 import '../classes/ui_util.dart';
 import '../classes/util.dart';
 import '../classes/word.dart';
+import '../ui/TipsyLoadingIndicator.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -121,7 +122,7 @@ class _HomeState extends State<Home> {
 
   Widget buildTodayLiquorCard(BuildContext context) {
     return Card(
-      color: Color(0x99005766),
+      //color: Color(0x99005766),
       elevation: 4.0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
@@ -140,11 +141,11 @@ class _HomeState extends State<Home> {
             builder: (context, snapshot) {
               if(snapshot.hasData) {
                 return SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.91,
+                  width: MediaQuery.of(context).size.width * 0.9,
                   child: Column(
                     children: [
                       Row(
-                        //mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Padding(
                             padding: const EdgeInsets.all(15.0),
@@ -156,7 +157,6 @@ class _HomeState extends State<Home> {
                               ),
                             ),
                           ),
-                          SizedBox(width: MediaQuery.of(context).size.width * 0.45),
                           IconButton(
                             icon: Icon(Icons.bookmark_border),
                             //icon: Icon(Icons.bookmark),
@@ -237,7 +237,8 @@ class _HomeState extends State<Home> {
                         padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
-                          children: makeStarUi(3),
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: makeStarUi(1, snapshot.data!.liquorList.first.ratingAvg),
                         ),
                       )
                     ],
@@ -252,7 +253,7 @@ class _HomeState extends State<Home> {
                 child: Column(
                   children: [
                     Row(
-                      //mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Padding(
                           padding: const EdgeInsets.all(15.0),
@@ -264,7 +265,6 @@ class _HomeState extends State<Home> {
                             ),
                           ),
                         ),
-                        SizedBox(width: MediaQuery.of(context).size.width * 0.45),
                         IconButton(
                           icon: Icon(Icons.bookmark_border),
                           //icon: Icon(Icons.bookmark),
@@ -281,7 +281,7 @@ class _HomeState extends State<Home> {
                         SizedBox(
                           //width: MediaQuery.of(context).size.width * 0.5,
                           height: MediaQuery.of(context).size.height * 0.35,
-                          child: Center(child: CircularProgressIndicator()),
+                          child: Center(child: TipsyLoadingIndicator()),
                         ),
                       ],
                     ),
@@ -324,7 +324,7 @@ class _HomeState extends State<Home> {
                       padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
-                        children: makeStarUi(3),
+                        children: makeStarUi(1, 0.0),
                       ),
                     )
                   ],
@@ -351,7 +351,7 @@ class _HomeState extends State<Home> {
               goToRecommandPage(context);
             },
             child: SizedBox(
-              width: MediaQuery.of(context).size.width * 0.95,
+              width: MediaQuery.of(context).size.width * 0.9,
               height: MediaQuery.of(context).size.height * 0.2,
               child: Container(
                 child: Row(

@@ -236,6 +236,18 @@ class Liquor {
   set countryName(String value) {
     _countryName = value;
   }
+
+  double get ratingAvg => _ratingAvg;
+
+  set ratingAvg(double value) {
+    _ratingAvg = value;
+  }
+
+  int get ratingCnt => _ratingCnt;
+
+  set ratingCnt(int value) {
+    _ratingCnt = value;
+  }
 }
 
 class LiquorList {

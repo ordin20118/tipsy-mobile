@@ -96,7 +96,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ],
                   ), child: Text(
-                    '팁씨와 함께 건강한\n주류 문화를 만들어 보세요!',
+                    '팁씨와 함께 건강한\n음주 문화를 만들어 보세요!',
                     textAlign: TextAlign.center,
                 ),
                 ),
@@ -452,6 +452,23 @@ class _LoginPageState extends State<LoginPage> {
             AppleIDAuthorizationScopes.fullName,
           ],
         );
+
+        // # 테스트 필요
+        // String redirectURL = dotenv.env['APPLE_REDIRECT_URI'].toString();
+        // print(redirectURL);
+        // String? clientID = dotenv.env['APPLE_CLIENT_ID'];
+        // final appleIdCredential = await SignInWithApple.getAppleIDCredential(
+        //     scopes: [
+        //       AppleIDAuthorizationScopes.email,
+        //       AppleIDAuthorizationScopes.fullName,
+        //     ],
+        //     webAuthenticationOptions: WebAuthenticationOptions(
+        //       clientId: clientID!,
+        //       redirectUri: Uri.parse(redirectURL),
+        //
+        //     ));
+        // print(appleIdCredential.authorizationCode);
+        // this.socialLogin(appleIdCredential.authorizationCode, "apple");
 
         // print('로그인 결과 : state:${result.state}');
         // print('로그인 결과 : email:${result.email}');

@@ -6,6 +6,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter_config/flutter_config.dart';
 import 'package:http/http.dart' as http;
+import 'package:tipsy_mobile/classes/param/recommandParam.dart';
 import 'package:tipsy_mobile/classes/recommand.dart';
 import 'dart:convert';
 import 'package:tipsy_mobile/classes/user.dart';
@@ -13,6 +14,7 @@ import 'package:tipsy_mobile/classes/ui_util.dart';
 import 'package:tipsy_mobile/classes/word.dart';
 import '../main.dart';
 import 'comment.dart';
+import 'liquor.dart';
 
 bool isLocal = true;
 const String API_URL_LOCAL = "http://192.168.219.108:8080/svcmgr/api";
@@ -64,8 +66,24 @@ String makeImgUrl(String filePath, int size) {
   return "http://tipsy.co.kr/svcmgr/api" + "/image/" + pathArr.last + ".tipsy?size=" + size.toString();
 }
 
+String makeCategString(Liquor liquor) {
+  String categString = "";
 
+  if(liquor.category1Name != null) {
+    categString += liquor.category1Name;
+  }
+  if(liquor.category2Name != null && liquor.category2Name.length > 0) {
+    categString += " > " + liquor.category2Name;
+  }
+  if(liquor.category3Name != null && liquor.category3Name.length > 0) {
+    categString += " > " + liquor.category3Name;
+  }
+  if(liquor.category4Name != null && liquor.category4Name.length > 0) {
+    categString += " > " + liquor.category4Name;
+  }
 
+  return categString;
+}
 
 Future<http.Response> requestGET(path) async {
 
@@ -215,6 +233,7 @@ Future<Recommand> requestTodayRecommand() async {
     String resString = response.body.toString();
     var parsed = json.decode(resString);
     var data = parsed['data'];
+    print(data.toString());
     Recommand recomm = new Recommand.fromJson(data);
     return recomm;
   } else {
@@ -243,6 +262,35 @@ Future<List<Comment>> loadCommentInfo(int contentId, int contentType) async {
     return tmp;
   } else {
     throw Exception('Failed to load liquor comments data.');
+  }
+}
+
+Future<List<Liquor>> loadRecommandLiquors(RecommandParam rParam) async {
+  print("#### [loadRecommandLiquors] ####" + rParam.toString());
+  String reqUrl = "/recommand/liquor.tipsy?tipsy=true&";
+
+  if(rParam.abvMin != rParam.abvMax) {
+    reqUrl += "&abvMin=" + rParam.abvMin.toString() + "&abvMax=" + rParam.abvMax.toString();
+  }
+
+  if(rParam.priceMin != rParam.priceMax) {
+    reqUrl += "&priceMin=" + rParam.priceMin.toString() + "&priceMax=" + rParam.priceMax.toString();
+  }
+
+  if(rParam.tastingNotes.length > 0) {
+    reqUrl += "&tastingNotes=" + rParam.tastingNotes;
+  }
+
+  final response = await requestGET(reqUrl);
+
+  if(response.statusCode == 200) {
+    String resString = response.body.toString();
+    var resJson = json.decode(resString);
+    var dataJson = resJson['data'];
+    Recommand recomm = new Recommand.fromJson(dataJson);
+    return recomm.liquorList;
+  } else {
+    throw Exception('Failed to load recommand liquors.');
   }
 }
 

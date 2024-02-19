@@ -456,7 +456,7 @@ class _LiquorGridViewState extends State<LiquorGridView> {
                       size: 13, // 아이콘 크기 조절
                     ),
                     Text(
-                        '4.5',
+                        widget.liquorController.data[index].ratingAvg.toString(),
                         style: TextStyle(
                           fontSize: 10, // 텍스트 크기 조절
                           // 추가적인 텍스트 스타일 속성들을 설정할 수 있습니다.

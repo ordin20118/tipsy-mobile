@@ -13,6 +13,7 @@ import 'abv_survey_page.dart';
 import 'price_survey_page.dart';
 import 'nosing_survey_page.dart';
 import 'survey_controller.dart';
+import 'survey_result_page.dart';
 
 class RecommandPage extends StatefulWidget {
   const RecommandPage({Key? key}) : super(key: key);
@@ -32,6 +33,10 @@ class _RecommandPageState extends State<RecommandPage> {
           leading: IconButton(icon: Icon(Icons.arrow_back_ios),
             onPressed: () {
               if(surveyController.nowSurveyPage.value == 0) {
+                surveyController.clearState();
+                Navigator.pop(context);
+              } else if(surveyController.nowSurveyPage == 99){
+                surveyController.clearState();
                 Navigator.pop(context);
               } else {
                 surveyController.goToPrev();
@@ -85,7 +90,7 @@ class _RecommandPageState extends State<RecommandPage> {
                       ),
                       Offstage(
                         offstage: surveyController.nowSurveyPage.value != 99,
-                        child: const AbvSurveyPage(),
+                        child: const SurveyResultPage(),
                       ),
                     ],
                   );
@@ -98,12 +103,6 @@ class _RecommandPageState extends State<RecommandPage> {
     );
   }
 
-  @override
-  void initState() {
-    super.initState();
-    log("my page initState()");
-  }
-
   Widget buildStartPage(BuildContext context) {
     return Container(
       height: MediaQuery.of(context).size.height * 0.7,
@@ -113,11 +112,11 @@ class _RecommandPageState extends State<RecommandPage> {
           height: MediaQuery.of(context).size.height * 0.08,
           child: ElevatedButton(
             onPressed: () {
+              surveyController.clearState();
               surveyController.goToPage(1);
             },
             child: Text(
               '시작하기',
-              textAlign: TextAlign.left,
               style: TextStyle(
                   color: Colors.white,
                   fontSize: 16,
@@ -125,7 +124,6 @@ class _RecommandPageState extends State<RecommandPage> {
               ),
             ),
             style: ElevatedButton.styleFrom(
-              //backgroundColor: Color(0x99005766),
               backgroundColor: Theme.of(context).primaryColor,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(100.0), // 원하는 둥근 정도로 조절
@@ -135,6 +133,12 @@ class _RecommandPageState extends State<RecommandPage> {
         ),
       ),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    log("my page initState()");
   }
 }
 

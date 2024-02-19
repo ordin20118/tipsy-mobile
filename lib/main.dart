@@ -1,6 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
+import 'package:firebase_core/firebase_core.dart';
+
+import 'firebase_options.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -27,6 +30,10 @@ void main() async {
 
   final cameras = await availableCameras();
   log(cameras.toString());
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
   runApp(
     MaterialApp(
@@ -62,8 +69,8 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
 
   int _selectedPageIndex = 0; // 선택된 페이지의 인덱스 번호
-  String _title = "";
-  String _subTitle = "";
+  String _title = "Tipsy";
+  String _subTitle = "함께하는 건강한 음주 문화";
 
   // test
   List<Widget> getAppBarIcons(index) {
@@ -193,7 +200,7 @@ class _MainPageState extends State<MainPage> {
                   _subTitle = "";
                 } else {
                   _title = "Tipsy";
-                  _subTitle = "건강한 술 생활";
+                  _subTitle = "함께하는 건강한 음주 문화";
                 }
               });
             },

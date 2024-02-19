@@ -52,7 +52,7 @@ TextStyle boxMenuPupple = TextStyle(
     fontWeight: FontWeight.bold
 );
 
-List<Widget> makeStarUi(int count) {
+List<Widget> makeStarUi(int count, double ratingAvg) {
   List<Widget> res = <Widget>[];
   for(int i=0; i<count; i++) {
     res.add(
@@ -63,6 +63,18 @@ List<Widget> makeStarUi(int count) {
         )
     );
   }
+
+  res.add(SizedBox(
+    width: 5,
+  ));
+
+  res.add(Text(
+      ratingAvg.toString(),
+      style: TextStyle(
+        color: Colors.black45,
+        fontWeight: FontWeight.bold,
+      ),
+  ));
   return res;
 }
 
@@ -128,7 +140,7 @@ Image makeImgWidget(context, String fileUrl, int size, height) {
   if(fileUrl.length == 0) {
     return Image.asset(
       'assets/images/default_image.png',
-      height: MediaQuery.of(context).size.height * 0.17,
+      height: height,
     );
   } else {
     return Image.network(
