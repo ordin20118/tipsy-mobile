@@ -50,7 +50,7 @@ class _SettingPageState extends State<SettingPage> {
                       onPressed: () async {
                         bool isLogout = await logout(context);
                         if(isLogout) {
-                          goToLoginPage(context);
+                          goToLoginPageReplace(context);
                         }
                       },
                       color: Colors.black,

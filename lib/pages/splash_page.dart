@@ -33,7 +33,6 @@ class _SplashPageState extends State<SplashPage> {
       child: SingleChildScrollView(
         child: Column(
           children: [
-
           ],
         ),
       ),
@@ -42,6 +41,7 @@ class _SplashPageState extends State<SplashPage> {
 
   @override
   void dispose() {
+    log("Splash Page dispose()");
     super.dispose();
   }
 
@@ -69,7 +69,7 @@ class _SplashPageState extends State<SplashPage> {
 
       if(platformStr == null || email == null) {
         log("[Splash Page]: 자동 로그인 정보 없음");
-        goToLoginPage(context);
+        goToLoginPageReplace(context);
       }
 
       int platform = int.parse(platformStr!);
@@ -78,23 +78,23 @@ class _SplashPageState extends State<SplashPage> {
       try{
         isLogin = await autoLogin(platform, email!, accessToken);
       } catch(e) {
-        goToLoginPage(context);
+        goToLoginPageReplace(context);
       }
 
       if(isLogin) {
         // 메인 페이지로
         log("[Splash Page]: 자동 로그인 성공");
-        goToMainPage(context);
+        goToMainPageReplace(context);
       } else {
         // 로그인 페이지로
         log("[Splash Page]: 자동 로그인 실패");
-        goToLoginPage(context);
+        goToLoginPageReplace(context);
       }
 
     } else {
       log("[Splash Page]: 자동 로그인 정보 없음");
       // 로그인 페이지로
-      goToLoginPage(context);
+      goToLoginPageReplace(context);
     }
   }
 

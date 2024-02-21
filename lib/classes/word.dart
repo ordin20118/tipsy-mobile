@@ -91,7 +91,7 @@ class WordList {
     wordList.forEach((element) {
       emptyList.add(element);
     });
-    words = wordList;
+    words = emptyList;
   }
 
   factory WordList.fromJson(List<dynamic> parsedJson) {

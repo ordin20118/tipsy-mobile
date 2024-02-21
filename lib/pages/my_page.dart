@@ -5,6 +5,8 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../classes/ui_util.dart';
 import '../classes/styles.dart';
+import '../classes/user.dart';
+import '../requests/user.dart';
 
 
 class MyPage extends StatefulWidget {
@@ -15,6 +17,9 @@ class MyPage extends StatefulWidget {
 }
 
 class _MyPageState extends State<MyPage> {
+
+  late Future<User> user;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -28,14 +33,17 @@ class _MyPageState extends State<MyPage> {
               height: MediaQuery.of(context).size.height * 0.25,
               child: Center(
                 child: FutureBuilder(
-                  future: fetchUserData(),
+                  future: user,
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       // 데이터 로딩 중 => TODO: 빈 UI로 변경
                       return CircularProgressIndicator();
                     } else if (snapshot.hasError) {
                       // 에러 발생
-                      return Text('내 정보를 불러오지 못했습니다.\n앱을 다시 실행해주세요.');
+                      return Text(
+                        '내 정보를 불러오지 못했습니다.\n앱을 다시 실행해주세요.$snapshot.error',
+                        textAlign: TextAlign.center,
+                      );
                     } else {
                       // 데이터 성공적으로 가져옴
                       return Column(
@@ -54,7 +62,7 @@ class _MyPageState extends State<MyPage> {
                             height: MediaQuery.of(context).size.height * 0.015
                           ),
                           Text(
-                            "닉네임 님",
+                            snapshot.data!.nickname,
                             style: TextStyle(
                               color: Colors.black,
                               fontSize: 18,
@@ -99,17 +107,6 @@ class _MyPageState extends State<MyPage> {
         ),
       ),
     );
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    log("my page initState()");
-  }
-
-  Future<String> fetchUserData() async {
-    await Future.delayed(Duration(seconds: 1));
-    return "Hello, Flutter!";
   }
 
   // 마이페이지의 중간 메뉴 만들기
@@ -209,5 +206,18 @@ class _MyPageState extends State<MyPage> {
       ),
     );
   }
+
+  Future<String> fetchUserData() async {
+    await Future.delayed(Duration(seconds: 1));
+    return "Hello, Flutter!";
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    log("my page initState()");
+    user = requestUserInfo();
+  }
+
 }
 

@@ -9,7 +9,7 @@ import 'dart:convert';
 import '../../classes/liquor.dart';
 import '../../classes/ui_util.dart';
 import '../../classes/styles.dart';
-import '../../ui/TipsyLoadingIndicator.dart';
+import '../../ui/tipsy_loading_indicator.dart';
 import '../liquor_page.dart';
 
 class SurveyResultPage extends StatefulWidget {

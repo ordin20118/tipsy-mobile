@@ -48,6 +48,52 @@ class _SearchPageState extends State<SearchPage> {
   // 검색 결과 controller
   LiquorScrollController liquorScrollController = Get.put<LiquorScrollController>(LiquorScrollController());
 
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(icon: Icon(Icons.arrow_back_ios),
+          onPressed: () { Navigator.pop(context);},
+          color: Colors.black,
+          iconSize: 25,
+        ),
+        //leadingWidth: MediaQuery.of(context).size.width * 0.1,
+        titleSpacing: 3,
+        elevation: 0.1,
+        title: TextFormField(
+          cursorHeight: 15,
+          controller: searchTextController,
+          decoration: InputDecoration(
+              hintText: '검색어를 입력해주세요.',
+              hintStyle: TextStyle(
+                color: Colors.grey
+              ),
+              contentPadding: const EdgeInsets.symmetric(vertical: 25.0, horizontal: 2.0),
+              border: InputBorder.none,
+              focusedBorder: InputBorder.none,
+              enabledBorder: InputBorder.none,
+              errorBorder: InputBorder.none,
+              disabledBorder: InputBorder.none,
+              filled: false,
+              suffixIcon: IconButton(icon: Icon(Icons.clear, color: Colors.blueGrey,),
+                  onPressed: emptySearchField)
+          ),
+          style: TextStyle(
+            color: Colors.black87
+          ),
+          onFieldSubmitted: submitSearch,
+        ),
+        backgroundColor: Colors.white,
+        actions: [],
+      ),
+      body: Container(
+        child: selectWidget(),
+      ),
+      bottomNavigationBar: Container(height: 0.0),
+    );
+  }
+
+
   /*
     검색 상태에 따른 페이지 반환 함수
       _searchState:0 => 검색 결과 없음 페이지
@@ -119,50 +165,6 @@ class _SearchPageState extends State<SearchPage> {
   // x 클릭 시 검색어 삭제
   emptySearchField() {
     searchTextController.clear();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(icon: Icon(Icons.arrow_back_ios),
-          onPressed: () { Navigator.pop(context);},
-          color: Colors.black,
-          iconSize: 25,
-        ),
-        //leadingWidth: MediaQuery.of(context).size.width * 0.1,
-        titleSpacing: 3,
-        title: TextFormField(
-          cursorHeight: 15,
-          controller: searchTextController,
-          decoration: InputDecoration(
-              hintText: '검색어를 입력해주세요.',
-              hintStyle: TextStyle(
-                color: Colors.grey
-              ),
-              contentPadding: const EdgeInsets.symmetric(vertical: 25.0, horizontal: 2.0),
-              border: InputBorder.none,
-              focusedBorder: InputBorder.none,
-              enabledBorder: InputBorder.none,
-              errorBorder: InputBorder.none,
-              disabledBorder: InputBorder.none,
-              filled: false,
-              suffixIcon: IconButton(icon: Icon(Icons.clear, color: Colors.blueGrey,),
-                  onPressed: emptySearchField)
-          ),
-          style: TextStyle(
-            color: Colors.black87
-          ),
-          onFieldSubmitted: submitSearch,
-        ),
-        backgroundColor: Colors.white,
-        actions: [],
-      ),
-      body: Container(
-        child: selectWidget(),
-      ),
-      bottomNavigationBar: Container(height: 0.0),
-    );
   }
 
   @override
@@ -383,10 +385,7 @@ class _LiquorGridViewState extends State<LiquorGridView> {
               GestureDetector(
                 child: makeImgWidget(context, widget.liquorController.data[index].repImgUrl, 300, MediaQuery.of(context).size.height * 0.17),
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => LiquorDetail(liquorId: widget.liquorController.data[index].liquorId)),
-                  );
+                  goToLiquorDetailPage(context, widget.liquorController.data[index].liquorId);
               },
               ),
 
@@ -580,6 +579,8 @@ class SearchParam {
 
 }
 
+// TODO: 최근 검색어 위젯 추가
+// 검색 입력 창 아래에 divider 추가
 
 // 검색 결과 없음 Widget
 class NoSearchRes extends StatelessWidget {

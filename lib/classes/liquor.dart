@@ -24,6 +24,14 @@ class Liquor {
   int _ratingCnt;
   double _ratingAvg;
 
+  int _likeCnt;
+  int _dislikeCnt;
+  int _commentCnt;
+  int _shareCnt;
+  int _reportCnt;
+  bool _bookmark;
+  bool _like;
+
   String _repImg;
   String _repImgUrl;
   DateTime _regDate;
@@ -41,6 +49,15 @@ class Liquor {
     required int countryId,
     required int ratingCnt,
     required double ratingAvg,
+
+    required int likeCnt,
+    required int dislikeCnt,
+    required int commentCnt,
+    required int shareCnt,
+    required int reportCnt,
+    required bool bookmark,
+    required bool like,
+
     required String repImg,
     required String repImgUrl,
     required DateTime regDate,
@@ -49,6 +66,8 @@ class Liquor {
         this._category2Id = category2Id, this._category1Name = category1Name,
         this._category2Name = category2Name, this._abv = abv, this._countryId = countryId,
         this._ratingCnt = ratingCnt, this._ratingAvg = ratingAvg,
+        this._likeCnt = likeCnt, this._dislikeCnt = dislikeCnt, this._commentCnt = commentCnt,
+        this._shareCnt = shareCnt, this._reportCnt = reportCnt, this._bookmark = bookmark, this._like = like,
         this._repImg = repImg, this._repImgUrl = repImgUrl, this._regDate = regDate;
 
 
@@ -65,6 +84,15 @@ class Liquor {
         countryId: json['country_id'],
         ratingCnt: json['rating_cnt'],
         ratingAvg: json['rating_avg'],
+
+        likeCnt: json['like_cnt'],
+        dislikeCnt: json['dislike_cnt'],
+        commentCnt: json['comment_cnt'],
+        shareCnt: json['share_cnt'],
+        reportCnt: json['report_cnt'],
+        bookmark: json['bookmark'],
+        like: json['like'],
+
         repImg: json['rep_img'],
         repImgUrl: json['rep_img_url'],
         regDate: DateTime.fromMillisecondsSinceEpoch(json['reg_date'] * 1000)
@@ -247,6 +275,48 @@ class Liquor {
 
   set ratingCnt(int value) {
     _ratingCnt = value;
+  }
+
+  bool get like => _like;
+
+  set like(bool value) {
+    _like = value;
+  }
+
+  bool get bookmark => _bookmark;
+
+  set bookmark(bool value) {
+    _bookmark = value;
+  }
+
+  int get reportCnt => _reportCnt;
+
+  set reportCnt(int value) {
+    _reportCnt = value;
+  }
+
+  int get shareCnt => _shareCnt;
+
+  set shareCnt(int value) {
+    _shareCnt = value;
+  }
+
+  int get commentCnt => _commentCnt;
+
+  set commentCnt(int value) {
+    _commentCnt = value;
+  }
+
+  int get dislikeCnt => _dislikeCnt;
+
+  set dislikeCnt(int value) {
+    _dislikeCnt = value;
+  }
+
+  int get likeCnt => _likeCnt;
+
+  set likeCnt(int value) {
+    _likeCnt = value;
   }
 }
 

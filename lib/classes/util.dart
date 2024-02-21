@@ -3,16 +3,12 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:flutter_config/flutter_config.dart';
 import 'package:http/http.dart' as http;
-import 'package:tipsy_mobile/classes/param/recommandParam.dart';
+import 'package:tipsy_mobile/classes/param/recommand_param.dart';
 import 'package:tipsy_mobile/classes/recommand.dart';
 import 'dart:convert';
 import 'package:tipsy_mobile/classes/user.dart';
-import 'package:tipsy_mobile/classes/ui_util.dart';
 import 'package:tipsy_mobile/classes/word.dart';
-import '../main.dart';
 import 'comment.dart';
 import 'liquor.dart';
 
@@ -34,7 +30,7 @@ void setTestToken() async {
   final storage = new FlutterSecureStorage();
   await storage.write(key:'accessToken', value: 'AUTOmKFxUkmakDV9w8z/yLOxrbm0WwxgbNpsOS6HhoUAGNY=');
   await storage.write(key:'platform', value: '1');
-  await storage.write(key:'id', value: '10');
+  await storage.write(key:'userId', value: '10');
   await storage.write(key:'email', value:'kimho2018@naver.com');
 }
 
@@ -130,6 +126,30 @@ Future<http.Response> requestPOST(path, data) async {
   return response;
 }
 
+Future<http.Response> requestDELETE(path, data) async {
+
+  final storage = new FlutterSecureStorage();
+  String? accessToken = await storage.read(key: "accessToken");
+  if(accessToken == null) {
+    accessToken = "";
+  }
+
+  String reqUrl = getApiUrl() + path;
+  log("[Request DELETE URL]:" + reqUrl);
+  final Uri url = Uri.parse(reqUrl);
+
+  final response = await http.delete(
+    url,
+    headers: <String, String> {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + accessToken
+    },
+    body: json.encode(data),
+  );
+
+  return response;
+}
+
 // request access token
 Future<AccessToken> requestAccessToken(int platform, String email, String socialId) async {
 
@@ -185,7 +205,7 @@ Future<bool> autoLogin(int platform, String email, String accessToken) async {
         final storage = new FlutterSecureStorage();
         await storage.write(key:'accessToken', value:token.tokenHash);
         await storage.write(key:'platform', value:platform.toString());
-        await storage.write(key:'id', value:token.userId.toString());
+        await storage.write(key:'userId', value:token.userId.toString());
         await storage.write(key:'email', value:email);
       }
       return true;
@@ -208,14 +228,13 @@ Future<bool> logout(BuildContext context) async {
 
 // request today word
 Future<Word> requestTodayWord() async {
-
   print("#### [requestTodayWord] ####");
   final response = await requestGET("/word/random.tipsy");
 
   if (response.statusCode == 200) {
     String resString = response.body.toString();
     var parsed = json.decode(resString);
-    var listData = parsed['list'];
+    var listData = parsed['data'];
     WordList wordList = new WordList.fromJson(listData);
     return wordList.words.first;
   } else {
@@ -233,7 +252,7 @@ Future<Recommand> requestTodayRecommand() async {
     String resString = response.body.toString();
     var parsed = json.decode(resString);
     var data = parsed['data'];
-    print(data.toString());
+    //print(data.toString());
     Recommand recomm = new Recommand.fromJson(data);
     return recomm;
   } else {
@@ -241,20 +260,21 @@ Future<Recommand> requestTodayRecommand() async {
   }
 }
 
-Future<List<Comment>> loadCommentInfo(int contentId, int contentType) async {
+Future<List<Comment>> loadCommentInfo(int contentId, int contentType, int perPage) async {
   print("#### [loadCommentInfo] ####" + contentId.toString());
   String reqUrl = "/comments.tipsy?contentId=" + contentId.toString()
-                  + "&contentType=" + contentType.toString() + "&state=0&paging.perPage=3";
+                  + "&contentType=" + contentType.toString() + "&state=0&paging.perPage=" + perPage.toString();
   final response = await requestGET(reqUrl);
 
   if(response.statusCode == 200) {
     String resString = response.body.toString();
     var resJson = json.decode(resString);
-    var commentListJson = resJson['list'];
+    var commentListJson = resJson['data'];
 
     List<Comment> tmp = [];
     try{
       tmp = CommentList.fromJson(commentListJson).comments;
+      print(tmp);
     } catch(e) {
       log("" + e.toString());
     }

@@ -6,7 +6,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:kakao_flutter_sdk_auth/kakao_flutter_sdk_auth.dart';
-import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
+import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart' as KakaoUser;
 import 'package:kakao_flutter_sdk_talk/kakao_flutter_sdk_talk.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
@@ -20,6 +20,7 @@ import 'dart:convert';
 import 'package:tipsy_mobile/pages/join_page.dart';
 import 'package:the_apple_sign_in/the_apple_sign_in.dart' as AppleScope;
 
+import '../classes/user.dart';
 import '../main.dart';
 
 class LoginPage extends StatefulWidget {
@@ -203,7 +204,7 @@ class _LoginPageState extends State<LoginPage> {
     if(accessToken != null && platform != null && email != null) {
       bool isLogin = await autoLogin(int.parse(platform), email, accessToken);
       if(isLogin) {
-        goToMainPage(context);
+        goToMainPageReplace(context);
       }
     }
   }
@@ -215,7 +216,7 @@ class _LoginPageState extends State<LoginPage> {
     await storage.write(key:'platform', value:USER_PLATFORM_KAKAO.toString());
     //await storage.write(key:'id', value:token.userId.toString());
     await storage.write(key:'email', value:'kimho2018@naver.com');
-    goToMainPage(context);
+    goToMainPageReplace(context);
   }
 
   // 카카오톡 존재 여부 초기화
@@ -247,7 +248,7 @@ class _LoginPageState extends State<LoginPage> {
 
       // 회원 가입 절차
       // 1. 회원 여부 확인
-      User user = await UserApi.instance.me();
+      KakaoUser.User user = await UserApi.instance.me();
       String? email = user.kakaoAccount?.email;
       String? nickname = user.kakaoAccount?.profile?.nickname;
 
@@ -268,7 +269,7 @@ class _LoginPageState extends State<LoginPage> {
           bool isLogin = await autoLogin(USER_PLATFORM_KAKAO, email, token.tokenHash);
 
           if(isLogin) {
-            goToMainPage(context);
+            goToMainPageReplace(context);
           } else {
             throw Exception('Failed auto login.');
           }
@@ -498,7 +499,7 @@ class _LoginPageState extends State<LoginPage> {
             bool isLogin = await autoLogin(USER_PLATFORM_APPLE, token.email, token.tokenHash);
 
             if(isLogin) {
-              goToMainPage(context);
+              goToMainPageReplace(context);
             } else {
               throw Exception('Failed auto login.');
             }

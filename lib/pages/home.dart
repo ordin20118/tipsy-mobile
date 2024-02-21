@@ -3,11 +3,14 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:marquee/marquee.dart';
+import '../classes/bookmark.dart';
+import '../classes/param/bookmark_param.dart';
 import '../classes/recommand.dart';
 import '../classes/ui_util.dart';
 import '../classes/util.dart';
 import '../classes/word.dart';
-import '../ui/TipsyLoadingIndicator.dart';
+import '../requests/bookmark.dart';
+import '../ui/tipsy_loading_indicator.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -140,108 +143,139 @@ class _HomeState extends State<Home> {
             future: recommand,
             builder: (context, snapshot) {
               if(snapshot.hasData) {
-                return SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.9,
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(15.0),
-                            child: Text(
-                              "오늘의 추천 술",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 15
+                return GestureDetector(
+                  onTap: () {
+                    goToLiquorDetailPage(context, snapshot.data!.liquorList.first.liquorId);
+                  },
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(15.0),
+                              child: Text(
+                                "오늘의 추천 술",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 15
+                                ),
                               ),
                             ),
-                          ),
-                          IconButton(
-                            icon: Icon(Icons.bookmark_border),
-                            //icon: Icon(Icons.bookmark),
-                            onPressed: () {},
-                            color: Colors.white,
-                            iconSize: 30,
-                          )
-                        ],
-                      ),
-                      // Liquor Image Row
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.5,
-                            height: MediaQuery.of(context).size.height * 0.3,
-                            child: makeImgWidget(context, snapshot.data!.liquorList.first.repImgUrl, 300, MediaQuery.of(context).size.height * 0.17),
-                          ),
-                        ],
-                      ),
-                      // Liquor Category Row
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(20, 0, 20, 5),
-                        child: Row(
-                          children: [
-                            Text(
-                              snapshot.data!.liquorList.first.getLastCategoryName(),
-                              style: TextStyle(
-                                  color: Colors.white60,
-                                  fontSize: 12
-                              ),
+                            IconButton(
+                              icon: getBookmarkIcon(snapshot.data!.liquorList.first.bookmark),
+                              onPressed: () async {
+                                // 북마크
+                                BookmarkParam bParam = BookmarkParam();
+                                bParam.contentId = snapshot.data!.liquorList.first.liquorId;
+                                bParam.contentType = 100;
+
+                                if(snapshot.data!.liquorList.first.bookmark) {
+                                  Future<bool> bookmarkFuture = deleteBookmark(bParam);
+                                  bool isDeleted = await bookmarkFuture;
+                                  if(isDeleted != null && isDeleted) {
+                                    setState(() {
+                                      snapshot.data!.liquorList.first.bookmark = false;
+                                    });
+                                  } else {
+                                    dialogBuilder(context, "알림", "북마크 제거에 실패했습니다.\n나중에 다시 시도해주세요.");
+                                  }
+                                } else {
+                                  Future<Bookmark> bookmarkFuture = requestBookmark(bParam);
+                                  Bookmark bookmark = await bookmarkFuture;
+                                  if(bookmark != null) {
+                                    setState(() {
+                                      snapshot.data!.liquorList.first.bookmark = true;
+                                    });
+                                  } else {
+                                    dialogBuilder(context, "알림", "북마크에 실패했습니다.\n나중에 다시 시도해주세요.");
+                                  }
+                                }
+                              },
+                              color: Colors.white,
+                              iconSize: 30,
                             )
                           ],
                         ),
-                      ),
-                      // Liquor Name_KR Row
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(20, 0, 20, 7),
-                        child: Row(
+                        // Liquor Image Row
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Flexible(
-                              child: RichText(
-                                  overflow: TextOverflow.ellipsis,
-                                  strutStyle: StrutStyle(fontSize: 8.0),
-                                  text: TextSpan(
-                                    text: snapshot.data!.liquorList.first.nameKr,
-                                    style: TextStyle(
-                                      fontSize: 17.0,
-                                      color: Colors.white,
-                                    ),
-                                  )
-                              ),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.5,
+                              height: MediaQuery.of(context).size.height * 0.3,
+                              child: makeImgWidget(context, snapshot.data!.liquorList.first.repImgUrl, 300, MediaQuery.of(context).size.height * 0.17),
                             ),
                           ],
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(20, 0, 20, 7),
-                        child: Row(
-                          children: [
-                            Flexible(
-                              child: RichText(
-                                  overflow: TextOverflow.ellipsis,
-                                  strutStyle: StrutStyle(fontSize: 8.0),
-                                  text: TextSpan(
-                                    text: snapshot.data!.liquorList.first.nameEn,
-                                    style: TextStyle(
-                                      fontSize: 13.0,
-                                      color: Colors.white60,
-                                    ),
-                                  )
+                        // Liquor Category Row
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(20, 0, 20, 5),
+                          child: Row(
+                            children: [
+                              Text(
+                                snapshot.data!.liquorList.first.getLastCategoryName(),
+                                style: TextStyle(
+                                    color: Colors.white60,
+                                    fontSize: 12
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                        // Liquor Name_KR Row
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(20, 0, 20, 7),
+                          child: Row(
+                            children: [
+                              Flexible(
+                                child: RichText(
+                                    overflow: TextOverflow.ellipsis,
+                                    strutStyle: StrutStyle(fontSize: 8.0),
+                                    text: TextSpan(
+                                      text: snapshot.data!.liquorList.first.nameKr,
+                                      style: TextStyle(
+                                        fontSize: 17.0,
+                                        color: Colors.white,
+                                      ),
+                                    )
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: makeStarUi(1, snapshot.data!.liquorList.first.ratingAvg),
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(20, 0, 20, 7),
+                          child: Row(
+                            children: [
+                              Flexible(
+                                child: RichText(
+                                    overflow: TextOverflow.ellipsis,
+                                    strutStyle: StrutStyle(fontSize: 8.0),
+                                    text: TextSpan(
+                                      text: snapshot.data!.liquorList.first.nameEn,
+                                      style: TextStyle(
+                                        fontSize: 13.0,
+                                        color: Colors.white60,
+                                      ),
+                                    )
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                      )
-                    ],
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: makeStarUi(1, snapshot.data!.liquorList.first.ratingAvg),
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                 );
               } else if(snapshot.hasError) {

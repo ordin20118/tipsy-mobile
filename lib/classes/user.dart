@@ -67,3 +67,55 @@ class AccessToken {
     _email = value;
   }
 }
+
+class User {
+
+  String _nickname;
+  int _age;
+  
+  int _bookmarkCnt;
+  int _commentCnt;
+
+  User.set({
+    required String nickname,
+    required int age,
+    required int bookmarkCnt,
+    required int commentCnt,
+  }) : this._nickname = nickname, this._age = age,
+        this._bookmarkCnt = bookmarkCnt, this._commentCnt = commentCnt;
+
+
+  factory User.fromJson(Map<String, dynamic> json) {
+    User tmp = User.set(
+        nickname: json['nickname'],
+        age: json['age'],
+        bookmarkCnt: json['bookmark_cnt'],
+        commentCnt: json['comment_cnt'],
+    );
+    return tmp;
+  }
+
+  int get commentCnt => _commentCnt;
+
+  set commentCnt(int value) {
+    _commentCnt = value;
+  }
+
+  int get bookmarkCnt => _bookmarkCnt;
+
+  set bookmarkCnt(int value) {
+    _bookmarkCnt = value;
+  }
+
+  int get age => _age;
+
+  set age(int value) {
+    _age = value;
+  }
+
+  String get nickname => _nickname;
+
+  set nickname(String value) {
+    _nickname = value;
+  }
+}

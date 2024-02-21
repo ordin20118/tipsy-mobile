@@ -131,81 +131,92 @@ class _MainPageState extends State<MainPage> {
           shadowColor: Colors.black
         )
       ),
-      home: Scaffold(
-        appBar: AppBar(
-          title: Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(_title, style: TextStyle(color: Color(0xff005766), fontFamily: 'NanumBarunGothicBold')),
-              SizedBox(width: MediaQuery.of(context).size.width * 0.015,),
-              Text(
-                _subTitle,
-                style: TextStyle(
-                  color: Color(0xff005766),
-                  fontFamily: 'NanumBarunGothicBold',
-                  fontSize: 13
-                )
-              )
-            ],
-          ),
-          backgroundColor: Color(0xffffffff),
-          actions: getAppBarIcons(_selectedPageIndex),
-          centerTitle: false,
-          elevation: 0.1,
+      home: PopScope(
+        canPop: false,
+        onPopInvoked: (bool didPop) {
+          //didPop == true , 뒤로가기 제스쳐가 감지되면 호출 된다.
+          if (didPop) {
+            // TODO: show select dialog
+            // 로그아웃 또는 앱 종료가 됩니다.\n진행하시겠습니까?
+            return;
+          }
+        },
+        child: Scaffold(
+            appBar: AppBar(
+              title: Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(_title, style: TextStyle(color: Color(0xff005766), fontFamily: 'NanumBarunGothicBold')),
+                  SizedBox(width: MediaQuery.of(context).size.width * 0.015,),
+                  Text(
+                      _subTitle,
+                      style: TextStyle(
+                          color: Color(0xff005766),
+                          fontFamily: 'NanumBarunGothicBold',
+                          fontSize: 13
+                      )
+                  )
+                ],
+              ),
+              backgroundColor: Color(0xffffffff),
+              actions: getAppBarIcons(_selectedPageIndex),
+              centerTitle: false,
+              elevation: 0.1,
+            ),
+            body: Stack(
+              children: [
+                Offstage(
+                  offstage: _selectedPageIndex != 0,
+                  child: const Home(),
+                ),
+                Offstage(
+                  offstage: _selectedPageIndex != 1,
+                  child: CreateMenuPage(),
+                ),
+                Offstage(
+                  offstage: _selectedPageIndex != 2,
+                  child: const MyPage(),
+                ),
+              ],
+            ),
+            bottomNavigationBar: Container(
+              decoration: BoxDecoration(
+                border: Border(top: BorderSide(color: Color(0xffEAEAEA), width: 1.0)), // 라인효과
+              ),
+              child: BottomNavigationBar(
+                items: [
+                  new BottomNavigationBarItem(
+                    icon: Icon(Icons.home),
+                    label: "홈",
+                  ),
+                  new BottomNavigationBarItem(
+                    icon: Icon(Icons.add_circle_outline),
+                    label: "new",
+                  ),
+                  new BottomNavigationBarItem(
+                    icon: Icon(Icons.person),
+                    label: "마이페이지",
+                  ),
+                ],
+                selectedLabelStyle: TextStyle(fontSize: 13),
+                selectedItemColor: Color(0xdd005766),
+                //unselectedItemColor: Colors.grey,
+                currentIndex: _selectedPageIndex,
+                onTap: (int index) {
+                  setState(() {
+                    _selectedPageIndex = index;
+                    if(index == 2) {
+                      _title = "마이페이지";
+                      _subTitle = "";
+                    } else {
+                      _title = "Tipsy";
+                      _subTitle = "함께하는 건강한 음주 문화";
+                    }
+                  });
+                },
+              ),
+            )
         ),
-        body: Stack(
-          children: [
-            Offstage(
-              offstage: _selectedPageIndex != 0,
-              child: const Home(),
-            ),
-            Offstage(
-              offstage: _selectedPageIndex != 1,
-              child: CreateMenuPage(),
-            ),
-            Offstage(
-              offstage: _selectedPageIndex != 2,
-              child: const MyPage(),
-            ),
-          ],
-        ),
-        bottomNavigationBar: Container(
-          decoration: BoxDecoration(
-            border: Border(top: BorderSide(color: Color(0xffEAEAEA), width: 1.0)), // 라인효과
-          ),
-          child: BottomNavigationBar(
-            items: [
-              new BottomNavigationBarItem(
-                icon: Icon(Icons.home),
-                label: "홈",
-              ),
-              new BottomNavigationBarItem(
-                icon: Icon(Icons.add_circle_outline),
-                label: "new",
-              ),
-              new BottomNavigationBarItem(
-                icon: Icon(Icons.person),
-                label: "마이페이지",
-              ),
-            ],
-            selectedLabelStyle: TextStyle(fontSize: 13),
-            selectedItemColor: Color(0xdd005766),
-            //unselectedItemColor: Colors.grey,
-            currentIndex: _selectedPageIndex,
-            onTap: (int index) {
-              setState(() {
-                _selectedPageIndex = index;
-                if(index == 2) {
-                  _title = "마이페이지";
-                  _subTitle = "";
-                } else {
-                  _title = "Tipsy";
-                  _subTitle = "함께하는 건강한 음주 문화";
-                }
-              });
-            },
-          ),
-        )
       ),
     );
   }
