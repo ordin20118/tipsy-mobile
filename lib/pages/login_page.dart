@@ -410,13 +410,15 @@ class _LoginPageState extends State<LoginPage> {
       "social_id": socialId
     };
 
-    http.Response response = await http.post(
-      url,
-      headers: <String, String> {
-        'Content-Type': 'application/json',
-      },
-      body: json.encode(bodyData),
-    );
+    // http.Response response = await http.post(
+    //   url,
+    //   headers: <String, String> {
+    //     'Content-Type': 'application/json',
+    //   },
+    //   body: json.encode(bodyData),
+    // );
+
+    http.Response response = await requestPOST(url, bodyData);
 
     if (response.statusCode == 200) {
 

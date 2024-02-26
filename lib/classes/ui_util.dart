@@ -46,6 +46,9 @@ class HexColor extends Color {
   HexColor(final String hexColor) : super(_getColorFromHex(hexColor));
 }
 
+Color getCommonBackColor() {
+  return Color(0x88EAEAEA);
+}
 
 TextStyle boxMenuWhite = TextStyle(
     color: Colors.white,

@@ -13,7 +13,7 @@ import 'comment.dart';
 import 'liquor.dart';
 
 bool isLocal = true;
-const String API_URL_LOCAL = "http://192.168.219.108:8080/svcmgr/api";
+const String API_URL_LOCAL = "http://192.168.219.104:8080/svcmgr/api";
 const String API_URL_SERVER = "https://www.tipsy.co.kr/svcmgr/api";
 
 String getAPIHost() {
@@ -76,6 +76,25 @@ String makeCategString(Liquor liquor) {
   }
   if(liquor.category4Name != null && liquor.category4Name.length > 0) {
     categString += " > " + liquor.category4Name;
+  }
+
+  return categString;
+}
+
+String getLastCategName(Liquor liquor) {
+  String categString = "";
+
+  if(liquor.category4Name != null && liquor.category4Name.length > 0) {
+    return liquor.category4Name;
+  }
+  if(liquor.category3Name != null && liquor.category3Name.length > 0) {
+    return liquor.category3Name;
+  }
+  if(liquor.category2Name != null && liquor.category2Name.length > 0) {
+    return liquor.category2Name;
+  }
+  if(liquor.category1Name != null) {
+    return liquor.category1Name;
   }
 
   return categString;

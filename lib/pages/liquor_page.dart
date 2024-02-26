@@ -4,10 +4,12 @@ import 'package:tipsy_mobile/classes/comment.dart';
 import 'package:tipsy_mobile/classes/util.dart';
 import 'package:tipsy_mobile/classes/ui_util.dart';
 import 'package:tipsy_mobile/pages/collector/comment_view.dart';
+import 'package:tipsy_mobile/pages/rating/rating_page.dart';
 import 'dart:convert';
-import 'package:tipsy_mobile/requests/comment.dart';
 
-import '../classes/param/comment_param.dart';
+import '../classes/bookmark.dart';
+import '../classes/param/bookmark_param.dart';
+import '../requests/bookmark.dart';
 import '../ui/tipsy_loading_indicator.dart';
 
 class LiquorDetail extends StatefulWidget {
@@ -40,22 +42,67 @@ class _LiquorDetailState extends State<LiquorDetail> {
         title: Text(''),
         backgroundColor: Colors.white,
         actions: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
-            child: IconButton(icon: Icon(Icons.bookmark_border),
-              onPressed: () { Navigator.pop(context);},
-              color: Colors.black,
-              iconSize: 27,
-            ),
+          FutureBuilder<Liquor>(
+            future: liquor,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return Padding(
+                  padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
+                  child: IconButton(icon: getBookmarkIcon(snapshot.data!.bookmark),
+                    onPressed: () async {
+                      //Navigator.pop(context);
+                      // 북마크
+                      BookmarkParam bParam = BookmarkParam();
+                      bParam.contentId = snapshot.data!.liquorId;
+                      bParam.contentType = 100;
+
+                      if(snapshot.data!.bookmark) {
+                        Future<bool> bookmarkFuture = deleteBookmark(bParam);
+                        bool isDeleted = await bookmarkFuture;
+                        if(isDeleted != null && isDeleted) {
+                          setState(() {
+                            snapshot.data!.bookmark = false;
+                          });
+                        } else {
+                          dialogBuilder(context, "알림", "북마크 제거에 실패했습니다.\n나중에 다시 시도해주세요.");
+                        }
+                      } else {
+                        Future<Bookmark> bookmarkFuture = requestBookmark(bParam);
+                        Bookmark bookmark = await bookmarkFuture;
+                        if(bookmark != null) {
+                          setState(() {
+                            snapshot.data!.bookmark = true;
+                          });
+                        } else {
+                          dialogBuilder(context, "알림", "북마크에 실패했습니다.\n나중에 다시 시도해주세요.");
+                        }
+                      }
+                    },
+                    color: Colors.black,
+                    iconSize: 27,
+                  ),
+                );
+              } else {
+                return Padding(
+                  padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
+                  child: IconButton(icon: Icon(Icons.bookmark_border),
+                    onPressed: () { Navigator.pop(context);},
+                    color: Colors.black,
+                    iconSize: 27,
+                  ),
+                );
+              }
+            }
           ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 0.0),
-            child: IconButton(icon: Icon(Icons.share),
-              onPressed: () { Navigator.pop(context);},
-              color: Colors.black,
-              iconSize: 27,
-            ),
-          )
+          // TODO: 공유하기 기능 구현 필요
+          // Padding(
+          //   padding: const EdgeInsets.fromLTRB(0.0, 0.0, 10.0, 0.0),
+          //   child: IconButton(icon: Icon(Icons.share),
+          //     onPressed: () { Navigator.pop(context);},
+          //     color: Colors.black,
+          //     iconSize: 27,
+          //   ),
+          // )
         ],
       ),
       body: Container(
@@ -113,6 +160,31 @@ class _LiquorDetailState extends State<LiquorDetail> {
                                           style: TextStyle(
                                             fontSize: 13,
                                             color: Colors.grey,
+                                            fontFamily: 'NanumBarunGothicLight',
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.fromLTRB(6, 0, 6, 8),
+                                        child: Text(
+                                          "분류 | ",
+                                          style: TextStyle(
+                                            fontSize: 11,
+                                            fontFamily: 'NanumBarunGothicLight',
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.fromLTRB(6, 0, 6, 8),
+                                        child: Text(
+                                          getLastCategName(snapshot.data!),
+                                          style: TextStyle(
+                                            fontSize: 11,
                                             fontFamily: 'NanumBarunGothicLight',
                                           ),
                                         ),
@@ -205,7 +277,16 @@ class _LiquorDetailState extends State<LiquorDetail> {
                                         elevation: 4.0, // 그림자 깊이
                                         child: InkWell(
                                           onTap: () {
-                                            dialogBuilder(context, "알림", "평가하기는 아직 준비중입니다.");
+                                            //dialogBuilder(context, "알림", "평가하기는 아직 준비중입니다.");
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(builder: (context) => RatingPage(contentId: snapshot.data!.liquorId,
+                                                                                                contentType: 100,
+                                                                                                categoryName: makeCategString(snapshot.data!),
+                                                                                                contentName: snapshot.data!.nameKr,
+                                                                                                imageUrl: snapshot.data!.repImgUrl
+                                                                                            )),
+                                            );
                                           },
                                           child: SizedBox(
                                             width: MediaQuery.of(context).size.width * 0.8,
@@ -664,7 +745,7 @@ class _CommentPreViewState extends State<CommentPreView> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                '아직 댓글이 없어요.\n댓글의 작성해보시겠어요?',
+                '아직 댓글이 없어요.\n첫 댓글을 작성해 보시겠어요?',
                 textAlign: TextAlign.center,
               ),
               TextButton(
