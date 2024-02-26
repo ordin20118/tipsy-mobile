@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:tipsy_mobile/classes/comment.dart';
 import 'package:tipsy_mobile/classes/param/comment_param.dart';
+import 'package:tipsy_mobile/pages/collector/comment_view.dart';
 
 import '../main.dart';
 import '../classes/util.dart';
@@ -79,7 +81,7 @@ List<Widget> makeStarUi(int count, double ratingAvg) {
   res.add(Text(
       ratingAvg.toString(),
       style: TextStyle(
-        color: Colors.black45,
+        color: Colors.white,
         fontWeight: FontWeight.bold,
       ),
   ));
@@ -218,137 +220,14 @@ Widget getBookmarkIcon(bool isBookmark) {
 /**
  * 댓글 모달 띄우기
  */
-// void showCommentModal(BuildContext context, TextEditingController commentInputController, int contentId, int contentType) {
-//   showModalBottomSheet(
-//       isScrollControlled: true,
-//       context: context,
-//       builder: (BuildContext context) {
-//         return Container(
-//           width: MediaQuery.of(context).size.width,
-//           height: MediaQuery.of(context).size.height * 0.6,
-//           padding: EdgeInsets.only(
-//             bottom: MediaQuery
-//                 .of(context)
-//                 .viewInsets
-//                 .bottom,
-//           ),
-//           decoration: const BoxDecoration(
-//             color: Colors.white,
-//             borderRadius: BorderRadius.only(
-//               topLeft: Radius.circular(20),   // 모달 좌상단 라운딩 처리
-//               topRight: Radius.circular(20),  // 모달 우상단 라운딩 처리
-//             ),
-//           ),
-//           child: Padding(
-//               padding: const EdgeInsets.fromLTRB(0.0, 18.0, 0.0, 18.0),
-//               child: Column(
-//                 mainAxisSize: MainAxisSize.min,
-//                 crossAxisAlignment: CrossAxisAlignment.end,
-//                 children: [
-//                   // Comment View Top
-//                   Flexible(
-//                     flex: 4,
-//                     child: Padding(
-//                       padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
-//                       child: Row(
-//                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                         children: [
-//                           Text(
-//                             "댓글",
-//                             style: TextStyle(
-//                               fontSize: 20,
-//                             ),
-//                           ),
-//                           TextButton(
-//                             onPressed: () {
-//                               Navigator.of(context).pop();
-//                             },
-//                             child: Text(
-//                               '닫기',
-//                               style: TextStyle(
-//                                 fontSize: 14,
-//                                 color: Colors.redAccent,
-//                               ),
-//                             ),
-//                           ),
-//                         ],
-//                       ),
-//                     ),
-//                   ),
-//                   Divider(
-//                     height: 1,
-//                     thickness: 0.5,
-//                     color: Colors.grey,
-//                   ),
-//                   // TODO: Comments List View
-//                   Flexible(
-//                     flex: 10,
-//                     child: Container(
-//                       color: Colors.yellow,
-//                     ),
-//                   ),
-//                   Divider(
-//                     height: 1,
-//                     thickness: 0.5,
-//                     color: Colors.grey,
-//                   ),
-//                   // Comment Input
-//                   Flexible(
-//                     flex: 2,
-//                     child: Container(
-//                       constraints: BoxConstraints(
-//                         minHeight: MediaQuery.of(context).size.height * 0.1,
-//                       ),
-//                       padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-//                       color: Colors.white,
-//                       child: Padding(
-//                         padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-//                         child: Row(
-//                           children: [
-//                             Flexible(
-//                                 flex: 9,
-//                                 child: TextField(
-//                                   controller: commentInputController,
-//                                   keyboardType: TextInputType.multiline,
-//                                   textInputAction: TextInputAction.newline,
-//                                   maxLines: null,
-//                                   decoration: InputDecoration(
-//                                     hintText: '댓글을 입력해주세요.',
-//                                     // border: OutlineInputBorder(),
-//                                     // focusedBorder: OutlineInputBorder(),
-//                                   ),
-//                                   style: TextStyle(
-//                                       fontSize: 14
-//                                   ),
-//                                 )
-//                             ),
-//                             Flexible(
-//                               flex: 1,
-//                               child: Container(
-//                                 margin: const EdgeInsets.symmetric(horizontal: 1.0),
-//                                 child: IconButton(
-//                                     icon: Icon(Icons.send),
-//                                     onPressed: () => sendComment(context, commentInputController.text, contentId, contentType) // TODO:
-//                                 ),
-//                               ),
-//                             )
-//                           ],
-//                         ),
-//                       )
-//
-//                     ),
-//                   ),
-//                 ],
-//               )
-//           ),
-//         );
-//       }
-//   );
-// }
+void showCommentModal(BuildContext context, FocusNode focusNode, TextEditingController commentInputController, int contentId, int contentType) async {
+  List<Comment> commentList = await loadCommentInfo(contentId, contentType, 1, 5);
+  //CommentScrollController commentScrollController = CommentScrollController();
+  CommentScrollController commentScrollController = Get.put<CommentScrollController>(CommentScrollController());
+  commentScrollController.setData(commentList, contentType, contentId);
 
-void showCommentModal(BuildContext context, FocusNode focusNode, TextEditingController commentInputController, int contentId, int contentType) {
   showModalBottomSheet(
-      //isScrollControlled: false,
+      isScrollControlled: true,
       context: context,
       builder: (BuildContext context) {
         return Container(
@@ -385,19 +264,18 @@ void showCommentModal(BuildContext context, FocusNode focusNode, TextEditingCont
                         thickness: 0.5,
                         color: Colors.grey,
                       ),
-                      // TODO: Comments List View
+                      // Comments List View
                       Flexible(
                         flex: 10,
                         child: GestureDetector(
                           onTap: () {
                             if(focusNode.hasFocus){
                               focusNode.unfocus();
-                            } else {
-                              print("test");
                             }
                           },
                           child: Container(
-                            color: Colors.yellow,
+                            color: Colors.white,
+                            child: CommentListView(commentList: commentList, commentScrollController: commentScrollController,),
                           ),
                         ),
                       ),
@@ -444,12 +322,13 @@ void showCommentModal(BuildContext context, FocusNode focusNode, TextEditingCont
                                     margin: const EdgeInsets.symmetric(horizontal: 1.0),
                                     child: IconButton(
                                       icon: Icon(Icons.send),
-                                      onPressed: () {
+                                      onPressed: () async {
                                         // TODO: bool 결과가 아닌 저장된 댓글 정보를 받아 리스트뷰에 추가해준다.
-                                        bool isSaved = sendComment(context, commentInputController.text, contentId, contentType);
-                                        if(isSaved) {
+                                        Comment savedComment = await sendComment(context, commentInputController.text, contentId, contentType);
+                                        if(savedComment != null) {
                                           focusNode.unfocus();
                                           commentInputController.text = "";
+                                          commentScrollController.data.insert(0, savedComment);
                                         } else {
                                           dialogBuilder(context, "알림", "댓글 작성에 실패했습니다.\n나중에 다시 시도해주세요.");
                                         }
@@ -471,7 +350,14 @@ void showCommentModal(BuildContext context, FocusNode focusNode, TextEditingCont
   );
 }
 
-bool sendComment(BuildContext context, String? comment, int contentId, int contentType) {
+/**
+ * 댓글 전송
+ * [ 필요 데이터 ]
+ * 댓글 내용
+ * 컨텐츠 ID
+ * 컨텐츠 유형
+ */
+Future<Comment> sendComment(BuildContext context, String? comment, int contentId, int contentType) async {
   String? commentTxt = comment;
   if(commentTxt != null && commentTxt.length > 0) {
     CommentParam rParam = CommentParam();
@@ -479,11 +365,11 @@ bool sendComment(BuildContext context, String? comment, int contentId, int conte
     rParam.contentId = contentId;
     rParam.comment = commentTxt;
     print(rParam.toJson().toString());
-    requestSendComment(rParam);
-    return true;
+    Comment comment = await requestSendComment(rParam);
+    return comment;
   } else {
     dialogBuilder(context, "알림", "댓글을 입력해 주세요.");
-    return false;
+    return Future.value(null);
   }
 }
 

@@ -15,16 +15,6 @@ class IngdListView extends StatefulWidget {
 class _IngdListViewState extends State<IngdListView> {
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Container(
       child: Padding(
@@ -68,6 +58,16 @@ class _IngdListViewState extends State<IngdListView> {
           ]
       ),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
 }

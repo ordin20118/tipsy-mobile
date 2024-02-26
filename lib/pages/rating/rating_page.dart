@@ -250,13 +250,13 @@ class _RatingPageState extends State<RatingPage> {
                       keyboardType: TextInputType.multiline,
                       textInputAction: TextInputAction.newline,
                       maxLines: null,
+                      textAlign: TextAlign.center,
                       decoration: InputDecoration(
-                        hintText: '술에 대한 맛, 가격 등에 대해서 자유롭게 작성해주세요.',
+                        hintText: '술에 대한 맛, 가격 등에 대해서 \n자유롭게 작성해주세요.',
                         border: InputBorder.none,
                       ),
                       style: TextStyle(
                           fontSize: 14,
-                          backgroundColor: Colors.yellow
                       ),
                     )
                 ),

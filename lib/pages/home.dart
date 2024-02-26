@@ -354,13 +354,13 @@ class _HomeState extends State<Home> {
                         ],
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: makeStarUi(1, 0.0),
-                      ),
-                    )
+                    // Padding(
+                    //   padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
+                    //   child: Row(
+                    //     mainAxisAlignment: MainAxisAlignment.start,
+                    //     children: makeStarUi(1, 0.0),
+                    //   ),
+                    // )
                   ],
                 ),
               );

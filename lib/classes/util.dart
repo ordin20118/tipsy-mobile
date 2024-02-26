@@ -12,7 +12,7 @@ import 'package:tipsy_mobile/classes/word.dart';
 import 'comment.dart';
 import 'liquor.dart';
 
-bool isLocal = true;
+bool isLocal = false;
 const String API_URL_LOCAL = "http://192.168.219.104:8080/svcmgr/api";
 const String API_URL_SERVER = "https://www.tipsy.co.kr/svcmgr/api";
 
@@ -276,31 +276,6 @@ Future<Recommand> requestTodayRecommand() async {
     return recomm;
   } else {
     throw Exception('Failed get today recommand.');
-  }
-}
-
-Future<List<Comment>> loadCommentInfo(int contentId, int contentType, int perPage) async {
-  print("#### [loadCommentInfo] ####" + contentId.toString());
-  String reqUrl = "/comments.tipsy?contentId=" + contentId.toString()
-                  + "&contentType=" + contentType.toString() + "&state=0&paging.perPage=" + perPage.toString();
-  final response = await requestGET(reqUrl);
-
-  if(response.statusCode == 200) {
-    String resString = response.body.toString();
-    var resJson = json.decode(resString);
-    var commentListJson = resJson['data'];
-
-    List<Comment> tmp = [];
-    try{
-      tmp = CommentList.fromJson(commentListJson).comments;
-      print(tmp);
-    } catch(e) {
-      log("" + e.toString());
-    }
-
-    return tmp;
-  } else {
-    throw Exception('Failed to load liquor comments data.');
   }
 }
 

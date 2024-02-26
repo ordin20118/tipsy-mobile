@@ -31,6 +31,7 @@ class Liquor {
   int _reportCnt;
   bool _bookmark;
   bool _like;
+  bool _rate;
 
   String _repImg;
   String _repImgUrl;
@@ -57,6 +58,7 @@ class Liquor {
     required int reportCnt,
     required bool bookmark,
     required bool like,
+    required bool rate,
 
     required String repImg,
     required String repImgUrl,
@@ -67,7 +69,7 @@ class Liquor {
         this._category2Name = category2Name, this._abv = abv, this._countryId = countryId,
         this._ratingCnt = ratingCnt, this._ratingAvg = ratingAvg,
         this._likeCnt = likeCnt, this._dislikeCnt = dislikeCnt, this._commentCnt = commentCnt,
-        this._shareCnt = shareCnt, this._reportCnt = reportCnt, this._bookmark = bookmark, this._like = like,
+        this._shareCnt = shareCnt, this._reportCnt = reportCnt, this._bookmark = bookmark, this._like = like, this._rate = rate,
         this._repImg = repImg, this._repImgUrl = repImgUrl, this._regDate = regDate;
 
 
@@ -92,6 +94,7 @@ class Liquor {
         reportCnt: json['report_cnt'],
         bookmark: json['bookmark'],
         like: json['like'],
+        rate: json['rate'],
 
         repImg: json['rep_img'],
         repImgUrl: json['rep_img_url'],
@@ -317,6 +320,12 @@ class Liquor {
 
   set likeCnt(int value) {
     _likeCnt = value;
+  }
+
+  bool get rate => _rate;
+
+  set rate(bool value) {
+    _rate = value;
   }
 }
 

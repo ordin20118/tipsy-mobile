@@ -10,6 +10,7 @@ import 'dart:convert';
 import '../classes/bookmark.dart';
 import '../classes/param/bookmark_param.dart';
 import '../requests/bookmark.dart';
+import '../requests/comment.dart';
 import '../ui/tipsy_loading_indicator.dart';
 
 class LiquorDetail extends StatefulWidget {
@@ -266,37 +267,7 @@ class _LiquorDetailState extends State<LiquorDetail> {
                                     ],
                                   ),
                                   SizedBox(height: 10,),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Card(
-                                        color: Color(0xff005766),
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius: const BorderRadius.all(const Radius.circular(10.0))
-                                        ),
-                                        elevation: 4.0, // 그림자 깊이
-                                        child: InkWell(
-                                          onTap: () {
-                                            //dialogBuilder(context, "알림", "평가하기는 아직 준비중입니다.");
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(builder: (context) => RatingPage(contentId: snapshot.data!.liquorId,
-                                                                                                contentType: 100,
-                                                                                                categoryName: makeCategString(snapshot.data!),
-                                                                                                contentName: snapshot.data!.nameKr,
-                                                                                                imageUrl: snapshot.data!.repImgUrl
-                                                                                            )),
-                                            );
-                                          },
-                                          child: SizedBox(
-                                            width: MediaQuery.of(context).size.width * 0.8,
-                                            height: MediaQuery.of(context).size.height * 0.07,
-                                            child: Center(child: Text('평가하기', style: boxMenuWhite)),
-                                          ),
-                                        ),
-                                      )
-                                    ],
-                                  ),
+                                  makeRateBtnWidget(snapshot.data!),
                                 ],
                               ),
                             ),
@@ -463,167 +434,44 @@ class _LiquorDetailState extends State<LiquorDetail> {
     }
   }
 
-  // 댓글 모달을 띄우는 함수
-  // 현재 ui_util에서 모듈화 하는중
-  // void showCommentModal() {
-  //   showModalBottomSheet(
-  //       isScrollControlled: true,
-  //       context: context,
-  //       builder: (BuildContext context) {
-  //         return Container(
-  //           width: MediaQuery.of(context).size.width,
-  //           height: MediaQuery.of(context).size.height * 0.6,
-  //           padding: EdgeInsets.only(
-  //             bottom: MediaQuery
-  //                 .of(context)
-  //                 .viewInsets
-  //                 .bottom,
-  //           ),
-  //           decoration: const BoxDecoration(
-  //             color: Colors.white,
-  //             borderRadius: BorderRadius.only(
-  //               topLeft: Radius.circular(20),   // 모달 좌상단 라운딩 처리
-  //               topRight: Radius.circular(20),  // 모달 우상단 라운딩 처리
-  //             ),
-  //           ),
-  //           child: Padding(
-  //               padding: const EdgeInsets.all(18.0),
-  //               child: Column(
-  //                 mainAxisSize: MainAxisSize.min,
-  //                 crossAxisAlignment: CrossAxisAlignment.end,
-  //                 children: [
-  //                   Flexible(
-  //                     flex: 1,
-  //                     child: Padding(
-  //                       padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
-  //                       child: Row(
-  //                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //                         children: [
-  //                           Text(
-  //                             "댓글",
-  //                             style: TextStyle(
-  //                               fontSize: 20,
-  //                             ),
-  //                           ),
-  //                           TextButton(
-  //                             onPressed: () {
-  //                               Navigator.of(context).pop();
-  //                             },
-  //                             child: Text(
-  //                               '닫기',
-  //                               style: TextStyle(
-  //                                 fontSize: 14,
-  //                                 color: Colors.redAccent,
-  //                               ),
-  //                             ),
-  //                           ),
-  //                         ],
-  //                       ),
-  //                     ),
-  //                   ),
-  //                   Divider(
-  //                     height: 1,
-  //                     thickness: 0.5,
-  //                     color: Colors.grey,
-  //                   ),
-  //                   // TODO: Comments List View
-  //                   Flexible(
-  //                     flex: 6,
-  //                     child: Container(
-  //                       color: Colors.yellow,
-  //                     ),
-  //                   ),
-  //                   Divider(
-  //                     height: 1,
-  //                     thickness: 0.5,
-  //                     color: Colors.grey,
-  //                   ),
-  //
-  //                   Flexible(
-  //                     flex: 2,
-  //                     child: Container(
-  //                         constraints: BoxConstraints(
-  //                           minHeight: MediaQuery.of(context).size.height * 0.07,
-  //                         ),
-  //                         padding: const EdgeInsets.fromLTRB(5, 5, 0, 5),
-  //                         color: Colors.white,
-  //                         child: Padding(
-  //                           padding: const EdgeInsets.all(8.0),
-  //                           child: Row(
-  //                             children: [
-  //                               Flexible(
-  //                                   flex: 9,
-  //                                   child: TextField(
-  //                                     controller: _commentInputController,
-  //                                     keyboardType: TextInputType.multiline,
-  //                                     textInputAction: TextInputAction.newline,
-  //                                     maxLines: null,
-  //                                     decoration: InputDecoration(
-  //                                       hintText: '댓글을 입력해주세요.',
-  //                                       // border: OutlineInputBorder(),
-  //                                       // focusedBorder: OutlineInputBorder(),
-  //                                     ),
-  //                                     style: TextStyle(
-  //                                         fontSize: 13
-  //                                     ),
-  //                                   )
-  //                               ),
-  //                               Flexible(
-  //                                 flex: 1,
-  //                                 child: Container(
-  //                                   margin: const EdgeInsets.symmetric(horizontal: 1.0),
-  //                                   child: IconButton(
-  //                                       icon: Icon(Icons.send),
-  //                                       onPressed: () => sendComment(context)
-  //                                   ),
-  //                                 ),
-  //                               )
-  //                             ],
-  //                           ),
-  //                         )
-  //                     ),
-  //                   ),
-  //
-  //
-  //
-  //                   TextField(
-  //                     controller: _commentInputController,
-  //                     decoration: const InputDecoration(hintText: 'Title'),
-  //                   ),
-  //
-  //                   // const SizedBox(
-  //                   //   height: 20,
-  //                   // ),
-  //                 ],
-  //               )
-  //           ),
-  //         );
-  //       }
-  //   );
-  // }
 
-  /**
-   * 댓글 전송
-   * [ 필요 데이터 ]
-   * 댓글 내용
-   * 컨텐츠 ID
-   * 컨텐츠 유형
-   */
-  // bool sendComment(BuildContext context) {
-  //   String commentTxt = _commentInputController.text;
-  //   if(commentTxt != null && commentTxt.length > 0) {
-  //     CommentParam rParam = CommentParam();
-  //     rParam.contentType = 100;
-  //     rParam.contentId = widget.liquorId;
-  //     rParam.comment = commentTxt;
-  //     print(rParam.toJson().toString());
-  //     requestSendComment(rParam);
-  //     return true;
-  //   } else {
-  //     dialogBuilder(context, "알림", "댓글을 입력해 주세요.");
-  //     return false;
-  //   }
-  // }
+  Widget makeRateBtnWidget(Liquor liquor) {
+    if(liquor.rate) {
+      return Container();
+    } else {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Card(
+            color: Color(0xff005766),
+            shape: RoundedRectangleBorder(
+                borderRadius: const BorderRadius.all(const Radius.circular(10.0))
+            ),
+            elevation: 4.0, // 그림자 깊이
+            child: InkWell(
+              onTap: () {
+                //dialogBuilder(context, "알림", "평가하기는 아직 준비중입니다.");
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => RatingPage(contentId: liquor.liquorId,
+                      contentType: 100,
+                      categoryName: makeCategString(liquor),
+                      contentName: liquor.nameKr,
+                      imageUrl: liquor.repImgUrl
+                  )),
+                );
+              },
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width * 0.8,
+                height: MediaQuery.of(context).size.height * 0.07,
+                child: Center(child: Text('평가하기', style: boxMenuWhite)),
+              ),
+            ),
+          )
+        ],
+      );
+    }
+  }
 
   @override
   void dispose() {
@@ -735,7 +583,7 @@ class _CommentPreViewState extends State<CommentPreView> {
     if(commentList.length > 0) {
       return Padding(
         padding: const EdgeInsets.all(0.0),
-        child: CommentListView(commentList: commentList),
+        child: CommentListView(commentList: commentList, commentScrollController: null,),
       );
     } else {
       return Container(
@@ -766,27 +614,11 @@ class _CommentPreViewState extends State<CommentPreView> {
     }
   }
 
-  // bool sendComment(BuildContext context) {
-  //   String commentTxt = _commentInputController.text;
-  //   if(commentTxt != null && commentTxt.length > 0) {
-  //     CommentParam rParam = CommentParam();
-  //     rParam.contentType = 100;
-  //     rParam.contentId = widget.contentId;
-  //     rParam.comment = commentTxt;
-  //     print(rParam.toJson().toString());
-  //     requestSendComment(rParam);
-  //     return true;
-  //   } else {
-  //     dialogBuilder(context, "알림", "댓글을 입력해 주세요.");
-  //     return false;
-  //   }
-  // }
-
   @override
   void initState() {
     super.initState();
     print("주류 상세 댓글 페이지 - liquorId:" + widget.contentId.toString());
-    commentList = loadCommentInfo(widget.contentId, widget.contentType, 3);
+    commentList = loadCommentInfo(widget.contentId, widget.contentType, 1, 3);
   }
 
   @override

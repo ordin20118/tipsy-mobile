@@ -127,7 +127,6 @@ class _SurveyResultPageState extends State<SurveyResultPage> {
   }
 
   Widget buildRecommendedLiquors() {
-    print("[buildRecommendedLiquors]");
     List<Liquor> liquorList = surveyController.recommandedLiquors;
     if(liquorList.length == 0 && surveyController.hasLiquors) { // 추천 데이터를 조회중
       return Center(child: TipsyLoadingIndicator(),);

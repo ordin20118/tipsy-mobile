@@ -105,7 +105,6 @@ class _SearchPageState extends State<SearchPage> {
       return NoSearchRes();
     } else if(_searchState == 1) {
       return SearchResTab(liquorScrollController: liquorScrollController, ingdList: ingdList, equipList: equipList, wordList: wordList,);
-      //return SearchResTab(gridLiquorList: gridLiquorList, ingdList: ingdList, equipList: equipList, wordList: wordList,);
     } else if(_searchState == 2) {
       return NoSearchRes();
     }
@@ -117,10 +116,10 @@ class _SearchPageState extends State<SearchPage> {
     log("submitSearch() - start");
     log("Search Keyord: " + keyword);
     SearchResult res = await searchRequest(keyword, SearchTarget.all, null, null, 1);
-    log("liquor count: " + res.liquorList.length.toString());
-    log("ingd count: " + res.ingredientList.length.toString());
-    log("equip count: " + res.equipmentList.length.toString());
-    log("word count: " + res.wordList.length.toString());
+    // log("liquor count: " + res.liquorList.length.toString());
+    // log("ingd count: " + res.ingredientList.length.toString());
+    // log("equip count: " + res.equipmentList.length.toString());
+    // log("word count: " + res.wordList.length.toString());
 
     setState((){
       searchParam = SearchParam.set(keyword: keyword, target: SearchTarget.all.toString(), categLv: null, categId: null, nowPage: 1);
@@ -254,7 +253,6 @@ class _SearchResTabState extends State<SearchResTab> with TickerProviderStateMix
         controller: _tabController,
         children: <Widget>[
           Center( // liquor
-            //child: widget.gridLiquorList.length > 0 ? LiquorGridView(gridLiquorList: widget.gridLiquorList) : NoSearchRes()
               child: widget.liquorScrollController.data.length > 0 ? LiquorGridView(liquorController: widget.liquorScrollController) : NoSearchRes()
           ),
           Center( // cocktail
@@ -277,7 +275,7 @@ class _SearchResTabState extends State<SearchResTab> with TickerProviderStateMix
 
 }
 
-//class
+// list controller class
 class LiquorScrollController extends GetxController {
   var scrollController = ScrollController().obs;
   var data = <Liquor>[].obs;
@@ -287,11 +285,6 @@ class LiquorScrollController extends GetxController {
   var hasMore = true.obs;
   var param;
 
-  // LiquorScrollController(List<Liquor> data, SearchParam param) {
-  //   this.data = data.obs;
-  //   this.param = param;
-  // }
-
   void setData(List<Liquor> data, SearchParam param) {
     this.data = data.obs;
     this.param = param;
@@ -299,6 +292,7 @@ class LiquorScrollController extends GetxController {
 
   @override
   void onInit() {
+    // set listener
     scrollController.value.addListener(() async {
       // more load data
       //log("[${scrollController.value.position.pixels}][${scrollController.value.position.maxScrollExtent}]");
@@ -310,6 +304,7 @@ class LiquorScrollController extends GetxController {
         SearchResult res = await searchRequest(param.keyword, SearchTarget.all, null, null, ++nowPage);
 
         log("[추가 로드된 개수]: ${res.liquorList.length}");
+
         if(res.liquorList.length > 0) {
           data.addAll(res.liquorList);
           if(res.liquorList.length >= 10) {
@@ -334,17 +329,6 @@ class LiquorGridView extends StatefulWidget {
 }
 
 class _LiquorGridViewState extends State<LiquorGridView> {
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Obx(
@@ -371,7 +355,6 @@ class _LiquorGridViewState extends State<LiquorGridView> {
   }
 
   Widget liquorItemBuilder(context, index) {
-    // http://tipsy.co.kr/svcmgr/api/image/1.tipsy
     return Card(
         // generate ambers with random shades
         //color: Colors.amber[Random().nextInt(9) * 100],
@@ -379,23 +362,18 @@ class _LiquorGridViewState extends State<LiquorGridView> {
         child: Container(
           padding: EdgeInsets.all(10),
           height: MediaQuery.of(context).size.height * 0.4,
-          //alignment: Alignment.center,
           child: Column(
             children: [
               GestureDetector(
                 child: makeImgWidget(context, widget.liquorController.data[index].repImgUrl, 300, MediaQuery.of(context).size.height * 0.17),
                 onTap: () {
                   goToLiquorDetailPage(context, widget.liquorController.data[index].liquorId);
-              },
+                },
               ),
-
               Padding(
                 padding: const EdgeInsets.fromLTRB(5, 10, 0, 0),
                 child: Row(
                   children: [
-                    // Expanded(
-                    //   child: Text(widget.liquorController.data[index].nameKr),
-                    // ),
                     Flexible(
                       child: RichText(
                           overflow: TextOverflow.ellipsis,
@@ -418,15 +396,6 @@ class _LiquorGridViewState extends State<LiquorGridView> {
                 padding: const EdgeInsets.fromLTRB(5, 3, 0, 0),
                 child: Row(
                   children: [
-                    // Expanded(
-                    //     child: Text(
-                    //       widget.liquorController.data[index].nameEn,
-                    //       style: TextStyle(
-                    //           fontSize: 12,
-                    //           color: Colors.grey
-                    //       ),
-                    //     )
-                    // ),
                     Flexible(
                         child: RichText(
                             overflow: TextOverflow.ellipsis,
@@ -468,6 +437,16 @@ class _LiquorGridViewState extends State<LiquorGridView> {
           ),
         ),
       );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
 }
