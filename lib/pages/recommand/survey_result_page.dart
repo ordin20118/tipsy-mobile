@@ -59,7 +59,7 @@ class _SurveyResultPageState extends State<SurveyResultPage> {
                         ),
                       ),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.redAccent,
+                        backgroundColor: getPrimaryColor(),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(100.0), // 원하는 둥근 정도로 조절
                         ),
@@ -83,7 +83,7 @@ class _SurveyResultPageState extends State<SurveyResultPage> {
                         ),
                       ),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Theme.of(context).primaryColor,
+                        backgroundColor: Colors.redAccent,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(100.0), // 원하는 둥근 정도로 조절
                         ),

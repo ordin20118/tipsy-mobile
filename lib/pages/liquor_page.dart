@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:tipsy_mobile/classes/liquor.dart';
 import 'package:tipsy_mobile/classes/comment.dart';
@@ -27,10 +29,10 @@ class _LiquorDetailState extends State<LiquorDetail> {
   FocusNode _focusNode = FocusNode();
   TextEditingController _commentInputController = TextEditingController();
   late Future<Liquor> liquor;
+  late Future<List<Comment>> commentList;
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -106,296 +108,316 @@ class _LiquorDetailState extends State<LiquorDetail> {
           // )
         ],
       ),
-      body: Container(
-        color: Color(0x33eaeaea),
-        child: SingleChildScrollView(
-          padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  FutureBuilder<Liquor>(
-                    future: liquor,
-                    builder: (context, snapshot) {
-                      if(snapshot.hasData) {
-                        return Column(
-                          children: [
-                            Container(  // image
-                              color: Colors.white,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  makeImgWidget(context, snapshot.data!.repImgUrl, 300, MediaQuery.of(context).size.height * 0.3),
-                                ],
-                              ),
-                            ),
-                            BlankView(color: Color(0x33eaeaea), heightRatio: 0.02),
-                            Container( // title, rating, abv ...
-                              padding: EdgeInsets.fromLTRB(10, 30, 10, 0),
-                              width: MediaQuery.of(context).size.width,
-                              color: Colors.white,
-                              child: Column(
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.all(6.0),
-                                        child: Text(
-                                          snapshot.data!.nameKr,
-                                          style: TextStyle(
-                                            fontSize: 18,
-                                            fontFamily: 'NanumBarunGothicLight',
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.fromLTRB(6, 0, 6, 8),
-                                        child: Text(
-                                          snapshot.data!.nameEn,
-                                          style: TextStyle(
-                                            fontSize: 13,
-                                            color: Colors.grey,
-                                            fontFamily: 'NanumBarunGothicLight',
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.fromLTRB(6, 0, 6, 8),
-                                        child: Text(
-                                          "분류 | ",
-                                          style: TextStyle(
-                                            fontSize: 11,
-                                            fontFamily: 'NanumBarunGothicLight',
-                                          ),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.fromLTRB(6, 0, 6, 8),
-                                        child: Text(
-                                          getLastCategName(snapshot.data!),
-                                          style: TextStyle(
-                                            fontSize: 11,
-                                            fontFamily: 'NanumBarunGothicLight',
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.fromLTRB(6, 0, 6, 8),
-                                        child: Text(
-                                          "국가 | ",
-                                          style: TextStyle(
-                                            fontSize: 11,
-                                            fontFamily: 'NanumBarunGothicLight',
-                                          ),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.fromLTRB(6, 0, 6, 8),
-                                        child: Text(
-                                          snapshot.data!.countryName,
-                                          style: TextStyle(
-                                            fontSize: 11,
-                                            fontFamily: 'NanumBarunGothicLight',
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.fromLTRB(6, 0, 6, 8),
-                                        child: Text(
-                                          "도수 | ",
-                                          style: TextStyle(
-                                            fontSize: 11,
-                                            fontFamily: 'NanumBarunGothicLight',
-                                          ),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.fromLTRB(6, 0, 6, 8),
-                                        child: Text(
-                                          snapshot.data!.abv.toString() + "%",
-                                          style: TextStyle(
-                                            fontSize: 11,
-                                            fontFamily: 'NanumBarunGothicLight',
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  // rating avg
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.fromLTRB(6, 0, 0, 8),
-                                        child: Icon(
-                                          Icons.star,
-                                          color: Colors.yellow,
-                                          size: 13,
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.fromLTRB(6, 0, 6, 8),
-                                        child: Text(
-                                          snapshot.data!.ratingAvg.toString(),
-                                          style: TextStyle(
-                                            fontSize: 11,
-                                            fontFamily: 'NanumBarunGothicLight',
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(height: 10,),
-                                  makeRateBtnWidget(snapshot.data!),
-                                ],
-                              ),
-                            ),
-                            BlankView(color: Colors.white, heightRatio: 0.02),
-                            BlankView(color: Color(0x33eaeaea), heightRatio: 0.02),
-                            BlankView(color: Colors.white, heightRatio: 0.02),
-                            Container(  // description
-                              width: MediaQuery.of(context).size.width,
-                              padding: EdgeInsets.all(15),
-                              color: Colors.white,
-                              child: Column(
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        snapshot.data!.description.trim().length > 0 ? "Description" : "",
-                                        style: TextStyle(
-                                          fontSize: 20,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  snapshot.data!.description.trim().length > 0 ? CustomTextView(historyText: snapshot.data!.description) : BlankView(color: Colors.white, heightRatio: 0.05),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        snapshot.data!.history.trim().length > 0 ? "History" : "",
-                                        style: TextStyle(
-                                          fontSize: 20,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  snapshot.data!.history.trim().length > 0 ? CustomTextView(historyText: snapshot.data!.history) : BlankView(color: Colors.white, heightRatio: 0.05),
-                                ],
-                              ),
-                            )
-                          ],
-                        );
-                      } else if(snapshot.hasError) {
-                        return Text('데이터를 불러오지 못했습니다.${snapshot.error}');
-                      }
-                      return Container(
-                        width: MediaQuery.of(context).size.width,
-                        height: MediaQuery.of(context).size.height * 0.7,
-                        child: Center(
-                            child: TipsyLoadingIndicator()
-                        ),
-                      );
-                    }
-                  ),
-                ],
-              ),
-              BlankView(color: Color(0x33eaeaea), heightRatio: 0.02),
-              // Comments
-              Container(
-                color: Colors.white,
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-                  child: FutureBuilder<Liquor>(
-                    future: liquor,
-                    builder: (context, snapshot) {
-                      if(snapshot.hasData) {
-                        return GestureDetector(
-                          onTap: () {
-                            showCommentModal(context, _focusNode, _commentInputController, widget.liquorId, 100);
-                          },
-                          child: Column(
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    "댓글",
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                    ),
-                                  ),
-                                  Text(
-                                    "댓글 " + snapshot.data!.commentCnt.toString() + "개 >",
-                                    style: TextStyle(
-                                      fontSize: 13,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        );
-                      } else {
-                        return Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.center,
+      body: RefreshIndicator(
+        onRefresh: _refreshData,
+        child: Container(
+          color: Color(0x33eaeaea),
+          child: SingleChildScrollView(
+            padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    FutureBuilder<Liquor>(
+                        future: liquor,
+                        builder: (context, snapshot) {
+                          if(snapshot.hasData) {
+                            return Column(
                               children: [
-                                Text(
-                                  "댓글",
-                                  style: TextStyle(
-                                    fontSize: 20,
+                                Container(  // image
+                                  color: Colors.transparent,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      makeImgWidget(context, snapshot.data!.repImgUrl, 300, MediaQuery.of(context).size.height * 0.3),
+                                    ],
                                   ),
                                 ),
-                                Text(
-                                  "댓글 0개 >",
-                                  style: TextStyle(
-                                    fontSize: 13,
-                                    color: Colors.grey,
+                                BlankView(color: Color(0x33eaeaea), heightRatio: 0.02),
+                                Container( // title, rating, abv ...
+                                  padding: EdgeInsets.fromLTRB(10, 30, 10, 0),
+                                  width: MediaQuery.of(context).size.width,
+                                  color: Colors.white,
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.all(6.0),
+                                            child: Text(
+                                              snapshot.data!.nameKr,
+                                              style: TextStyle(
+                                                fontSize: 18,
+                                                fontFamily: 'NanumBarunGothicLight',
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.fromLTRB(6, 0, 6, 8),
+                                            child: Text(
+                                              snapshot.data!.nameEn,
+                                              style: TextStyle(
+                                                fontSize: 13,
+                                                color: Colors.grey,
+                                                fontFamily: 'NanumBarunGothicLight',
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.fromLTRB(6, 0, 6, 8),
+                                            child: Text(
+                                              "분류 | ",
+                                              style: TextStyle(
+                                                fontSize: 11,
+                                                fontFamily: 'NanumBarunGothicLight',
+                                              ),
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.fromLTRB(6, 0, 6, 8),
+                                            child: Text(
+                                              getLastCategName(snapshot.data!),
+                                              style: TextStyle(
+                                                fontSize: 11,
+                                                fontFamily: 'NanumBarunGothicLight',
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.fromLTRB(6, 0, 6, 8),
+                                            child: Text(
+                                              "국가 | ",
+                                              style: TextStyle(
+                                                fontSize: 11,
+                                                fontFamily: 'NanumBarunGothicLight',
+                                              ),
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.fromLTRB(6, 0, 6, 8),
+                                            child: Text(
+                                              snapshot.data!.countryName,
+                                              style: TextStyle(
+                                                fontSize: 11,
+                                                fontFamily: 'NanumBarunGothicLight',
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.fromLTRB(6, 0, 6, 8),
+                                            child: Text(
+                                              "도수 | ",
+                                              style: TextStyle(
+                                                fontSize: 11,
+                                                fontFamily: 'NanumBarunGothicLight',
+                                              ),
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.fromLTRB(6, 0, 6, 8),
+                                            child: Text(
+                                              snapshot.data!.abv.toString() + "%",
+                                              style: TextStyle(
+                                                fontSize: 11,
+                                                fontFamily: 'NanumBarunGothicLight',
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      // rating avg
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.fromLTRB(6, 0, 0, 8),
+                                            child: Icon(
+                                              Icons.star,
+                                              color: Colors.yellow,
+                                              size: 13,
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.fromLTRB(6, 0, 6, 8),
+                                            child: Text(
+                                              snapshot.data!.ratingAvg.toString(),
+                                              style: TextStyle(
+                                                fontSize: 11,
+                                                fontFamily: 'NanumBarunGothicLight',
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      SizedBox(height: 10,),
+                                      makeRateBtnWidget(snapshot.data!),
+                                    ],
                                   ),
+                                ),
+                                BlankView(color: Colors.white, heightRatio: 0.02),
+                                BlankView(color: Color(0x33eaeaea), heightRatio: 0.02),
+                                BlankView(color: Colors.white, heightRatio: 0.02),
+                                Container(  // description
+                                  width: MediaQuery.of(context).size.width,
+                                  padding: EdgeInsets.all(15),
+                                  color: Colors.white,
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            snapshot.data!.description.trim().length > 0 ? "Description" : "",
+                                            style: TextStyle(
+                                              fontSize: 20,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      snapshot.data!.description.trim().length > 0 ? CustomTextView(historyText: snapshot.data!.description) : BlankView(color: Colors.white, heightRatio: 0.05),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            snapshot.data!.history.trim().length > 0 ? "History" : "",
+                                            style: TextStyle(
+                                              fontSize: 20,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      snapshot.data!.history.trim().length > 0 ? CustomTextView(historyText: snapshot.data!.history) : BlankView(color: Colors.white, heightRatio: 0.05),
+                                    ],
+                                  ),
+                                )
+                              ],
+                            );
+                          } else if(snapshot.hasError) {
+                            return Text('데이터를 불러오지 못했습니다.${snapshot.error}');
+                          }
+                          return Container(
+                            width: MediaQuery.of(context).size.width,
+                            height: MediaQuery.of(context).size.height * 0.7,
+                            child: Center(
+                                child: TipsyLoadingIndicator()
+                            ),
+                          );
+                        }
+                    ),
+                  ],
+                ),
+                BlankView(color: Color(0x33eaeaea), heightRatio: 0.02),
+                // Comments
+                Container(
+                  color: Colors.white,
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                    child: FutureBuilder<Liquor>(
+                        future: liquor,
+                        builder: (context, snapshot) {
+                          if(snapshot.hasData) {
+                            return GestureDetector(
+                              onTap: () {
+                                showCommentModal(context, _focusNode, _commentInputController, widget.liquorId, 100);
+                              },
+                              child: Column(
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        "댓글",
+                                        style: TextStyle(
+                                          fontSize: 20,
+                                        ),
+                                      ),
+                                      Text(
+                                        "댓글 " + snapshot.data!.commentCnt.toString() + "개 >",
+                                        style: TextStyle(
+                                          fontSize: 13,
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            );
+                          } else {
+                            return Column(
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "댓글",
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                      ),
+                                    ),
+                                    Text(
+                                      "댓글 0개 >",
+                                      style: TextStyle(
+                                        fontSize: 13,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ],
-                            ),
-                          ],
-                        );
-                      }
-                    }
+                            );
+                          }
+                        }
+                    ),
                   ),
                 ),
-              ),
-              // TODO: add comment preview view
-              CommentPreView(
-                  contentId: widget.liquorId,
-                  contentType: 100
-              ),
-            ],
+                // add comment preview view
+                FutureBuilder<List<Comment>>(
+                  future: commentList,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return CommentPreView(
+                        contentId: widget.liquorId,
+                        contentType: 100,
+                        commentList: snapshot.data!,
+                      );
+                    } else if(snapshot.hasError) {
+                      return Text(
+                        '데이터를 불러오지 못했습니다.${snapshot.error}',
+                        style: TextStyle(
+                            fontSize: 7
+                        ),
+                      );
+                    } else {
+                      return Container();
+                    }
+                  }
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -473,6 +495,13 @@ class _LiquorDetailState extends State<LiquorDetail> {
     }
   }
 
+  Future<void> _refreshData() async {
+    setState(() {
+      liquor = loadLiquorInfo(widget.liquorId);
+      commentList = loadCommentInfo(widget.liquorId, 100, 1, 3);
+    });
+  }
+
   @override
   void dispose() {
     super.dispose();
@@ -483,6 +512,7 @@ class _LiquorDetailState extends State<LiquorDetail> {
     super.initState();
     print("주류 상세 페이지 - liquorId:" + widget.liquorId.toString());
     liquor = loadLiquorInfo(widget.liquorId);
+    commentList = loadCommentInfo(widget.liquorId, 100, 1, 3);
   }
 
 }
@@ -520,10 +550,11 @@ class _CustomTextViewState extends State<CustomTextView> {
  * Comment UI
  */
 class CommentPreView extends StatefulWidget {
-  const CommentPreView({Key? key, required this.contentId, required this.contentType}) : super(key: key);
+  const CommentPreView({Key? key, required this.contentId, required this.contentType, required this.commentList}) : super(key: key);
 
   final contentId;
   final contentType;
+  final commentList;
 
   @override
   _CommentPreViewState createState() => _CommentPreViewState();
@@ -534,45 +565,30 @@ class _CommentPreViewState extends State<CommentPreView> {
   FocusNode _focusNode = FocusNode();
   TextEditingController _commentInputController = TextEditingController();
 
-  late Future<List<Comment>> commentList;
+  //late Future<List<Comment>> commentList;
 
   @override
   Widget build(BuildContext context) {
+    log("어쩌면.." + widget.commentList.length.toString());
     return Column(
       children: [
         Container(
-          child: FutureBuilder<List<Comment>>(
-            future: commentList,
-            builder: (context, snapshot) {
-              if(snapshot.hasData) {
-                return Column(
+          child: Column(
+            children: [
+              Container(
+                padding: EdgeInsets.fromLTRB(10, 0, 10, 10),
+                width: MediaQuery.of(context).size.width,
+                //height: MediaQuery.of(context).size.height * 0.42,
+                color: Colors.white,
+                child: Column(
                   children: [
-                    Container(
-                      padding: EdgeInsets.fromLTRB(10, 0, 10, 10),
-                      width: MediaQuery.of(context).size.width,
-                      //height: MediaQuery.of(context).size.height * 0.42,
-                      color: Colors.white,
-                      child: Column(
-                        children: [
-                          // Comment ListView
-                          printCommentListView(context, snapshot.data!),
-                          BlankView(color: Colors.white, heightRatio: 0.01),
-                        ],
-                      ),
-                    )
+                    // Comment ListView
+                    printCommentListView(context, widget.commentList),
+                    BlankView(color: Colors.white, heightRatio: 0.01),
                   ],
-                );
-              } else if(snapshot.hasError) {
-                return Text(
-                  '데이터를 불러오지 못했습니다.${snapshot.error}',
-                  style: TextStyle(
-                      fontSize: 7
-                  ),
-                );
-              } else {
-                return Container();
-              }
-            }
+                ),
+              )
+            ],
           ),
         ),
       ],
@@ -618,7 +634,9 @@ class _CommentPreViewState extends State<CommentPreView> {
   void initState() {
     super.initState();
     print("주류 상세 댓글 페이지 - liquorId:" + widget.contentId.toString());
-    commentList = loadCommentInfo(widget.contentId, widget.contentType, 1, 3);
+    print("주류 상세 댓글 페이지 - comments size:" + widget.commentList.length.toString());
+
+    //commentList = loadCommentInfo(widget.contentId, widget.contentType, 1, 3);
   }
 
   @override

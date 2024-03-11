@@ -161,7 +161,7 @@ class _PriceSurveyPageState extends State<PriceSurveyPage> {
                     ),
                   ),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Theme.of(context).primaryColor,
+                    backgroundColor: getPrimaryColor(),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(100.0), // 원하는 둥근 정도로 조절
                     ),

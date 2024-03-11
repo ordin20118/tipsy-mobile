@@ -51,7 +51,7 @@ Future<List<Comment>> loadCommentInfo(int contentId, int contentType, int nowPag
     } catch(e) {
       log("" + e.toString());
     }
-    print("return comments");
+    print("return comments size:" + tmp.length.toString());
     return tmp;
   } else {
     throw Exception('Failed to load liquor comments data.');

@@ -46,6 +46,7 @@ dependencies:
   dio: ^4.0.6
   getwidget: ^3.0.1
   jwt_decoder: ^2.0.1
+  custom_refresh_indicator: ^3.0.0
   #camera: ^0.10.0
   camera:
     git:

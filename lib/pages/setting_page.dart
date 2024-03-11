@@ -28,15 +28,49 @@ class _SettingPageState extends State<SettingPage> {
       ),
       body: Container(
         color: Colors.white,
-        padding: EdgeInsets.all(10),
+        padding: EdgeInsets.fromLTRB(5, 10, 5, 0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             SizedBox(
               height: MediaQuery.of(context).size.height * 0.07,
               child: Padding(
-                padding: const EdgeInsets.all(10.0),
+                padding: const EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      "내 정보 수정",
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontFamily: 'NanumBarunGothicUltraLight'
+                      ),
+                    ),
+                    SizedBox(width: MediaQuery.of(context).size.width * 0.59),
+                    IconButton(icon: Icon(Icons.arrow_forward_ios),
+                      onPressed: () async {
+                        dialogBuilder(context, '알림', '내 정보 수정은 준비중입니다.🥲');
+                      },
+                      color: Colors.black,
+                      iconSize: 18,
+                    )
+                  ],
+                ),
+              ),
+            ),
+            Divider(
+              height: 0.1,
+              thickness: 0.3,
+              color: Colors.grey,
+              indent: 3,
+              endIndent: 3,
+            ),
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.07,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
                       "로그아웃",
@@ -60,16 +94,19 @@ class _SettingPageState extends State<SettingPage> {
                 ),
               ),
             ),
-            Container(
-              height:1.0,
-              //width:500.0,
-              color:Colors.black12,
+            Divider(
+              height: 0.1,
+              thickness: 0.3,
+              color: Colors.grey,
+              indent: 3,
+              endIndent: 3,
             ),
             SizedBox(
               height: MediaQuery.of(context).size.height * 0.07,
               child: Padding(
-                padding: const EdgeInsets.all(10.0),
+                padding: const EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
                       "회원탈퇴",

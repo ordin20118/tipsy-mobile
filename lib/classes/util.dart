@@ -1,6 +1,4 @@
 import 'dart:developer';
-//import 'dart:html';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
@@ -9,11 +7,10 @@ import 'package:tipsy_mobile/classes/recommand.dart';
 import 'dart:convert';
 import 'package:tipsy_mobile/classes/user.dart';
 import 'package:tipsy_mobile/classes/word.dart';
-import 'comment.dart';
 import 'liquor.dart';
 
-bool isLocal = false;
-const String API_URL_LOCAL = "http://192.168.219.104:8080/svcmgr/api";
+bool isLocal = true;
+const String API_URL_LOCAL = "http://192.168.219.105:8080/svcmgr/api";
 const String API_URL_SERVER = "https://www.tipsy.co.kr/svcmgr/api";
 
 String getAPIHost() {

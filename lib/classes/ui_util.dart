@@ -52,6 +52,10 @@ Color getCommonBackColor() {
   return Color(0x88EAEAEA);
 }
 
+Color getPrimaryColor() {
+  return Color(0xff005766);
+}
+
 TextStyle boxMenuWhite = TextStyle(
     color: Colors.white,
     fontWeight: FontWeight.bold

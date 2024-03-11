@@ -93,7 +93,7 @@ class _CommentListViewState extends State<CommentListView> {
                   Expanded(
                     child: Text(
                       comment,
-                      //"아주 긴 댓글 테스트아주 긴 댓글 테스트아주 긴 댓글 테스트아주 긴 댓글 테스트아주 긴 댓글 테스트아주 긴 댓글 테스트아주 긴 댓글 테스트아주 긴 댓글 테스트아주 긴 댓글 테스트아주 긴 댓글 테스트아주 긴 댓글 테스트",
+                      //"아주 긴 댓글 테스트아주 긴 댓글 테스트아주 긴 댓글 테스트아주 긴 댓글 테스트아주 긴 댓글 테스트아주 긴 댓글 테스트아주 긴 댓글 테스트아주 긴 댓글 테스트아주 긴 댓글 테스트아주 긴 댓글 테스트아주 긴 댓글 테스트 끝",
                       overflow: TextOverflow.ellipsis,
                       maxLines: 3,
                       style: TextStyle(
@@ -164,12 +164,11 @@ class CommentScrollController extends GetxController {
         // load comments
         List<Comment> comments = await loadCommentInfo(contentId, contentType, nowPage, perPage);
 
-        log("[추가 로드된 댓글 개수]: ${comments.length}");
-
         if(comments.length > 0) {
           data.addAll(comments);
           if(comments.length >= perPage) {
             hasMore = true.obs;
+            nowPage++;
           } else {
             hasMore = false.obs;
           }
