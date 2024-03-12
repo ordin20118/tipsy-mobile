@@ -56,60 +56,6 @@ class _CommentListViewState extends State<CommentListView> {
     );
   }
 
-  Widget makeCommentListItem(userNickname, comment, regDate, context) {
-    return Container(
-      child: Row(
-        //mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Flexible(
-            flex: 6,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(100.0),
-              child:Image.asset(
-                'assets/images/default_profile.jpeg',
-                // width: MediaQuery.of(context).size.width * 0.01,
-                // height: MediaQuery.of(context).size.width * 0.01
-              ),
-            ),
-          ),
-          Flexible(
-            flex: 1,
-            child: SizedBox(width: MediaQuery.of(context).size.width * 0.02),
-          ),
-          Flexible(
-            flex: 40,
-            child: Padding(
-              padding: const EdgeInsets.all(5.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    userNickname+" ",
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.black87,
-                    ),
-                  ),
-                  Expanded(
-                    child: Text(
-                      comment,
-                      //"아주 긴 댓글 테스트아주 긴 댓글 테스트아주 긴 댓글 테스트아주 긴 댓글 테스트아주 긴 댓글 테스트아주 긴 댓글 테스트아주 긴 댓글 테스트아주 긴 댓글 테스트아주 긴 댓글 테스트아주 긴 댓글 테스트아주 긴 댓글 테스트 끝",
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 3,
-                      style: TextStyle(
-                          fontSize: 13,
-                          color: Colors.black54
-                      ),
-                    ),
-                  )
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
   @override
   void initState() {
@@ -177,4 +123,60 @@ class CommentScrollController extends GetxController {
     });
     super.onInit();
   }
+}
+
+
+Widget makeCommentListItem(userNickname, comment, regDate, context) {
+  return Container(
+    child: Row(
+      //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Flexible(
+          flex: 6,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(100.0),
+            child:Image.asset(
+              'assets/images/default_profile.jpeg',
+              // width: MediaQuery.of(context).size.width * 0.01,
+              // height: MediaQuery.of(context).size.width * 0.01
+            ),
+          ),
+        ),
+        Flexible(
+          flex: 1,
+          child: SizedBox(width: MediaQuery.of(context).size.width * 0.02),
+        ),
+        Flexible(
+          flex: 40,
+          child: Padding(
+            padding: const EdgeInsets.all(5.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  userNickname+" ",
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.black87,
+                  ),
+                ),
+                Expanded(
+                  child: Text(
+                    comment,
+                    //"아주 긴 댓글 테스트아주 긴 댓글 테스트아주 긴 댓글 테스트아주 긴 댓글 테스트아주 긴 댓글 테스트아주 긴 댓글 테스트아주 긴 댓글 테스트아주 긴 댓글 테스트아주 긴 댓글 테스트아주 긴 댓글 테스트아주 긴 댓글 테스트 끝",
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 3,
+                    style: TextStyle(
+                        fontSize: 13,
+                        color: Colors.black54
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
 }

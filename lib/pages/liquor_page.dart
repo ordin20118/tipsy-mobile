@@ -1,6 +1,8 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:tipsy_mobile/classes/liquor.dart';
 import 'package:tipsy_mobile/classes/comment.dart';
 import 'package:tipsy_mobile/classes/util.dart';
@@ -438,9 +440,9 @@ class _LiquorDetailState extends State<LiquorDetail> {
 
       Liquor tmp = Liquor.fromJson(liquorJson);
 
-      print("[getLiquorInfo] desc:" + tmp.description);
-      print("[getLiquorInfo] history:" + tmp.history);
-      print("[getLiquorInfo] history lenth:" + tmp.history.length.toString());
+      // print("[getLiquorInfo] desc:" + tmp.description);
+      // print("[getLiquorInfo] history:" + tmp.history);
+      // print("[getLiquorInfo] history lenth:" + tmp.history.length.toString());
       // TODO: null check
       if(tmp.description != null) {
         tmp.description = makeText(tmp.description);
@@ -564,12 +566,12 @@ class _CommentPreViewState extends State<CommentPreView> {
 
   FocusNode _focusNode = FocusNode();
   TextEditingController _commentInputController = TextEditingController();
-
-  //late Future<List<Comment>> commentList;
+  CommentScrollController commentScrollController = Get.put<CommentScrollController>(CommentScrollController());
 
   @override
   Widget build(BuildContext context) {
-    log("어쩌면.." + widget.commentList.length.toString());
+    log("CommentPreview build screen");
+
     return Column(
       children: [
         Container(
@@ -599,7 +601,7 @@ class _CommentPreViewState extends State<CommentPreView> {
     if(commentList.length > 0) {
       return Padding(
         padding: const EdgeInsets.all(0.0),
-        child: CommentListView(commentList: commentList, commentScrollController: null,),
+        child: CommentListView(commentList: commentList, commentScrollController: commentScrollController,),
       );
     } else {
       return Container(
@@ -630,13 +632,23 @@ class _CommentPreViewState extends State<CommentPreView> {
     }
   }
 
+  List<Widget> makeCommentList(List<Comment> commentList, BuildContext context) {
+    List<Widget> res = [];
+
+    for(var i=0; i < commentList.length; i++) {
+      Comment comment = commentList[i];
+      res.add(makeCommentListItem(comment.userNickname, comment.comment, comment.regDate, context));
+    }
+
+    return res;
+  }
+
   @override
   void initState() {
     super.initState();
     print("주류 상세 댓글 페이지 - liquorId:" + widget.contentId.toString());
     print("주류 상세 댓글 페이지 - comments size:" + widget.commentList.length.toString());
-
-    //commentList = loadCommentInfo(widget.contentId, widget.contentType, 1, 3);
+    commentScrollController.setData(widget.commentList, widget.contentType, widget.contentId);
   }
 
   @override
