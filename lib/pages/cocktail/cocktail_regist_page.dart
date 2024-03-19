@@ -311,7 +311,7 @@ class _CocktailRegistPageState extends State<CocktailRegistPage> {
                   } : null,
                   child: Text('칵테일 등록', style: TextStyle(fontSize: 21),),
                   style: ElevatedButton.styleFrom(
-                      primary: Color(0xff005766),
+                      //primary: Color(0xff005766),
                       minimumSize: const Size.fromHeight(50)
                   ),
                 )

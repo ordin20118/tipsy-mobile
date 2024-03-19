@@ -241,7 +241,7 @@ class _JoinPageState extends State<JoinPage> {
                   } : null,
                   child: Text('가입하기', style: TextStyle(fontSize: 21),),
                   style: ElevatedButton.styleFrom(
-                    primary: Color(0xff005766),
+                    //primary: Color(0xff005766),
                     minimumSize: const Size.fromHeight(50)
                   ),
                 )
@@ -282,9 +282,9 @@ class _JoinPageState extends State<JoinPage> {
   // 입력사항 확인
   // 모두 정상 입력 시 '가입하기' 버튼 활성화
   void validateForm() {
-    print("validateForm");
+    log("validateForm");
     if (_formKey.currentState!.validate()) {
-      print("validate ok");
+      log("validate ok");
       setState(() {
         _canSubmit = true;
       });

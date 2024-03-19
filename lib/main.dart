@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:tipsy_mobile/pages/post/post_regist_page.dart';
 
 import 'firebase_options.dart';
 import 'package:camera/camera.dart';
@@ -17,6 +18,8 @@ import 'package:tipsy_mobile/pages/splash_page.dart';
 import 'package:tipsy_mobile/pages/my_page.dart';
 import 'package:tipsy_mobile/pages/setting_page.dart';
 import 'package:flutter_config/flutter_config.dart';
+import 'package:dismiss_keyboard_on_tap/dismiss_keyboard_on_tap.dart';
+
 
 import 'classes/ui_util.dart';
 
@@ -36,10 +39,12 @@ void main() async {
   );
 
   runApp(
-    MaterialApp(
-      title: 'Main',
-      debugShowCheckedModeBanner: false,
-      home: MyApp(),
+    DismissKeyboardOnTap(
+      child: MaterialApp(
+        title: 'Main',
+        debugShowCheckedModeBanner: false,
+        home: MyApp(),
+      ),
     ),
   );
 }
@@ -179,6 +184,20 @@ class _MainPageState extends State<MainPage> {
                 ),
               ],
             ),
+            floatingActionButton: Visibility(
+              visible: _selectedPageIndex == 1,
+              child: FloatingActionButton(
+                backgroundColor: getPrimaryColor(),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => PostRegistPage()),
+                  );
+                },
+                child: Icon(Icons.add, color: Colors.white),
+              ),
+            ),
+            floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
             bottomNavigationBar: Container(
               decoration: BoxDecoration(
                 border: Border(top: BorderSide(color: Color(0xffEAEAEA), width: 1.0)), // 라인효과
@@ -190,8 +209,8 @@ class _MainPageState extends State<MainPage> {
                     label: "홈",
                   ),
                   new BottomNavigationBarItem(
-                    icon: Icon(Icons.add_circle_outline),
-                    label: "new",
+                    icon: Icon(Icons.feed),
+                    label: "피드",
                   ),
                   new BottomNavigationBarItem(
                     icon: Icon(Icons.person),
