@@ -38,6 +38,7 @@ dependencies:
   fluttertoast: ^8.0.9
   flutter_config: ^2.0.0
   image_picker: ^1.0.7
+  smooth_page_indicator: ^1.1.0
   get: ^4.6.5
   marquee: ^2.2.3
   permission_handler: ^10.0.0

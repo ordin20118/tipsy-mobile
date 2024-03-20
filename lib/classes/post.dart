@@ -10,6 +10,8 @@ class Post {
   String _content;
   int _state;
   String _userNickname;
+  String _userProfileUrl;
+  List<String> _imageUrls;
   DateTime _regDate;
   late DateTime _updateDate;
   late DateTime _deleteDate;
@@ -21,9 +23,12 @@ class Post {
     required String content,
     required int state,
     required String userNickname,
+    required String userProfileUrl,
+    required List<String> imageUrls,
     required DateTime regDate,
   }) : this._id = id, this._userId = userId, this._title = title, this._content = content,
-        this._state = state, this._userNickname = userNickname, this._regDate = regDate;
+        this._state = state, this._userNickname = userNickname, this._userProfileUrl = userProfileUrl,
+        this._imageUrls = imageUrls, this._regDate = regDate;
 
 
   factory Post.fromJson(Map<String, dynamic> json) {
@@ -34,6 +39,8 @@ class Post {
         content: json['content'],
         state: json['state'],
         userNickname: json['user_nickname'],
+        userProfileUrl: json['user_profile_url'],
+        imageUrls: List<String>.from(json['image_urls'].map((item) => item.toString())),
         regDate: DateTime.fromMillisecondsSinceEpoch(json['reg_date'] * 1000)
     );
 
@@ -98,10 +105,22 @@ class Post {
   set content(String value) {
     _content = value;
   }
+
+  List<String> get imageUrls => _imageUrls;
+
+  set imageUrls(List<String> value) {
+    _imageUrls = value;
+  }
+
+  String get userProfileUrl => _userProfileUrl;
+
+  set userProfileUrl(String value) {
+    _userProfileUrl = value;
+  }
 }
 
 class PostList {
-  List<Post> Posts = List<Post>.empty();
+  List<Post> posts = List<Post>.empty();
 
   PostList() {}
   PostList.set(List<Post> PostList) {
@@ -109,7 +128,7 @@ class PostList {
     PostList.forEach((element) {
       emptyList.add(element);
     });
-    Posts = PostList;
+    posts = PostList;
   }
 
   factory PostList.fromJson(List<dynamic> parsedJson) {

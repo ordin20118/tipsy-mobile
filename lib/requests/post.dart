@@ -75,8 +75,27 @@ Future<bool> requestPosting(PostParam pParam) async {
   }
 }
 
+Future<List<Post>> requestNewsFeed(nowPage) async {
+  log("#### [requestNewsFeed] ####");
+  String reqUrl = "/post/newsfeed.tipsy?paging.nowPage=" + nowPage.toString();
+
+  final response = await requestGET(reqUrl);
+
+  if(response.statusCode == 200) {
+    String resString = response.body.toString();
+    //log("NewsFeed:" + resString);
+    var resJson = json.decode(resString);
+    var dataJson = resJson['data'];
+
+    PostList newsFeed = PostList.fromJson(dataJson);
+    return newsFeed.posts;
+  } else {
+    throw Exception('Failed to get user info.');
+  }
+}
+
 // Future<bool> deleteBookmark(BookmarkParam bParam) async {
-//   print("#### [deleteBookmark] ####" + bParam.toString());
+//   log("#### [deleteBookmark] ####" + bParam.toString());
 //   String reqUrl = "/bookmark.tipsy";
 //
 //   final storage = new FlutterSecureStorage();
@@ -90,7 +109,7 @@ Future<bool> requestPosting(PostParam pParam) async {
 //     String resString = response.body.toString();
 //     var resJson = json.decode(resString);
 //     var state = resJson['state'];
-//     print(state);
+//     log(state);
 //     return true;
 //   } else {
 //     throw Exception('Failed to unbookmark.');

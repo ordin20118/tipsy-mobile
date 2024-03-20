@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:tipsy_mobile/pages/post/news_feed_page.dart';
 import 'package:tipsy_mobile/pages/post/post_regist_page.dart';
 
 import 'firebase_options.dart';
@@ -176,7 +177,7 @@ class _MainPageState extends State<MainPage> {
                 ),
                 Offstage(
                   offstage: _selectedPageIndex != 1,
-                  child: CreateMenuPage(),
+                  child: NewsFeedPage(),
                 ),
                 Offstage(
                   offstage: _selectedPageIndex != 2,
@@ -210,7 +211,7 @@ class _MainPageState extends State<MainPage> {
                   ),
                   new BottomNavigationBarItem(
                     icon: Icon(Icons.feed),
-                    label: "피드",
+                    label: "새로운 피드",
                   ),
                   new BottomNavigationBarItem(
                     icon: Icon(Icons.person),
