@@ -30,6 +30,8 @@ class _LiquorDetailState extends State<LiquorDetail> {
 
   FocusNode _focusNode = FocusNode();
   TextEditingController _commentInputController = TextEditingController();
+  late CommentScrollController _commentScrollController;
+
   late Future<Liquor> liquor;
   late Future<List<Comment>> commentList;
 
@@ -341,7 +343,7 @@ class _LiquorDetailState extends State<LiquorDetail> {
                           if(snapshot.hasData) {
                             return GestureDetector(
                               onTap: () {
-                                showCommentModal(context, _focusNode, _commentInputController, widget.liquorId, 100);
+                                showCommentModal(context, _focusNode, _commentInputController, _commentScrollController, widget.liquorId, 100);
                               },
                               child: Column(
                                 children: [
@@ -513,6 +515,7 @@ class _LiquorDetailState extends State<LiquorDetail> {
   void initState() {
     super.initState();
     print("주류 상세 페이지 - liquorId:" + widget.liquorId.toString());
+    _commentScrollController = Get.put<CommentScrollController>(CommentScrollController(), tag: "commentModal_100_${widget.liquorId}",);
     liquor = loadLiquorInfo(widget.liquorId);
     commentList = loadCommentInfo(widget.liquorId, 100, 1, 3);
   }
@@ -566,7 +569,7 @@ class _CommentPreViewState extends State<CommentPreView> {
 
   FocusNode _focusNode = FocusNode();
   TextEditingController _commentInputController = TextEditingController();
-  CommentScrollController commentScrollController = Get.put<CommentScrollController>(CommentScrollController());
+  late CommentScrollController _commentScrollController;
 
   @override
   Widget build(BuildContext context) {
@@ -601,7 +604,7 @@ class _CommentPreViewState extends State<CommentPreView> {
     if(commentList.length > 0) {
       return Padding(
         padding: const EdgeInsets.all(0.0),
-        child: CommentListView(commentList: commentList, commentScrollController: commentScrollController,),
+        child: CommentListView(commentList: commentList, commentScrollController: _commentScrollController,),
       );
     } else {
       return Container(
@@ -616,7 +619,7 @@ class _CommentPreViewState extends State<CommentPreView> {
               ),
               TextButton(
                 onPressed: () {
-                  showCommentModal(context, _focusNode, _commentInputController, widget.contentId, widget.contentType);
+                  showCommentModal(context, _focusNode, _commentInputController, _commentScrollController, widget.contentId, widget.contentType);
                 },
                 child: Text(
                   '댓글 쓰기 >',
@@ -648,7 +651,8 @@ class _CommentPreViewState extends State<CommentPreView> {
     super.initState();
     print("주류 상세 댓글 페이지 - liquorId:" + widget.contentId.toString());
     print("주류 상세 댓글 페이지 - comments size:" + widget.commentList.length.toString());
-    commentScrollController.setData(widget.commentList, widget.contentType, widget.contentId);
+    _commentScrollController = Get.put<CommentScrollController>(CommentScrollController(), tag: "commentPreview_${widget.contentType}_${widget.contentId}",);
+    _commentScrollController.setData(widget.commentList, widget.contentType, widget.contentId);
   }
 
   @override

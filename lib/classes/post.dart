@@ -16,6 +16,14 @@ class Post {
   late DateTime _updateDate;
   late DateTime _deleteDate;
 
+  int _likeCnt;
+  int _dislikeCnt;
+  int _commentCnt;
+  int _shareCnt;
+  int _reportCnt;
+
+  bool _like;
+
   Post.set({
     required int id,
     required int userId,
@@ -26,10 +34,17 @@ class Post {
     required String userProfileUrl,
     required List<String> imageUrls,
     required DateTime regDate,
+    required int likeCnt,
+    required int dislikeCnt,
+    required int commentCnt,
+    required int shareCnt,
+    required int reportCnt,
+    required bool like
   }) : this._id = id, this._userId = userId, this._title = title, this._content = content,
         this._state = state, this._userNickname = userNickname, this._userProfileUrl = userProfileUrl,
-        this._imageUrls = imageUrls, this._regDate = regDate;
-
+        this._imageUrls = imageUrls, this._regDate = regDate,
+        this._likeCnt = likeCnt, this._dislikeCnt = dislikeCnt, this._commentCnt = commentCnt,
+        this._shareCnt = shareCnt, this._reportCnt = reportCnt, this._like = like;
 
   factory Post.fromJson(Map<String, dynamic> json) {
     Post tmp = Post.set(
@@ -41,7 +56,13 @@ class Post {
         userNickname: json['user_nickname'],
         userProfileUrl: json['user_profile_url'],
         imageUrls: List<String>.from(json['image_urls'].map((item) => item.toString())),
-        regDate: DateTime.fromMillisecondsSinceEpoch(json['reg_date'] * 1000)
+        regDate: DateTime.fromMillisecondsSinceEpoch(json['reg_date'] * 1000),
+        likeCnt: json['like_cnt'],
+        dislikeCnt: json['dislike_cnt'],
+        commentCnt: json['comment_cnt'],
+        shareCnt: json['share_cnt'],
+        reportCnt: json['report_cnt'],
+        like: json['like']
     );
 
     // set late variable
@@ -116,6 +137,42 @@ class Post {
 
   set userProfileUrl(String value) {
     _userProfileUrl = value;
+  }
+
+  int get reportCnt => _reportCnt;
+
+  set reportCnt(int value) {
+    _reportCnt = value;
+  }
+
+  int get shareCnt => _shareCnt;
+
+  set shareCnt(int value) {
+    _shareCnt = value;
+  }
+
+  int get commentCnt => _commentCnt;
+
+  set commentCnt(int value) {
+    _commentCnt = value;
+  }
+
+  int get dislikeCnt => _dislikeCnt;
+
+  set dislikeCnt(int value) {
+    _dislikeCnt = value;
+  }
+
+  int get likeCnt => _likeCnt;
+
+  set likeCnt(int value) {
+    _likeCnt = value;
+  }
+
+  bool get like => _like;
+
+  set like(bool value) {
+    _like = value;
   }
 }
 

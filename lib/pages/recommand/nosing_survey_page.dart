@@ -28,7 +28,7 @@ class _NosingSurveyPageState extends State<NosingSurveyPage> {
           return Column(
             children: [
               Text(
-                '향이 강한 술을 좋아하시나요?',
+                '좋아하는 향 또는 맛을 선택하시겠나요?',
                 style: TextStyle(
                   color: Colors.black87,
                   fontSize: 22,
@@ -46,7 +46,7 @@ class _NosingSurveyPageState extends State<NosingSurveyPage> {
                     });
                   },
                   child: Text(
-                    '향이 강한 술을 좋아해요!🤩',
+                    '좋아하는 향을 선택할래요!🤩',
                     textAlign: TextAlign.left,
                     style: TextStyle(
                         color: Colors.black87,
@@ -73,7 +73,7 @@ class _NosingSurveyPageState extends State<NosingSurveyPage> {
                     });
                   },
                   child: Text(
-                    '향이 강한건 별로에요..🥲',
+                    '향 선택 없이 추천받을래요',
                     textAlign: TextAlign.left,
                     style: TextStyle(
                         color: Colors.black87,

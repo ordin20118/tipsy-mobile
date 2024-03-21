@@ -76,12 +76,15 @@ class User {
   int _bookmarkCnt;
   int _commentCnt;
 
+  String _profileUrl;
+
   User.set({
     required String nickname,
     required int age,
+    required String profileUrl,
     required int bookmarkCnt,
     required int commentCnt,
-  }) : this._nickname = nickname, this._age = age,
+  }) : this._nickname = nickname, this._age = age, this._profileUrl = profileUrl,
         this._bookmarkCnt = bookmarkCnt, this._commentCnt = commentCnt;
 
 
@@ -89,6 +92,7 @@ class User {
     User tmp = User.set(
         nickname: json['nickname'],
         age: json['age'],
+        profileUrl: json['profile_url'],
         bookmarkCnt: json['bookmark_cnt'],
         commentCnt: json['comment_cnt'],
     );
@@ -117,5 +121,11 @@ class User {
 
   set nickname(String value) {
     _nickname = value;
+  }
+
+  String get profileUrl => _profileUrl;
+
+  set profileUrl(String value) {
+    _profileUrl = value;
   }
 }

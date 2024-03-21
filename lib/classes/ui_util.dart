@@ -224,10 +224,12 @@ Widget getBookmarkIcon(bool isBookmark) {
 /**
  * 댓글 모달 띄우기
  */
-void showCommentModal(BuildContext context, FocusNode focusNode, TextEditingController commentInputController, int contentId, int contentType) async {
+void showCommentModal(BuildContext context, FocusNode focusNode
+    , TextEditingController commentInputController
+    , CommentScrollController commentScrollController
+    , int contentId
+    , int contentType) async {
   List<Comment> commentList = await loadCommentInfo(contentId, contentType, 1, 5);
-  //CommentScrollController commentScrollController = CommentScrollController();
-  CommentScrollController commentScrollController = Get.put<CommentScrollController>(CommentScrollController());
   commentScrollController.setData(commentList, contentType, contentId);
 
   showModalBottomSheet(
@@ -279,7 +281,18 @@ void showCommentModal(BuildContext context, FocusNode focusNode, TextEditingCont
                           },
                           child: Container(
                             color: Colors.white,
-                            child: CommentListView(commentList: commentList, commentScrollController: commentScrollController,),
+                            child: commentScrollController.data.length > 0
+                                   ? CommentListView(commentList: commentList, commentScrollController: commentScrollController,)
+                                   : Container(
+                                      height: MediaQuery.of(context).size.height * 0.4,
+                                      padding: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
+                                      child: Center(
+                                        child: Text(
+                                          '아직 댓글이 없어요.\n첫 댓글을 작성해 보시겠어요?',
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ),
+                                     )
                           ),
                         ),
                       ),
@@ -327,7 +340,7 @@ void showCommentModal(BuildContext context, FocusNode focusNode, TextEditingCont
                                     child: IconButton(
                                       icon: Icon(Icons.send),
                                       onPressed: () async {
-                                        // TODO: bool 결과가 아닌 저장된 댓글 정보를 받아 리스트뷰에 추가해준다.
+                                        // 저장된 댓글 정보를 받아 리스트뷰에 추가해준다.
                                         Comment savedComment = await sendComment(context, commentInputController.text, contentId, contentType);
                                         if(savedComment != null) {
                                           focusNode.unfocus();

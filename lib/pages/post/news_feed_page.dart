@@ -16,6 +16,7 @@ import '../../requests/post.dart';
 import '../../requests/user.dart';
 import '../../ui/tipsy_loading_indicator.dart';
 import '../../ui/tipsy_refresh_indicator.dart';
+import '../collector/comment_view.dart';
 
 
 class NewsFeedPage extends StatefulWidget {
@@ -27,7 +28,9 @@ class NewsFeedPage extends StatefulWidget {
 
 class _NewsFeedPageState extends State<NewsFeedPage> {
 
-  NewsFeedScrollController _newsFeedScrollController = NewsFeedScrollController();
+  FocusNode _focusNode = FocusNode();
+  NewsFeedScrollController _newsFeedScrollController = Get.put<NewsFeedScrollController>(NewsFeedScrollController(), tag: "newsFeedList",);
+
 
   @override
   Widget build(BuildContext context) {
@@ -83,6 +86,9 @@ class _NewsFeedPageState extends State<NewsFeedPage> {
                   child:Image.network(
                     post.userProfileUrl,
                     height: MediaQuery.of(context).size.height * 0.05,
+                    errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                      return Text('이미지를 불러오던 중 문제가 발생했습니다.\n새로고침 해주세요.');
+                    },
                   ),
                 )
               ),
@@ -105,7 +111,7 @@ class _NewsFeedPageState extends State<NewsFeedPage> {
         ),
         makePostImageView(context, post),
         Container(
-          padding: EdgeInsets.all(15),
+          padding: EdgeInsets.all(10),
           alignment: Alignment.topLeft,
           child: Text(
             post.content,
@@ -113,10 +119,11 @@ class _NewsFeedPageState extends State<NewsFeedPage> {
             //maxLines: 100,
             style: TextStyle(
                 fontSize: 13,
-                color: Colors.black54
+                color: Colors.black87
             ),
           ),
-        )
+        ),
+        makePostToolView(context, post),
       ]
     );
   }
@@ -175,8 +182,48 @@ class _NewsFeedPageState extends State<NewsFeedPage> {
     }
   }
 
+  Widget makePostToolView(BuildContext context, Post post) {
+    return Container(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                if(post.like)
+                  Icon(Icons.favorite, size: 25, color: Colors.red),
+                if(!post.like)
+                  Icon(Icons.favorite_border, size: 25, color: Colors.black54),
+                SizedBox(width: MediaQuery.of(context).size.width * 0.01),
+                Text(post.likeCnt.toString()),
+                SizedBox(width: MediaQuery.of(context).size.width * 0.03),
+                GestureDetector(
+                  onTap: () {
+                    TextEditingController _commentInputController = TextEditingController();
+                    CommentScrollController _commentScrollController = Get.put<CommentScrollController>(CommentScrollController(), tag: "commentPreview_602_${post.id}",);
+                    showCommentModal(context, _focusNode, _commentInputController, _commentScrollController, post.id, 602);
+                  },
+                  child: Icon(Icons.chat_bubble_outline, size: 22),
+                ),
+
+                SizedBox(width: MediaQuery.of(context).size.width * 0.01),
+                Text(post.commentCnt.toString()),
+              ]
+            ),
+            Row(
+              children: [
+
+              ]
+            )
+          ]
+        ),
+      )
+    );
+  }
+
   Future<void> _refreshData() async {
-    log("refresh news feed");
+    log("Refresh news feed");
     setState(() {
       fetchData();
     });
@@ -190,7 +237,7 @@ class _NewsFeedPageState extends State<NewsFeedPage> {
   @override
   void initState() {
     super.initState();
-    log("news feed page initState()");
+    log("News Feed page initState()");
     fetchData();
   }
 
@@ -213,12 +260,8 @@ class NewsFeedScrollController extends GetxController {
     // set listener
     scrollController.value.addListener(() async {
       // more load data
-      //log("[${scrollController.value.position.pixels}][${scrollController.value.position.maxScrollExtent}]");
       if(scrollController.value.position.pixels ==
           scrollController.value.position.maxScrollExtent && hasMore.value) {
-
-        // log("[리스트의 끝입니다.] - contentType:[" + contentType.toString() + "]/contentId:[" + contentId.toString() + "]");
-        // log("[리스트의 끝입니다.] - nowPage:[" + nowPage.toString() + "]/perPage:[" + perPage.toString() + "]");
 
         // load Posts
         List<Post> posts = (await requestNewsFeed(nowPage)).cast<Post>();

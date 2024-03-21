@@ -210,8 +210,8 @@ class _MainPageState extends State<MainPage> {
                     label: "홈",
                   ),
                   new BottomNavigationBarItem(
-                    icon: Icon(Icons.feed),
-                    label: "새로운 피드",
+                    icon: Icon(Icons.groups),
+                    label: "커뮤니티",
                   ),
                   new BottomNavigationBarItem(
                     icon: Icon(Icons.person),
