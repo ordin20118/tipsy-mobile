@@ -2,12 +2,16 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:getwidget/components/button/gf_button.dart';
+import 'package:getwidget/shape/gf_button_shape.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:tipsy_mobile/ui/form.dart';
 import 'package:tipsy_mobile/classes/user.dart';
 import 'package:tipsy_mobile/classes/util.dart';
 import 'package:tipsy_mobile/classes/ui_util.dart';
+
+import '../requests/user.dart';
 
 class JoinPage extends StatefulWidget {
   JoinPage({Key? key, required this.platform, required this.socialId, required this.email}) : super(key: key);
@@ -32,6 +36,8 @@ class _JoinPageState extends State<JoinPage> {
   String _age = '';
   Gender _gender = Gender.male;
 
+  bool _nicknameDupChck = false;
+  bool _nicknameDup = false;
   bool _canSubmit = false;
 
   final emailController = TextEditingController();
@@ -65,6 +71,7 @@ class _JoinPageState extends State<JoinPage> {
           child: Form(
             key: _formKey,
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 TextFormField(
                   enabled: true,
@@ -110,6 +117,10 @@ class _JoinPageState extends State<JoinPage> {
                   controller: nickController,
                   //initialValue: _nickname,
                   autovalidateMode: AutovalidateMode.always,
+                  onChanged: (value) {
+                    _nicknameDupChck = false;
+                    _nicknameDup = false;
+                  },
                   onSaved: (value) {
                     setState(() {
                       _nickname = value as String;
@@ -118,6 +129,14 @@ class _JoinPageState extends State<JoinPage> {
                   validator: (value) {
                     if(value == null || value.isEmpty) {
                       return '닉네임을 입력해주세요.';
+                    }
+
+                    if(!_nicknameDupChck) {
+                      return '닉네임 중복을 확인해 주세요.';
+                    }
+
+                    if(_nicknameDup) {
+                      return '중복된 닉네임 입니다.';
                     }
                     return null;
                   },
@@ -144,6 +163,17 @@ class _JoinPageState extends State<JoinPage> {
                   style: TextStyle(
                       color: Colors.black87
                   ),
+                ),
+                GFButton(
+                  onPressed: () async {
+                    _nicknameDup = await requestNicknameDupChck(nickController.text);
+                    setState(() {
+                      _nicknameDupChck = true;
+                      log("$_nicknameDup");
+                    });
+                  },
+                  text: "중복 확인",
+                  shape: GFButtonShape.square,
                 ),
                 SizedBox(height: 50),
                 TextFormField(
@@ -226,13 +256,10 @@ class _JoinPageState extends State<JoinPage> {
                 ),
                 SizedBox(height: 50),
                 ElevatedButton(
-                  onPressed: _canSubmit ? () {
+                  onPressed: _canSubmit && !_nicknameDup ? () {
                     if (_formKey.currentState!.validate()) {
                       _formKey.currentState!.save();
                       join();
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text(_email + '/' + _nickname + '/' + _age.toString() + '/' + _gender.toString())),
-                      );
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(content: Text('입력사항을 다시 확인해주세요.'), backgroundColor: Colors.redAccent,),
@@ -282,9 +309,7 @@ class _JoinPageState extends State<JoinPage> {
   // 입력사항 확인
   // 모두 정상 입력 시 '가입하기' 버튼 활성화
   void validateForm() {
-    log("validateForm");
     if (_formKey.currentState!.validate()) {
-      log("validate ok");
       setState(() {
         _canSubmit = true;
       });
@@ -310,9 +335,9 @@ class _JoinPageState extends State<JoinPage> {
     var bodyData = {
       "platform": widget.platform,
       "social_id": widget.socialId,
-      "email": _email,
-      "nickname": _nickname,
-      "age": _age,
+      "email": emailController.text,
+      "nickname": nickController.text,
+      "age": ageController.text,
       "gender": gender
     };
 
@@ -333,7 +358,8 @@ class _JoinPageState extends State<JoinPage> {
       var parsedData = parsed['data'];
       log("parsed join result data: $parsedData");
 
-      // TODO
+      dialogBuilder(context, "환영합니다!", parsedData['nickname'] + " 님 회원가입을 완료했습니다.");
+
       // 1. 토큰 발급
       AccessToken? token = null;
       try {
@@ -364,9 +390,8 @@ class _JoinPageState extends State<JoinPage> {
       // TODO: Add loading logo
 
     } else {
-      // TODO: toast
       // 회원가입 실패에 대한 메시지
-      print("" + response.body);
+      showErrorToast("회원가입에 실패했습니다. 다시 시도해 주세요.");
       throw Exception('Failed to join.');
     }
 

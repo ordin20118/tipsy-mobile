@@ -36,11 +36,7 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-    //   statusBarColor: Colors.black,
-    // ));
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
-
     return Container(
       height: MediaQuery.of(context).size.height,
       width: MediaQuery.of(context).size.width,
@@ -185,10 +181,12 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     super.initState();
     log("Login Page initState()");
-
-    // initKakaoTalkInstalled();
+    initKakaoTalkInstalled();
     checkAutoLogin();
+
+
     // TODO: remove under test code ...
+
     // registTestUser();
     // _logoutFromKakao();
     // _unlinkFromKakao();
@@ -219,17 +217,15 @@ class _LoginPageState extends State<LoginPage> {
     goToMainPageReplace(context);
   }
 
-  // 카카오톡 존재 여부 초기화
+  // 카카오톡 존재 여부 초기화 - TODO: 카카오 앱이 있음에도 설치되지 않았다고 나옴
   void initKakaoTalkInstalled() async {
     final installed = await isKakaoTalkInstalled();
-    print('kakao install: '+ installed.toString());
+    log('kakao install: '+ installed.toString());
     setState(() {
       _isKakaoTalkInstalled = installed;
     });
   }
 
-  // for test
-  // 함수를 하나로 통일해서 파라미터를 받자
   void goToJoinPage(int platform, String socialId, String email) {
     log("[goToJoinPage] platform:${platform}/socialId:${socialId}/email:${email}");
     Navigator.push(
@@ -244,50 +240,55 @@ class _LoginPageState extends State<LoginPage> {
 
     try {
       OAuthToken token = await UserApi.instance.loginWithKakaoTalk();
-      print('카카오톡으로 로그인 성공 ${token.accessToken}/${token.refreshToken}');
+      log('카카오톡으로 로그인 성공 ${token.accessToken}/${token.refreshToken}');
 
       // 회원 가입 절차
       // 1. 회원 여부 확인
       KakaoUser.User user = await UserApi.instance.me();
+      log("kakao user id:" + user.id.toString());
+
       String? email = user.kakaoAccount?.email;
       String? nickname = user.kakaoAccount?.profile?.nickname;
 
-      // api로 사용자 계정 유무 확인 - email
-      bool isDup =  await checkEmailDuplicate(email);
+      // 회원 가입 여부 확인 및 로그인 처리
+      checkPlatformId(USER_PLATFORM_KAKAO, user.id.toString(), email);
 
-      if(isDup) {
-        print("이미 가입된 이메일 입니다.");
-
-        // 1. 서비스 토큰 발급
-        AccessToken token = await requestAccessToken(USER_PLATFORM_KAKAO, email!, '');
-
-        print("[액세스 토큰 발급]: $token");
-
-        if(token != null && token.tokenHash.length > 0 && email != null) {
-
-          // 2. 자동 로그인 처리
-          bool isLogin = await autoLogin(USER_PLATFORM_KAKAO, email, token.tokenHash);
-
-          if(isLogin) {
-            goToMainPageReplace(context);
-          } else {
-            throw Exception('Failed auto login.');
-          }
-        } else {
-          throw Exception('Failed isuue access token.');
-        }
-
-      } else {
-        print("가입할 수 있는 이메일 입니다.");
-        // TODO: 가입 페이지로 이동 => 함수로 빼내기
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(builder: (context) => JoinPage(platform: USER_PLATFORM_KAKAO, email: email ?? "", nickname: nickname ?? "", accessToken: token.accessToken, refreshToken: token.refreshToken,)),
-        // );
-      }
+      // bool isDup =  await checkEmailDuplicate(email);
+      //
+      // if(isDup) {
+      //   print("이미 가입된 이메일 입니다.");
+      //
+      //   // 1. 서비스 토큰 발급
+      //   AccessToken token = await requestAccessToken(USER_PLATFORM_KAKAO, email!, '');
+      //
+      //   print("[액세스 토큰 발급]: $token");
+      //
+      //   if(token != null && token.tokenHash.length > 0 && email != null) {
+      //
+      //     // 2. 자동 로그인 처리
+      //     bool isLogin = await autoLogin(USER_PLATFORM_KAKAO, email, token.tokenHash);
+      //
+      //     if(isLogin) {
+      //       goToMainPageReplace(context);
+      //     } else {
+      //       throw Exception('Failed auto login.');
+      //     }
+      //   } else {
+      //     throw Exception('Failed isuue access token.');
+      //   }
+      //
+      // } else {
+      //   log("가입할 수 있는 이메일 입니다.");
+      //   // TODO: 가입 페이지로 이동 => 함수로 빼내기
+      //   // Navigator.push(
+      //   //   context,
+      //   //   MaterialPageRoute(builder: (context) => JoinPage(platform: USER_PLATFORM_KAKAO, email: email ?? "", nickname: nickname ?? "", accessToken: token.accessToken, refreshToken: token.refreshToken,)),
+      //   // );
+      //   //goToJoinPage(USER_PLATFORM_KAKAO, decodedToken['sub'], "");
+      // }
 
     } catch(e) {
-      print('카카오톡으로 로그인 실패 $e');
+      log('카카오톡으로 로그인 실패 $e');
       // 사용자가 카카오톡 설치 후 디바이스 권한 요청 화면에서 로그인을 취소한 경우,
       // 의도적인 로그인 취소로 보고 카카오계정으로 로그인 시도 없이 로그인 취소로 처리 (예: 뒤로 가기)
       if (e is PlatformException && e.code == 'CANCELED') {
@@ -301,30 +302,18 @@ class _LoginPageState extends State<LoginPage> {
   // 카카오계정으로 로그인
   void _loginWithKakaoAccount() async {
     try {
-      print('웹에서 카카오톡 로그인');
-
-      // 카카오톡 설치 유무 확인
-      if(await isKakaoTalkInstalled()) {  // 카카오톡 설치됨
-        // 카카오로 로그인: 웹
-        OAuthToken token = await UserApi.instance.loginWithKakaoAccount();
-        print('카카오계정으로 로그인 성공 ${token.accessToken}/${token.refreshToken}');
-      } else {                            // 카카오톡 설치 안됨
-        // 카카오 계정으로 로그인
-        // OAuthToken token = await UserApi.instance.loginWithKakaoAccount();
-        // print('카카오계정으로 로그인 성공 ${token.accessToken}/${token.refreshToken}');
-      }
+      log('카카오계정으로 로그인');
+      OAuthToken token = await UserApi.instance.loginWithKakaoAccount();
+      log('카카오계정으로 로그인 성공 ${token.accessToken}/${token.refreshToken}');
+      KakaoUser.User user = await UserApi.instance.me();
+      log("kakao user id:" + user.id.toString());
+      String? email = user.kakaoAccount?.email;
+      // 회원 가입 여부 확인 및 로그인 처리
+      checkPlatformId(USER_PLATFORM_KAKAO, user.id.toString(), email);
 
     } catch(e) {
-      print('카카오계정으로 로그인 실패 $e');
-      Fluttertoast.showToast(
-          msg: "카카오톡 로그인 실패",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER,
-          timeInSecForIosWeb: 2,
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-          fontSize: 16.0
-      );
+      log('카카오계정으로 로그인 실패 $e');
+      showErrorToast("카카오톡 로그인 실패");
     }
   }
 
@@ -332,28 +321,81 @@ class _LoginPageState extends State<LoginPage> {
   void _logoutFromKakao() async {
     try {
       await UserApi.instance.logout();
-      print('로그아웃 성공, SDK에서 토큰 삭제');
+      log('로그아웃 성공, SDK에서 토큰 삭제');
     } catch (error) {
-      print('로그아웃 실패, SDK에서 토큰 삭제 $error');
+      log('로그아웃 실패, SDK에서 토큰 삭제 $error');
     }
   }
 
   void _unlinkFromKakao() async {
     try {
       await UserApi.instance.unlink();
-      print('연결 끊기 성공, SDK에서 토큰 삭제');
+      log('연결 끊기 성공, SDK에서 토큰 삭제');
     } catch (error) {
-      print('연결 끊기 실패 $error');
+      log('연결 끊기 실패 $error');
     }
   }
 
-  // 자동로그인 여부 확인
-  void _checkKakaoToken() {
-    // TODO
-    // keychain에 저장되어 있는 정보가 있는지 확인
-    // 플랫폼에 따라서 자동 로그인 절차 진행
-    // 1. 카카오 로그인 연동일 경우
-    // 1-1.
+
+  Future<void> appleLogin() async {
+    if(await SignInWithApple.isAvailable()) {
+
+      try {
+        final result = await SignInWithApple.getAppleIDCredential(
+          scopes: [
+            AppleIDAuthorizationScopes.email,
+            AppleIDAuthorizationScopes.fullName,
+          ],
+        );
+
+        Map<String, dynamic> decodedToken = JwtDecoder.decode(result.identityToken.toString());
+
+        log('로그인 결과 : sub:${decodedToken['sub']}');
+
+        // 회원 가입 여부 확인 및 로그인 처리
+        checkPlatformId(USER_PLATFORM_APPLE, decodedToken['sub'], '');
+
+      } catch (e) {
+        // 다른 예외에 대한 처리
+        log('Sign in with Apple Error: $e');
+        showErrorToast("Apple 로그인 실패. 다시 시도해 주세요.");
+      }
+    } else {
+      log('애플 로그인을 지원하지 않는 기기입니다.');
+      showErrorToast("애플 로그인을 지원하지 않는 기기입니다.");
+    }
+  }
+
+  void checkPlatformId(platform, platformId, email) async {
+    bool hasUser = await checkSocialUser(platform, platformId);
+    if(hasUser) {
+      log("[이미 소셜 사용자 존재]");
+
+      // 1. 서비스 토큰 발급
+      AccessToken token = await requestAccessToken(platform, email, platformId);
+
+      log("[액세스 토큰 발급]: $token");
+
+      if(token != null && token.tokenHash.length > 0 && token.email != null) {
+
+        // 2. 자동 로그인 처리
+        bool isLogin = await autoLogin(USER_PLATFORM_APPLE, token.email, token.tokenHash);
+
+        if(isLogin) {
+          goToMainPageReplace(context);
+        } else {
+          showErrorToast("로그인 실패. 다시 시도해 주세요.");
+          throw Exception('Failed auto login.');
+        }
+      } else {
+        showErrorToast("로그인 실패. 다시 시도해 주세요.");
+        throw Exception('Failed isuue access token.');
+      }
+    } else {
+      // 회원가입 페이지 이동
+      log("[회원가입 페이지 이동]");
+      goToJoinPage(platform, platformId, "");
+    }
   }
 
   Future<bool> checkEmailDuplicate(email) async {
@@ -400,35 +442,28 @@ class _LoginPageState extends State<LoginPage> {
 
 
   Future<bool> checkSocialUser(platform, socialId) async {
-    print("#### [checkSocialUser] #### / platform:"+platform.toString()+"/socialId:"+socialId);
-    String host = getAPIHost();
-    String chckUrl = host + "/user/social_user.tipsy";
-    final Uri url = Uri.parse(chckUrl);
+    log("#### [checkSocialUser] #### / platform:"+platform.toString()+"/socialId:"+socialId);
+
+    String chckPath = "/user/social_user.tipsy";
 
     var bodyData = {
       "platform": platform,
       "social_id": socialId
     };
 
-    // http.Response response = await http.post(
-    //   url,
-    //   headers: <String, String> {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: json.encode(bodyData),
-    // );
-
-    http.Response response = await requestPOST(url, bodyData);
+    http.Response response = await requestPOST(chckPath, bodyData);
+    log("" + response.statusCode.toString());
+    log("" + response.body.toString());
 
     if (response.statusCode == 200) {
 
       String resString = response.body.toString();
-      print("[checkSocialUser]:" + resString);
+      log("[checkSocialUser]:" + resString);
       var parsed = null;
       try {
         parsed = json.decode(resString);
       } catch(e) {
-        print(e);
+        log("$e");
       }
 
       var data = parsed['data'];
@@ -444,81 +479,4 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-
-  Future<void> appleLogin() async {
-    if(await SignInWithApple.isAvailable()) {
-
-      try {
-        final result = await SignInWithApple.getAppleIDCredential(
-          scopes: [
-            AppleIDAuthorizationScopes.email,
-            AppleIDAuthorizationScopes.fullName,
-          ],
-        );
-
-        // # 테스트 필요
-        // String redirectURL = dotenv.env['APPLE_REDIRECT_URI'].toString();
-        // print(redirectURL);
-        // String? clientID = dotenv.env['APPLE_CLIENT_ID'];
-        // final appleIdCredential = await SignInWithApple.getAppleIDCredential(
-        //     scopes: [
-        //       AppleIDAuthorizationScopes.email,
-        //       AppleIDAuthorizationScopes.fullName,
-        //     ],
-        //     webAuthenticationOptions: WebAuthenticationOptions(
-        //       clientId: clientID!,
-        //       redirectUri: Uri.parse(redirectURL),
-        //
-        //     ));
-        // print(appleIdCredential.authorizationCode);
-        // this.socialLogin(appleIdCredential.authorizationCode, "apple");
-
-        // print('로그인 결과 : state:${result.state}');
-        // print('로그인 결과 : email:${result.email}');
-        // print('로그인 결과 : familyName:${result.familyName}');
-        // print('로그인 결과 : givenName:${result.givenName}');
-        // print('로그인 결과 : authorizationCode:${result.authorizationCode}');
-        // print('로그인 결과 : identityToken:${result.identityToken}');
-
-        Map<String, dynamic> decodedToken = JwtDecoder.decode(result.identityToken.toString());
-
-        log('로그인 결과 : sub:${decodedToken['sub']}');
-
-
-        // 회원 가입 여부 확인
-        bool hasUser = await checkSocialUser(USER_PLATFORM_APPLE, decodedToken['sub']);
-        if(hasUser) {
-          log("[이미 소셜 사용자 존재]");
-
-          // 1. 서비스 토큰 발급
-          AccessToken token = await requestAccessToken(USER_PLATFORM_APPLE, '', decodedToken['sub']);
-
-          print("[액세스 토큰 발급]: $token");
-
-          if(token != null && token.tokenHash.length > 0 && token.email != null) {
-
-            // 2. 자동 로그인 처리
-            bool isLogin = await autoLogin(USER_PLATFORM_APPLE, token.email, token.tokenHash);
-
-            if(isLogin) {
-              goToMainPageReplace(context);
-            } else {
-              throw Exception('Failed auto login.');
-            }
-          } else {
-            throw Exception('Failed isuue access token.');
-          }
-        } else {
-          log("[회원가입 페이지 이동]");
-          // 회원가입 페이지 이동
-          goToJoinPage(USER_PLATFORM_APPLE, decodedToken['sub'], "");
-        }
-      } catch (e) {
-        // 다른 예외에 대한 처리
-        log('Sign in with Apple Error: $e');
-      }
-    } else {
-      log('애플 로그인을 지원하지 않는 기기입니다.');
-    }
-  }
 }

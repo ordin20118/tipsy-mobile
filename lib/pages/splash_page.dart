@@ -16,8 +16,6 @@ class SplashPage extends StatefulWidget {
 
 class _SplashPageState extends State<SplashPage> {
 
-  static final storage = new FlutterSecureStorage();
-
   @override
   Widget build(BuildContext context) {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
@@ -49,16 +47,11 @@ class _SplashPageState extends State<SplashPage> {
   void initState() {
     super.initState();
     log("Splash Page initState()");
-
-    //setTestToken(); // just use test
     checkAutoLogin();
   }
 
   void checkAutoLogin() async {
     final storage = new FlutterSecureStorage();
-
-    //await storage.deleteAll();
-    //await storage.write(key:'is_auto_login', value:'true');
 
     String? accessToken = await storage.read(key: "accessToken");
     if(accessToken != null) {

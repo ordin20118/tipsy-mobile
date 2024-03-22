@@ -29,8 +29,8 @@ void main() async {
 
   // set config data
   WidgetsFlutterBinding.ensureInitialized(); // Required by FlutterConfig
-  await FlutterConfig.loadEnvVariables();
-  print(FlutterConfig.get('API_URL'));
+  // await FlutterConfig.loadEnvVariables();
+  // log(FlutterConfig.get('API_URL'));
 
   final cameras = await availableCameras();
   log(cameras.toString());

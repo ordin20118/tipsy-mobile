@@ -102,6 +102,18 @@ void showToast(String message) {
   );
 }
 
+void showErrorToast(message) {
+  Fluttertoast.showToast(
+      msg: message,
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.CENTER,
+      timeInSecForIosWeb: 2,
+      backgroundColor: Colors.red,
+      textColor: Colors.white,
+      fontSize: 16.0
+  );
+}
+
 void goToLoginPage(BuildContext context) {
   Navigator.push(
     context,

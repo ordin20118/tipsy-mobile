@@ -48,11 +48,8 @@ class _CommentListViewState extends State<CommentListView> {
   Widget commentItemBuilder(context, index) {
     return Container(
       color: Colors.white,
-      padding: EdgeInsets.all(0),
-      height: MediaQuery.of(context).size.height * 0.08,  // TODO: 얘가 없어져야 할 거 같은데..
-      child: Container(
-        child: makeCommentListItem(_commentScrollController.data[index].userNickname, _commentScrollController.data[index].comment, _commentScrollController.data[index].regDate, context),
-      ),
+      //height: MediaQuery.of(context).size.height * 0.08,  // TODO: 얘가 없어져야 할 거 같은데..
+      child: makeCommentListItem(_commentScrollController.data[index].userNickname, _commentScrollController.data[index].comment, _commentScrollController.data[index].regDate, context),
     );
   }
 
@@ -77,6 +74,54 @@ class _CommentListViewState extends State<CommentListView> {
   void dispose() {
     super.dispose();
   }
+}
+
+Widget makeCommentListItem(userNickname, comment, regDate, context) {
+  return Row(
+    //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+      Flexible(
+        flex: 6,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(100.0),
+          child:Image.asset(
+            'assets/images/default_profile.jpeg',
+            // width: MediaQuery.of(context).size.width * 0.01,
+            // height: MediaQuery.of(context).size.width * 0.01
+          ),
+        ),
+      ),
+      Flexible(
+        flex: 1,
+        child: SizedBox(width: MediaQuery.of(context).size.width * 0.02),
+      ),
+      Flexible(
+        flex: 40,
+        child: Padding(
+          padding: const EdgeInsets.all(5.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                userNickname+" ",
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.black87,
+                ),
+              ),
+              Text(
+                comment,
+                style: TextStyle(
+                    fontSize: 13,
+                    color: Colors.black54
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    ],
+  );
 }
 
 class CommentScrollController extends GetxController {
@@ -123,60 +168,4 @@ class CommentScrollController extends GetxController {
     });
     super.onInit();
   }
-}
-
-
-Widget makeCommentListItem(userNickname, comment, regDate, context) {
-  return Container(
-    child: Row(
-      //mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Flexible(
-          flex: 6,
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(100.0),
-            child:Image.asset(
-              'assets/images/default_profile.jpeg',
-              // width: MediaQuery.of(context).size.width * 0.01,
-              // height: MediaQuery.of(context).size.width * 0.01
-            ),
-          ),
-        ),
-        Flexible(
-          flex: 1,
-          child: SizedBox(width: MediaQuery.of(context).size.width * 0.02),
-        ),
-        Flexible(
-          flex: 40,
-          child: Padding(
-            padding: const EdgeInsets.all(5.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  userNickname+" ",
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.black87,
-                  ),
-                ),
-                Expanded(
-                  child: Text(
-                    comment,
-                    //"아주 긴 댓글 테스트아주 긴 댓글 테스트아주 긴 댓글 테스트아주 긴 댓글 테스트아주 긴 댓글 테스트아주 긴 댓글 테스트아주 긴 댓글 테스트아주 긴 댓글 테스트아주 긴 댓글 테스트아주 긴 댓글 테스트아주 긴 댓글 테스트 끝",
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 3,
-                    style: TextStyle(
-                        fontSize: 13,
-                        color: Colors.black54
-                    ),
-                  ),
-                )
-              ],
-            ),
-          ),
-        ),
-      ],
-    ),
-  );
 }

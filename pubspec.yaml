@@ -44,7 +44,8 @@ dependencies:
   permission_handler: ^10.0.0
   path_provider: ^2.0.11
   path: ^1.8.1
-  dio: ^4.0.6
+  #dio: ^4.0.6
+  dio: ^5.0.3
   getwidget: ^3.0.1
   jwt_decoder: ^2.0.1
   custom_refresh_indicator: ^3.0.0
@@ -58,10 +59,11 @@ dependencies:
   http: ^0.13.6
   image_cropper: ^4.0.1
   dismiss_keyboard_on_tap: ^2.0.0
-  kakao_flutter_sdk: ^1.4.2 # 전체 추가
-  kakao_flutter_sdk_user: ^1.4.2 # 카카오 로그인
-  kakao_flutter_sdk_talk: ^1.4.2 # 카카오톡(소셜, 메시지)
-  kakao_flutter_sdk_story: ^1.4.2 # 카카오스토리
+  kakao_flutter_sdk: ^1.9.0 # 전체 추가
+  kakao_flutter_sdk_user: ^1.9.0 # 카카오 로그인
+  kakao_flutter_sdk_share: ^1.9.0 # 카카오톡 공유 API 패키지
+  kakao_flutter_sdk_talk: ^1.9.0 # 카카오톡(소셜, 메시지)
+  #kakao_flutter_sdk_story: ^1.9.0 # 카카오스토리
   #kakao_flutter_sdk_link: ^1.1.1 # 카카오톡 공유
   #firebase_auth: ^4.4.1
   firebase_auth: ^4.17.4
