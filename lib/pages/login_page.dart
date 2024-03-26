@@ -367,34 +367,39 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void checkPlatformId(platform, platformId, email) async {
-    bool hasUser = await checkSocialUser(platform, platformId);
-    if(hasUser) {
-      log("[이미 소셜 사용자 존재]");
+    try {
+      bool hasUser = await checkSocialUser(platform, platformId);
+      if(hasUser) {
+        log("[이미 소셜 사용자 존재]");
 
-      // 1. 서비스 토큰 발급
-      AccessToken token = await requestAccessToken(platform, email, platformId);
+        // 1. 서비스 토큰 발급
+        AccessToken token = await requestAccessToken(platform, email, platformId);
 
-      log("[액세스 토큰 발급]: $token");
+        log("[액세스 토큰 발급]: $token");
 
-      if(token != null && token.tokenHash.length > 0 && token.email != null) {
+        if(token != null && token.tokenHash.length > 0 && token.email != null) {
 
-        // 2. 자동 로그인 처리
-        bool isLogin = await autoLogin(USER_PLATFORM_APPLE, token.email, token.tokenHash);
+          // 2. 자동 로그인 처리
+          bool isLogin = await autoLogin(USER_PLATFORM_APPLE, token.email, token.tokenHash);
 
-        if(isLogin) {
-          goToMainPageReplace(context);
+          if(isLogin) {
+            goToMainPageReplace(context);
+          } else {
+            showErrorToast("로그인 실패. 다시 시도해 주세요.");
+            throw Exception('Failed auto login.');
+          }
         } else {
           showErrorToast("로그인 실패. 다시 시도해 주세요.");
-          throw Exception('Failed auto login.');
+          throw Exception('Failed isuue access token.');
         }
       } else {
-        showErrorToast("로그인 실패. 다시 시도해 주세요.");
-        throw Exception('Failed isuue access token.');
+        // 회원가입 페이지 이동
+        log("[회원가입 페이지 이동]");
+        goToJoinPage(platform, platformId, "");
       }
-    } else {
-      // 회원가입 페이지 이동
-      log("[회원가입 페이지 이동]");
-      goToJoinPage(platform, platformId, "");
+    } catch(e) {
+      showErrorToast("로그인 실패. 다시 시도해 주세요.");
+      throw e;
     }
   }
 

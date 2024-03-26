@@ -19,55 +19,64 @@ import '../../ui/tipsy_refresh_indicator.dart';
 import '../collector/comment_view.dart';
 
 
-class NewsFeedPage extends StatefulWidget {
-  const NewsFeedPage({Key? key}) : super(key: key);
+class MyPostPage extends StatefulWidget {
+  const MyPostPage({Key? key}) : super(key: key);
 
   @override
-  _NewsFeedPageState createState() => _NewsFeedPageState();
+  _MyPostPageState createState() => _MyPostPageState();
 }
 
-class _NewsFeedPageState extends State<NewsFeedPage> {
+class _MyPostPageState extends State<MyPostPage> {
 
   FocusNode _focusNode = FocusNode();
-  NewsFeedScrollController _newsFeedScrollController = Get.put<NewsFeedScrollController>(NewsFeedScrollController(), tag: "newsFeedList",);
-
+  MyPostScrollController _myPostScrollController = Get.put<MyPostScrollController>(MyPostScrollController(), tag: "myPostList",);
 
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
         onRefresh: _refreshData,
-        child: buildNewsFeedPage(context),
+        child: buildMyPostPage(context),
     );
   }
 
-  Widget buildNewsFeedPage(BuildContext context) {
-    return Container(
-      color: getCommonBackColor(),
-      height: MediaQuery.of(context).size.height * 0.77,
-      child: Obx(() =>
-        Padding(
-          padding: EdgeInsets.all(0.0),
-          child: ListView.separated(
-            shrinkWrap: true,
-            controller: _newsFeedScrollController.scrollController.value,
-            itemCount: _newsFeedScrollController.data.length,
-            itemBuilder: (BuildContext context, index) {
-              return newsFeedItemBuilder(context, index);
-            },
-            separatorBuilder: (BuildContext context, int index) => const Divider(
-                height: 10,
-                color: Colors.transparent
-            ),
-          ),
-        )
+  Widget buildMyPostPage(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: true,
+        title: Text('나의 피드', style: TextStyle(color: Color(0xff005766), fontFamily: 'NanumBarunGothicBold')),
+        //backgroundColor: Color(0xff005766),
+        backgroundColor: Color(0xffffffff),
+        actions: [],
       ),
+      body: Container(
+        color: getCommonBackColor(),
+        height: MediaQuery.of(context).size.height * 0.875,
+        child: Obx(() =>
+            Padding(
+              padding: EdgeInsets.all(0.0),
+              child: ListView.separated(
+                shrinkWrap: true,
+                controller: _myPostScrollController.scrollController.value,
+                itemCount: _myPostScrollController.data.length,
+                itemBuilder: (BuildContext context, index) {
+                  return myPostItemBuilder(context, index);
+                },
+                separatorBuilder: (BuildContext context, int index) => const Divider(
+                    height: 10,
+                    color: Colors.transparent
+                ),
+              ),
+            )
+        ),
+      ),
+      bottomNavigationBar: Container(height: 0,),
     );
   }
 
-  Widget newsFeedItemBuilder(context, index) {
+  Widget myPostItemBuilder(context, index) {
     return Container(
       color: Colors.white,
-      child: makePostListItem(context, _newsFeedScrollController.data[index]),
+      child: makePostListItem(context, _myPostScrollController.data[index]),
     );
   }
 
@@ -240,27 +249,27 @@ class _NewsFeedPageState extends State<NewsFeedPage> {
   }
 
   Future<void> _refreshData() async {
-    log("Refresh news feed");
+    log("Refresh my posts.");
     setState(() {
       fetchData();
     });
   }
 
   Future<void> fetchData() async {
-    List<Post> newData = await requestNewsFeed(1);
-    _newsFeedScrollController.setData(newData);
+    List<Post> newData = await requestMyPost(1);
+    _myPostScrollController.setData(newData);
   }
 
   @override
   void initState() {
     super.initState();
-    log("News Feed page initState()");
+    log("My posts page initState()");
     fetchData();
   }
 
 }
 
-class NewsFeedScrollController extends GetxController {
+class MyPostScrollController extends GetxController {
   var scrollController = ScrollController().obs;
   var data = <Post>[].obs;
   var nowPage = 2;
@@ -289,7 +298,7 @@ class NewsFeedScrollController extends GetxController {
         isLoading = true.obs;
 
         // load Posts
-        List<Post> posts = (await requestNewsFeed(nowPage)).cast<Post>();
+        List<Post> posts = (await requestMyPost(nowPage)).cast<Post>();
 
         if(posts.length > 0) {
           data.addAll(posts);
@@ -299,6 +308,8 @@ class NewsFeedScrollController extends GetxController {
           } else {
             hasMore = false.obs;
           }
+        } else {
+          hasMore = false.obs;
         }
         isLoading = false.obs;
       }

@@ -37,6 +37,7 @@ dependencies:
   flutter_secure_storage: ^8.0.0
   fluttertoast: ^8.0.9
   flutter_config: ^2.0.0
+  intl: ^0.19.0
   image_picker: ^1.0.7
   smooth_page_indicator: ^1.1.0
   get: ^4.6.5

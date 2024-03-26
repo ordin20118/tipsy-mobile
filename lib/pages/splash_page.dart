@@ -55,33 +55,36 @@ class _SplashPageState extends State<SplashPage> {
 
     String? accessToken = await storage.read(key: "accessToken");
     if(accessToken != null) {
+      try {
+        // request auto login
+        String? platformStr = await storage.read(key: "platform");
+        String? email = await storage.read(key: "email");
 
-      // request auto login
-      String? platformStr = await storage.read(key: "platform");
-      String? email = await storage.read(key: "email");
+        if(platformStr == null || email == null) {
+          log("[Splash Page]: 자동 로그인 정보 없음");
+          goToLoginPageReplace(context);
+        }
 
-      if(platformStr == null || email == null) {
-        log("[Splash Page]: 자동 로그인 정보 없음");
-        goToLoginPageReplace(context);
-      }
+        int platform = int.parse(platformStr!);
 
-      int platform = int.parse(platformStr!);
+        bool isLogin = false;
+        try{
+          isLogin = await autoLogin(platform, email!, accessToken);
+        } catch(e) {
+          goToLoginPageReplace(context);
+        }
 
-      bool isLogin = false;
-      try{
-        isLogin = await autoLogin(platform, email!, accessToken);
+        if(isLogin) {
+          // 메인 페이지로
+          log("[Splash Page]: 자동 로그인 성공");
+          goToMainPageReplace(context);
+        } else {
+          // 로그인 페이지로
+          log("[Splash Page]: 자동 로그인 실패");
+          goToLoginPageReplace(context);
+        }
       } catch(e) {
-        goToLoginPageReplace(context);
-      }
-
-      if(isLogin) {
-        // 메인 페이지로
-        log("[Splash Page]: 자동 로그인 성공");
-        goToMainPageReplace(context);
-      } else {
-        // 로그인 페이지로
-        log("[Splash Page]: 자동 로그인 실패");
-        goToLoginPageReplace(context);
+        showErrorToast("로그인 실패. 다시 시도해 주세요.");
       }
 
     } else {

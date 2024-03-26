@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
+import 'package:intl/intl.dart';
 import 'package:tipsy_mobile/classes/comment.dart';
 import 'package:tipsy_mobile/classes/util.dart';
 import 'package:tipsy_mobile/classes/ui_util.dart';
@@ -26,7 +27,7 @@ class _CommentListViewState extends State<CommentListView> {
     return Container(
       child: Obx(() =>
         Padding(
-          padding: EdgeInsets.all(0.0),
+          padding: EdgeInsets.all(10.0),
           child: ListView.separated(
             shrinkWrap: true,
             controller: _commentScrollController.scrollController.value,
@@ -49,7 +50,7 @@ class _CommentListViewState extends State<CommentListView> {
     return Container(
       color: Colors.white,
       //height: MediaQuery.of(context).size.height * 0.08,  // TODO: 얘가 없어져야 할 거 같은데..
-      child: makeCommentListItem(_commentScrollController.data[index].userNickname, _commentScrollController.data[index].comment, _commentScrollController.data[index].regDate, context),
+      child: makeCommentListItem(_commentScrollController.data[index], context),
     );
   }
 
@@ -76,7 +77,7 @@ class _CommentListViewState extends State<CommentListView> {
   }
 }
 
-Widget makeCommentListItem(userNickname, comment, regDate, context) {
+Widget makeCommentListItem(comment, context) {
   return Row(
     //mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
@@ -84,10 +85,16 @@ Widget makeCommentListItem(userNickname, comment, regDate, context) {
         flex: 6,
         child: ClipRRect(
           borderRadius: BorderRadius.circular(100.0),
-          child:Image.asset(
-            'assets/images/default_profile.jpeg',
+          child:Image.network(
+            comment.userProfileUrl,
             // width: MediaQuery.of(context).size.width * 0.01,
             // height: MediaQuery.of(context).size.width * 0.01
+            errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+              return Image.asset(
+                'assets/images/default_profile.png',
+                fit: BoxFit.cover,
+              );
+            },
           ),
         ),
       ),
@@ -102,15 +109,29 @@ Widget makeCommentListItem(userNickname, comment, regDate, context) {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                userNickname+" ",
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.black87,
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    comment.userNickname+" ",
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.black87,
+                    ),
+                  ),
+                  Text(
+                    DateFormat('yy.MM.dd').format(comment.regDate),
+                    //comment.regDate.toString(),
+                    style: TextStyle(
+                      fontSize: 11,
+                      color: Colors.black54,
+                    ),
+                  ),
+                ],
               ),
               Text(
-                comment,
+                comment.comment,
                 style: TextStyle(
                     fontSize: 13,
                     color: Colors.black54
@@ -135,9 +156,13 @@ class CommentScrollController extends GetxController {
   var contentId;
 
   void setData(List<Comment> data, int contentType, int contentId) {
+    this.data.clear();
     this.data = data.obs;
     this.contentType = contentType;
     this.contentId = contentId;
+    this.nowPage = 2;
+    this.isLoading = false.obs;
+    this.hasMore = true.obs;
   }
 
   @override
@@ -146,11 +171,10 @@ class CommentScrollController extends GetxController {
     scrollController.value.addListener(() async {
       // more load data
       //log("[${scrollController.value.position.pixels}][${scrollController.value.position.maxScrollExtent}]");
-      if(scrollController.value.position.pixels ==
-          scrollController.value.position.maxScrollExtent && hasMore.value) {
+      if(scrollController.value.position.pixels == scrollController.value.position.maxScrollExtent
+          && hasMore.value && !isLoading.value) {
 
-        // log("[리스트의 끝입니다.] - contentType:[" + contentType.toString() + "]/contentId:[" + contentId.toString() + "]");
-        // log("[리스트의 끝입니다.] - nowPage:[" + nowPage.toString() + "]/perPage:[" + perPage.toString() + "]");
+        isLoading = true.obs;
 
         // load comments
         List<Comment> comments = await loadCommentInfo(contentId, contentType, nowPage, perPage);
@@ -163,7 +187,10 @@ class CommentScrollController extends GetxController {
           } else {
             hasMore = false.obs;
           }
+        } else {
+          hasMore = false.obs;
         }
+        isLoading = false.obs;
       }
     });
     super.onInit();

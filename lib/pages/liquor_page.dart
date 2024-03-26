@@ -581,7 +581,7 @@ class _CommentPreViewState extends State<CommentPreView> {
           child: Column(
             children: [
               Container(
-                padding: EdgeInsets.fromLTRB(10, 0, 10, 10),
+                padding: EdgeInsets.fromLTRB(5, 0, 10, 10),
                 width: MediaQuery.of(context).size.width,
                 //height: MediaQuery.of(context).size.height * 0.42,
                 color: Colors.white,
@@ -640,7 +640,7 @@ class _CommentPreViewState extends State<CommentPreView> {
 
     for(var i=0; i < commentList.length; i++) {
       Comment comment = commentList[i];
-      res.add(makeCommentListItem(comment.userNickname, comment.comment, comment.regDate, context));
+      res.add(makeCommentListItem(comment, context));
     }
 
     return res;

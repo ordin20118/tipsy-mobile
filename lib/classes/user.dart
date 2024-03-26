@@ -75,6 +75,10 @@ class User {
   
   int _bookmarkCnt;
   int _commentCnt;
+  int _ratingCnt;
+  int _postCnt;
+  int _shareCnt;
+  int _reportCnt;
 
   String _profileUrl;
 
@@ -84,8 +88,13 @@ class User {
     required String profileUrl,
     required int bookmarkCnt,
     required int commentCnt,
+    required int ratingCnt,
+    required int postCnt,
+    required int shareCnt,
+    required int reportCnt
   }) : this._nickname = nickname, this._age = age, this._profileUrl = profileUrl,
-        this._bookmarkCnt = bookmarkCnt, this._commentCnt = commentCnt;
+        this._bookmarkCnt = bookmarkCnt, this._commentCnt = commentCnt, this._ratingCnt = ratingCnt,
+        this._postCnt = postCnt, this._shareCnt = shareCnt, this._reportCnt = reportCnt;
 
 
   factory User.fromJson(Map<String, dynamic> json) {
@@ -95,6 +104,10 @@ class User {
         profileUrl: json['profile_url'],
         bookmarkCnt: json['bookmark_cnt'],
         commentCnt: json['comment_cnt'],
+        ratingCnt: json['rating_cnt'],
+        postCnt: json['post_cnt'],
+        shareCnt: json['share_cnt'],
+        reportCnt: json['report_cnt']
     );
     return tmp;
   }
@@ -127,5 +140,29 @@ class User {
 
   set profileUrl(String value) {
     _profileUrl = value;
+  }
+
+  int get reportCnt => _reportCnt;
+
+  set reportCnt(int value) {
+    _reportCnt = value;
+  }
+
+  int get shareCnt => _shareCnt;
+
+  set shareCnt(int value) {
+    _shareCnt = value;
+  }
+
+  int get postCnt => _postCnt;
+
+  set postCnt(int value) {
+    _postCnt = value;
+  }
+
+  int get ratingCnt => _ratingCnt;
+
+  set ratingCnt(int value) {
+    _ratingCnt = value;
   }
 }

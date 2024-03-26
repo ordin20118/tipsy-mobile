@@ -3,6 +3,7 @@ import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:tipsy_mobile/classes/util.dart';
 import 'package:http/http.dart' as http;
+import 'package:tipsy_mobile/pages/mypage/my_post_page.dart';
 import 'dart:convert';
 import '../classes/ui_util.dart';
 import '../classes/styles.dart';
@@ -10,6 +11,8 @@ import '../classes/user.dart';
 import '../requests/user.dart';
 import '../ui/tipsy_loading_indicator.dart';
 import '../ui/tipsy_refresh_indicator.dart';
+import 'mypage/my_bookmark_page.dart';
+import 'mypage/my_comment_page.dart';
 
 
 class MyPage extends StatefulWidget {
@@ -110,10 +113,10 @@ class _MyPageState extends State<MyPage> {
                   future: user,
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting || snapshot.hasError) {
-                      return buildMyPageCenterStats(context, 0, 0, 0);
+                      return buildMyPageCenterStats(context, 0, 0, 0, 0);
                     } else {
                       // 데이터 성공적으로 가져옴
-                      return buildMyPageCenterStats(context, 0, snapshot.data!.bookmarkCnt, snapshot.data!.commentCnt);
+                      return buildMyPageCenterStats(context, snapshot.data!.ratingCnt, snapshot.data!.bookmarkCnt, snapshot.data!.commentCnt, snapshot.data!.postCnt);
                     }
                   },
                 )
@@ -125,28 +128,28 @@ class _MyPageState extends State<MyPage> {
               thickness: 0.1,
             ),
             SizedBox(height: MediaQuery.of(context).size.height * 0.02,),
-            Container(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(13, 10, 13, 0),
-                child: Card(
-                  color: Color(0xffC98AFF),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: const BorderRadius.all(const Radius.circular(10.0))
-                  ),
-                  elevation: 4.0, // 그림자 깊이
-                  child: InkWell(
-                    onTap: () {
-                      goToCocktailRegistPage(context);
-                    },
-                    child: SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.95,
-                      height: MediaQuery.of(context).size.height * 0.08,
-                      child: Center(child: Text('나만의 칵테일 등록하기', style: boxMenuWhite)),
-                    ),
-                  ),
-                ),
-              ),
-            ),
+            // Container(
+            //   child: Padding(
+            //     padding: const EdgeInsets.fromLTRB(13, 10, 13, 0),
+            //     child: Card(
+            //       color: Color(0xffC98AFF),
+            //       shape: RoundedRectangleBorder(
+            //           borderRadius: const BorderRadius.all(const Radius.circular(10.0))
+            //       ),
+            //       elevation: 4.0, // 그림자 깊이
+            //       child: InkWell(
+            //         onTap: () {
+            //           goToCocktailRegistPage(context);
+            //         },
+            //         child: SizedBox(
+            //           width: MediaQuery.of(context).size.width * 0.95,
+            //           height: MediaQuery.of(context).size.height * 0.08,
+            //           child: Center(child: Text('나만의 칵테일 등록하기', style: boxMenuWhite)),
+            //         ),
+            //       ),
+            //     ),
+            //   ),
+            // ),
             SizedBox(height: MediaQuery.of(context).size.height * 0.02,),
             buildMyHistoryMenu(context),
           ],
@@ -156,14 +159,14 @@ class _MyPageState extends State<MyPage> {
   }
 
   // 마이페이지의 중간 통계 만들기
-  Widget buildMyPageCenterStats(BuildContext context, int ratingCnt, int bookmarkCnt, int commentCnt) {
+  Widget buildMyPageCenterStats(BuildContext context, int ratingCnt, int bookmarkCnt, int commentCnt, int postCnt) {
     return Container(
       color: Colors.white60,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Container(
-            width: MediaQuery.of(context).size.width * 0.3,
+            width: MediaQuery.of(context).size.width * 0.2,
             child: Padding(
               padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
               child: Column(
@@ -201,7 +204,40 @@ class _MyPageState extends State<MyPage> {
             endIndent: 20, // 끝 부분에서의 여백 조절
           ),
           Container(
-            width: MediaQuery.of(context).size.width * 0.3,
+            width: MediaQuery.of(context).size.width * 0.2,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Text(
+                    postCnt.toString(),
+                    style: TextStyle(
+                      color: Colors.black54,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    "게시글",
+                    style: TextStyle(
+                      color: Colors.black87,
+                      fontSize: 13,
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+          VerticalDivider(
+            width: 1,  // 구분선의 높이 조절
+            thickness: 2, // 구분선의 두께 조절
+            color: Color(0x33BDBDBD), // 구분선의 색상 설정
+            indent: 20, // 시작 부분에서의 여백 조절
+            endIndent: 20, // 끝 부분에서의 여백 조절
+          ),
+          Container(
+            width: MediaQuery.of(context).size.width * 0.2,
             child: Padding(
               padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
               child: Column(
@@ -216,7 +252,7 @@ class _MyPageState extends State<MyPage> {
                     ),
                   ),
                   Text(
-                    "북마크",
+                    "스크랩",
                     style: TextStyle(
                       color: Colors.black87,
                       fontSize: 13,
@@ -234,7 +270,7 @@ class _MyPageState extends State<MyPage> {
             endIndent: 20,
           ),
           Container(
-            width: MediaQuery.of(context).size.width * 0.3,
+            width: MediaQuery.of(context).size.width * 0.2,
             child: Padding(
               padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
               child: Column(
@@ -288,31 +324,37 @@ class _MyPageState extends State<MyPage> {
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.07,
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                      children: [
-                        Icon(Icons.groups, size: 15),
-                        SizedBox(width: MediaQuery.of(context).size.width * 0.01),
-                        Text(
-                          "커뮤니티 게시글",
-                          style: TextStyle(
-                              fontSize: 15,
-                              fontFamily: 'NanumBarunGothicUltraLight'
+              padding: const EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
+              child: GestureDetector(
+                onTap: (() {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => MyPostPage()),
+                  );
+                }),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                        children: [
+                          Icon(Icons.groups, size: 15),
+                          SizedBox(width: MediaQuery.of(context).size.width * 0.01),
+                          Text(
+                            "나의 피드",
+                            style: TextStyle(
+                                fontSize: 15,
+                                fontFamily: 'NanumBarunGothicUltraLight'
+                            ),
                           ),
-                        ),
-                      ]
-                  ),
-                  IconButton(icon: Icon(Icons.arrow_forward_ios),
-                    onPressed: () async {
-                      dialogBuilder(context, '알림', '커뮤니티 게시글 조회는 준비 중입니다.🥲');
-                    },
-                    color: Colors.black,
-                    iconSize: 15,
-                  )
-                ],
+                        ]
+                    ),
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      color: Colors.black,
+                      size: 15,
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -326,31 +368,38 @@ class _MyPageState extends State<MyPage> {
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.07,
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                      children: [
-                        Icon(Icons.star, size: 15),
-                        SizedBox(width: MediaQuery.of(context).size.width * 0.01),
-                        Text(
-                          "주류 평가",
-                          style: TextStyle(
-                              fontSize: 15,
-                              fontFamily: 'NanumBarunGothicUltraLight'
+              padding: const EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
+              child: GestureDetector(
+                onTap: (() {
+                  dialogBuilder(context, '알림', '해당 기능은 준비 중입니다.🥲');
+                  // Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(builder: (context) => MyPostPage()),
+                  // );
+                }),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                        children: [
+                          Icon(Icons.star, size: 15),
+                          SizedBox(width: MediaQuery.of(context).size.width * 0.01),
+                          Text(
+                            "주류 평가",
+                            style: TextStyle(
+                                fontSize: 15,
+                                fontFamily: 'NanumBarunGothicUltraLight'
+                            ),
                           ),
-                        ),
-                      ]
-                  ),
-                  IconButton(icon: Icon(Icons.arrow_forward_ios),
-                    onPressed: () async {
-                      dialogBuilder(context, '알림', '나의 평가 기록 조회는 준비 중입니다.🥲');
-                    },
-                    color: Colors.black,
-                    iconSize: 15,
-                  )
-                ],
+                        ]
+                    ),
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      color: Colors.black,
+                      size: 15,
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -364,31 +413,37 @@ class _MyPageState extends State<MyPage> {
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.07,
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                      children: [
-                        Icon(Icons.chat_bubble, size: 15),
-                        SizedBox(width: MediaQuery.of(context).size.width * 0.01),
-                        Text(
-                          "내가 쓴 댓글",
-                          style: TextStyle(
-                              fontSize: 15,
-                              fontFamily: 'NanumBarunGothicUltraLight'
+              padding: const EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
+              child: GestureDetector(
+                onTap: (() {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => MyBookmarkPage()),
+                  );
+                }),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                        children: [
+                          Icon(Icons.bookmark, size: 15),
+                          SizedBox(width: MediaQuery.of(context).size.width * 0.01),
+                          Text(
+                            "스크랩 북",
+                            style: TextStyle(
+                                fontSize: 15,
+                                fontFamily: 'NanumBarunGothicUltraLight'
+                            ),
                           ),
-                        ),
-                      ]
-                  ),
-                  IconButton(icon: Icon(Icons.arrow_forward_ios),
-                    onPressed: () async {
-                      dialogBuilder(context, '알림', '내가 쓴 댓글 조회 기능은 준비 중입니다.🥲');
-                    },
-                    color: Colors.black,
-                    iconSize: 15,
-                  )
-                ],
+                        ]
+                    ),
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      color: Colors.black,
+                      size: 15,
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -402,69 +457,127 @@ class _MyPageState extends State<MyPage> {
           SizedBox(
             height: MediaQuery.of(context).size.height * 0.07,
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
+              padding: const EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
+              child: GestureDetector(
+                onTap: (() {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => MyCommentPage()),
+                  );
+                }),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                        children: [
+                          Icon(Icons.chat_bubble_outline, size: 15),
+                          SizedBox(width: MediaQuery.of(context).size.width * 0.01),
+                          Text(
+                            "내가 쓴 댓글",
+                            style: TextStyle(
+                                fontSize: 15,
+                                fontFamily: 'NanumBarunGothicUltraLight'
+                            ),
+                          ),
+                        ]
+                    ),
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      color: Colors.black,
+                      size: 15,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Divider(
+            height: 0.1,
+            thickness: 0.3,
+            color: Colors.grey,
+            indent: 3,
+            endIndent: 3,
+          ),
+          SizedBox(
+            height: MediaQuery.of(context).size.height * 0.07,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
+              child: GestureDetector(
+                onTap: (() {
+                  dialogBuilder(context, '알림', '해당 기능은 준비 중입니다.🥲');
+                  // Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(builder: (context) => MyPostPage()),
+                  // );
+                }),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                        children: [
+                          Icon(Icons.liquor, size: 15),
+                          SizedBox(width: MediaQuery.of(context).size.width * 0.01),
+                          Text(
+                            "이 술 찾아주세요!",
+                            style: TextStyle(
+                                fontSize: 15,
+                                fontFamily: 'NanumBarunGothicUltraLight'
+                            ),
+                          )
+                        ]
+                    ),
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      color: Colors.black,
+                      size: 15,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Divider(
+            height: 0.1,
+            thickness: 0.3,
+            color: Colors.grey,
+            indent: 3,
+            endIndent: 3,
+          ),
+          SizedBox(
+            height: MediaQuery.of(context).size.height * 0.07,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
+              child: GestureDetector(
+                onTap: (() {
+                  dialogBuilder(context, '알림', '문의하기 기능은 준비 중입니다.🥲\nordin20118@gmail.com으로 문의하세요.');
+                  // Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(builder: (context) => MyPostPage()),
+                  // );
+                }),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
                       children: [
-                        Icon(Icons.liquor, size: 15),
+                        Icon(Icons.contact_support, size: 15),
                         SizedBox(width: MediaQuery.of(context).size.width * 0.01),
                         Text(
-                          "이 술 찾아주세요!",
+                          "문의하기",
                           style: TextStyle(
                               fontSize: 15,
                               fontFamily: 'NanumBarunGothicUltraLight'
                           ),
                         )
                       ]
-                  ),
-                  IconButton(icon: Icon(Icons.arrow_forward_ios),
-                    onPressed: () async {
-                      dialogBuilder(context, '알림', '해당 기능은 준비 중입니다.🥲');
-                    },
-                    color: Colors.black,
-                    iconSize: 15,
-                  )
-                ],
-              ),
-            ),
-          ),
-          Divider(
-            height: 0.1,
-            thickness: 0.3,
-            color: Colors.grey,
-            indent: 3,
-            endIndent: 3,
-          ),
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.07,
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 0.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      Icon(Icons.contact_support, size: 15),
-                      SizedBox(width: MediaQuery.of(context).size.width * 0.01),
-                      Text(
-                        "문의하기",
-                        style: TextStyle(
-                            fontSize: 15,
-                            fontFamily: 'NanumBarunGothicUltraLight'
-                        ),
-                      )
-                    ]
-                  ),
-                  IconButton(icon: Icon(Icons.arrow_forward_ios),
-                    onPressed: () async {
-                      dialogBuilder(context, '알림', '문의하기 기능은 준비 중입니다.🥲');
-                    },
-                    color: Colors.black,
-                    iconSize: 15,
-                  )
-                ],
+                    ),
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      color: Colors.black,
+                      size: 15,
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

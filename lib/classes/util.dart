@@ -9,8 +9,8 @@ import 'package:tipsy_mobile/classes/user.dart';
 import 'package:tipsy_mobile/classes/word.dart';
 import 'liquor.dart';
 
-bool isLocal = true;
-const String API_URL_LOCAL = "http://192.168.219.105:8080/svcmgr/api";
+bool isLocal = false;
+const String API_URL_LOCAL = "http://192.168.219.101:8080/svcmgr/api";
 const String API_URL_SERVER = "https://www.tipsy.co.kr/svcmgr/api";
 
 String getAPIHost() {

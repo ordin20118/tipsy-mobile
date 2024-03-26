@@ -191,6 +191,12 @@ Image makeImgWidget(context, String fileUrl, int size, height) {
     return Image.network(
       fileUrl,
       height: height,
+      errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+        return Image.asset(
+          'assets/images/default_image.png',
+          fit: BoxFit.cover,
+        );
+      },
     );
   }
 }

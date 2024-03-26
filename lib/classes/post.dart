@@ -56,7 +56,8 @@ class Post {
         userNickname: json['user_nickname'],
         userProfileUrl: json['user_profile_url'],
         imageUrls: List<String>.from(json['image_urls'].map((item) => item.toString())),
-        regDate: DateTime.fromMillisecondsSinceEpoch(json['reg_date'] * 1000),
+        //regDate: DateTime.fromMillisecondsSinceEpoch(json['reg_date'] * 1000), // * 1000은 밀리 세컨으로 변환하기 위해
+        regDate: DateTime.fromMillisecondsSinceEpoch(json['reg_date']),
         likeCnt: json['like_cnt'],
         dislikeCnt: json['dislike_cnt'],
         commentCnt: json['comment_cnt'],

@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../classes/comment.dart';
+import '../classes/my_comment.dart';
 import '../classes/param/comment_param.dart';
 import '../classes/util.dart';
 
@@ -55,5 +56,23 @@ Future<List<Comment>> loadCommentInfo(int contentId, int contentType, int nowPag
     return tmp;
   } else {
     throw Exception('Failed to load liquor comments data.');
+  }
+}
+
+Future<List<MyComment>> requestMyComment(nowPage) async {
+  log("#### [requestMyComment] ####");
+  String reqUrl = "/comment/my/comments.tipsy?paging.nowPage=" + nowPage.toString();
+  reqUrl += "&sort.field=comment_id&sort.sorting=desc";
+
+  final response = await requestGET(reqUrl);
+
+  if(response.statusCode == 200) {
+    String resString = response.body.toString();
+    var resJson = json.decode(resString);
+    var dataJson = resJson['data'];
+    MyCommentList myComments = MyCommentList.fromJson(dataJson);
+    return myComments.comments;
+  } else {
+    throw Exception('Failed to get user info.');
   }
 }

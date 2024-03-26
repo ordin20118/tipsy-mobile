@@ -312,6 +312,8 @@ class LiquorScrollController extends GetxController {
           } else {
             hasMore = false.obs;
           }
+        } else {
+          hasMore = false.obs;
         }
       }
     });

@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 
-class Comment {
+class MyComment {
   int _commentId;
   int _userId;
   int _contentId;
@@ -13,10 +13,11 @@ class Comment {
   String _userNickname;
   String _userProfileUrl;
   String _comment;
+  String _contentTitle;
   DateTime _regDate;
   late DateTime _updateDate;
 
-  Comment.set({
+  MyComment.set({
     required int commentId,
     required int userId,
     required int contentId,
@@ -27,14 +28,15 @@ class Comment {
     required String userNickname,
     required String userProfileUrl,
     required String comment,
+    required String contentTitle,
     required DateTime regDate,
   }) : this._commentId = commentId, this._userId = userId, this._contentId = contentId, this._contentType = contentType,
         this._like = like, this._dislike = dislike, this._state = state, this._userNickname = userNickname, this._userProfileUrl = userProfileUrl,
-        this._comment = comment, this._regDate = regDate;
+        this._comment = comment, this._regDate = regDate, this._contentTitle = contentTitle;
 
 
-  factory Comment.fromJson(Map<String, dynamic> json) {
-    Comment tmp = Comment.set(
+  factory MyComment.fromJson(Map<String, dynamic> json) {
+    MyComment tmp = MyComment.set(
         commentId: json['comment_id'],
         userId: json['user_id'],
         contentId: json['content_id'],
@@ -45,6 +47,7 @@ class Comment {
         userNickname: json['user_nickname'],
         userProfileUrl: json['user_profile_url'],
         comment: json['comment'],
+        contentTitle: json['content_title'],
         regDate: DateTime.fromMillisecondsSinceEpoch(json['reg_date'])
     );
 
@@ -127,24 +130,30 @@ class Comment {
   set userProfileUrl(String value) {
     _userProfileUrl = value;
   }
+
+  String get contentTitle => _contentTitle;
+
+  set contentTitle(String value) {
+    _contentTitle = value;
+  }
 }
 
-class CommentList {
-  List<Comment> comments = List<Comment>.empty();
+class MyCommentList {
+  List<MyComment> comments = List<MyComment>.empty();
 
-  CommentList() {}
-  CommentList.set(List<Comment> commentList) {
-    List<Comment> emptyList = [];
+  MyCommentList() {}
+  MyCommentList.set(List<MyComment> commentList) {
+    List<MyComment> emptyList = [];
     commentList.forEach((element) {
       emptyList.add(element);
     });
     comments = commentList;
   }
 
-  factory CommentList.fromJson(List<dynamic> parsedJson) {
-    List<Comment> comments = List<Comment>.empty(growable: true); // []와 같다.
-    comments = parsedJson.map((i)=>Comment.fromJson(i)).toList();
-    return new CommentList.set(
+  factory MyCommentList.fromJson(List<dynamic> parsedJson) {
+    List<MyComment> comments = List<MyComment>.empty(growable: true); // []와 같다.
+    comments = parsedJson.map((i)=>MyComment.fromJson(i)).toList();
+    return new MyCommentList.set(
       comments,
     );
   }

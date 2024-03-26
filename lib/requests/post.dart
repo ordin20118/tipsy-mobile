@@ -54,7 +54,7 @@ Future<bool> requestPosting(PostParam pParam) async {
     var streamedResponse = await request.send();
     var response = await http.Response.fromStream(streamedResponse);
 
-    log("result code:" + response.statusCode.toString());
+    //log("result code:" + response.statusCode.toString());
 
     // 응답 확인
     var data = null;
@@ -87,12 +87,35 @@ Future<List<Post>> requestNewsFeed(nowPage) async {
     var resJson = json.decode(resString);
     var dataJson = resJson['data'];
 
+    //log("NewsFeed:" + dataJson.toString());
+
     PostList newsFeed = PostList.fromJson(dataJson);
     return newsFeed.posts;
   } else {
     throw Exception('Failed to get user info.');
   }
 }
+
+
+Future<List<Post>> requestMyPost(nowPage) async {
+  log("#### [requestMyPost] ####");
+  String reqUrl = "/post/my/posts.tipsy?paging.nowPage=" + nowPage.toString();
+  reqUrl += "&sort.field=id&sort.sorting=desc";
+
+  final response = await requestGET(reqUrl);
+
+  if(response.statusCode == 200) {
+    String resString = response.body.toString();
+    var resJson = json.decode(resString);
+    var dataJson = resJson['data'];
+    PostList myPosts = PostList.fromJson(dataJson);
+    return myPosts.posts;
+  } else {
+    throw Exception('Failed to get my posts.');
+  }
+}
+
+
 
 // Future<bool> deleteBookmark(BookmarkParam bParam) async {
 //   log("#### [deleteBookmark] ####" + bParam.toString());
