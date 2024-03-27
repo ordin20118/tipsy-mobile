@@ -2,15 +2,10 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/material/progress_indicator.dart';
 import 'package:get/get.dart';
-import 'package:get/get_state_manager/src/simple/get_controllers.dart';
-import 'package:tipsy_mobile/classes/util.dart';
-import 'package:http/http.dart' as http;
+import 'package:tipsy_mobile/pages/recommand/price_survey_page.dart';
 import 'package:tipsy_mobile/pages/recommand/tasting_note_survey_page.dart';
-import 'dart:convert';
 import '../../classes/ui_util.dart';
-import '../../classes/styles.dart';
 import 'abv_survey_page.dart';
-import 'price_survey_page.dart';
 import 'nosing_survey_page.dart';
 import 'survey_controller.dart';
 import 'survey_result_page.dart';
@@ -65,34 +60,36 @@ class _RecommandPageState extends State<RecommandPage> {
               }),
               SizedBox(height: MediaQuery.of(context).size.width * 0.1,),
               Obx(
-                    () {
-                  return Stack(
-                    children: [
-                      Offstage(
-                        offstage: surveyController.nowSurveyPage.value != 0,
-                        child: buildStartPage(context),
-                      ),
-                      Offstage(
-                        offstage: surveyController.nowSurveyPage.value != 1,
-                        child: const PriceSurveyPage(),
-                      ),
-                      Offstage(
-                        offstage: surveyController.nowSurveyPage.value != 2,
-                        child: const AbvSurveyPage(),
-                      ),
-                      Offstage(
-                        offstage: surveyController.nowSurveyPage.value != 3,
-                        child: const NosingSurveyPage(),
-                      ),
-                      Offstage(
-                        offstage: surveyController.nowSurveyPage.value != 4,
-                        child: const TastingNoteSurveyPage(),
-                      ),
-                      Offstage(
-                        offstage: surveyController.nowSurveyPage.value != 99,
-                        child: const SurveyResultPage(),
-                      ),
-                    ],
+                () {
+                  return Expanded(
+                    child: Stack(
+                      children: [
+                        Offstage(
+                          offstage: surveyController.nowSurveyPage.value != 0,
+                          child: buildStartPage(context),
+                        ),
+                        Offstage(
+                          offstage: surveyController.nowSurveyPage.value != 1,
+                          child: const PriceSurveyPage(),
+                        ),
+                        Offstage(
+                          offstage: surveyController.nowSurveyPage.value != 2,
+                          child: const AbvSurveyPage(),
+                        ),
+                        Offstage(
+                          offstage: surveyController.nowSurveyPage.value != 3,
+                          child: const NosingSurveyPage(),
+                        ),
+                        Offstage(
+                          offstage: surveyController.nowSurveyPage.value != 4,
+                          child: const TastingNoteSurveyPage(),
+                        ),
+                        Offstage(
+                          offstage: surveyController.nowSurveyPage.value != 99,
+                          child: const SurveyResultPage(),
+                        ),
+                      ],
+                    ),
                   );
                 }
               )

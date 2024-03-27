@@ -27,170 +27,196 @@ class _AbvSurveyPageState extends State<AbvSurveyPage> {
         child:Obx( () {
           return Column(
             children: [
-              Text(
-                '원하는 도수를 선택해주세요.',
-                style: TextStyle(
-                  color: Colors.black87,
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
+              Container(
+                height: MediaQuery.of(context).size.height * 0.07,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Q.',
+                      style: TextStyle(
+                        color: getPrimaryColor(),
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      '어느정도 도수를 원하시나요?',
+                      style: TextStyle(
+                        color: Colors.black87,
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
                 ),
               ),
               SizedBox(height: MediaQuery.of(context).size.width * 0.1,),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.8,
-                height: MediaQuery.of(context).size.height * 0.08,
-                child: ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      surveyController.abvPageSelectedBtnId.value = 1;
-                    });
-                  },
-                  child: Text(
-                    '무알콜',
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                        color: Colors.black87,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold
+              Container(
+                height: MediaQuery.of(context).size.height * 0.6,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.8,
+                      height: MediaQuery.of(context).size.height * 0.08,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            surveyController.abvPageSelectedBtnId.value = 1;
+                          });
+                        },
+                        child: Text(
+                          '무알콜',
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                              color: Colors.black87,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold
+                          ),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: surveyController.abvPageSelectedBtnId.value == 1 ? Color(0xFF1DE9B6) : Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0), // 원하는 둥근 정도로 조절
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: surveyController.abvPageSelectedBtnId.value == 1 ? Color(0xFF1DE9B6) : Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0), // 원하는 둥근 정도로 조절
+                    SizedBox(height: MediaQuery.of(context).size.width * 0.05,),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.8,
+                      height: MediaQuery.of(context).size.height * 0.08,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            surveyController.abvPageSelectedBtnId.value = 2;
+                          });
+                        },
+                        child: Text(
+                          '10도 이하',
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                              color: Colors.black87,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold
+                          ),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: surveyController.abvPageSelectedBtnId.value == 2 ? Color(0xFF1DE9B6) : Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0), // 원하는 둥근 정도로 조절
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
+                    SizedBox(height: MediaQuery.of(context).size.width * 0.05,),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.8,
+                      height: MediaQuery.of(context).size.height * 0.08,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            surveyController.abvPageSelectedBtnId.value = 3;
+                          });
+                        },
+                        child: Text(
+                          '10 ~ 20도 사이',
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                              color: Colors.black87,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold
+                          ),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: surveyController.abvPageSelectedBtnId.value == 3 ? Color(0xFF1DE9B6) : Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0), // 원하는 둥근 정도로 조절
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: MediaQuery.of(context).size.width * 0.05,),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.8,
+                      height: MediaQuery.of(context).size.height * 0.08,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            surveyController.abvPageSelectedBtnId.value = 4;
+                          });
+                        },
+                        child: Text(
+                          '20 ~ 40도 사이',
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                              color: Colors.black87,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold
+                          ),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: surveyController.abvPageSelectedBtnId.value == 4 ? Color(0xFF1DE9B6) : Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0), // 원하는 둥근 정도로 조절
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: MediaQuery.of(context).size.width * 0.05,),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.8,
+                      height: MediaQuery.of(context).size.height * 0.08,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            surveyController.abvPageSelectedBtnId.value = 5;
+                          });
+                        },
+                        child: Text(
+                          '40도 이상',
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                              color: Colors.black87,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold
+                          ),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: surveyController.abvPageSelectedBtnId.value == 5 ? Color(0xFF1DE9B6) : Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0), // 원하는 둥근 정도로 조절
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              SizedBox(height: MediaQuery.of(context).size.width * 0.05,),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.8,
-                height: MediaQuery.of(context).size.height * 0.08,
-                child: ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      surveyController.abvPageSelectedBtnId.value = 2;
-                    });
-                  },
-                  child: Text(
-                    '10도 이하',
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                        color: Colors.black87,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold
-                    ),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: surveyController.abvPageSelectedBtnId.value == 2 ? Color(0xFF1DE9B6) : Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0), // 원하는 둥근 정도로 조절
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(height: MediaQuery.of(context).size.width * 0.05,),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.8,
-                height: MediaQuery.of(context).size.height * 0.08,
-                child: ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      surveyController.abvPageSelectedBtnId.value = 3;
-                    });
-                  },
-                  child: Text(
-                    '10 ~ 20도 사이',
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                        color: Colors.black87,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold
-                    ),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: surveyController.abvPageSelectedBtnId.value == 3 ? Color(0xFF1DE9B6) : Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0), // 원하는 둥근 정도로 조절
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(height: MediaQuery.of(context).size.width * 0.05,),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.8,
-                height: MediaQuery.of(context).size.height * 0.08,
-                child: ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      surveyController.abvPageSelectedBtnId.value = 4;
-                    });
-                  },
-                  child: Text(
-                    '20 ~ 40도 사이',
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                        color: Colors.black87,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold
-                    ),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: surveyController.abvPageSelectedBtnId.value == 4 ? Color(0xFF1DE9B6) : Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0), // 원하는 둥근 정도로 조절
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(height: MediaQuery.of(context).size.width * 0.05,),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.8,
-                height: MediaQuery.of(context).size.height * 0.08,
-                child: ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      surveyController.abvPageSelectedBtnId.value = 5;
-                    });
-                  },
-                  child: Text(
-                    '40도 이상',
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                        color: Colors.black87,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold
-                    ),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: surveyController.abvPageSelectedBtnId.value == 5 ? Color(0xFF1DE9B6) : Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0), // 원하는 둥근 정도로 조절
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(height: MediaQuery.of(context).size.width * 0.2,),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.7,
+              Container(
                 height: MediaQuery.of(context).size.height * 0.07,
-                child: ElevatedButton(
-                  onPressed: surveyController.abvPageSelectedBtnId.value > 0 ? () {
-                    clickNextBtn();
-                  } : null,
-                  child: Text(
-                    '다음',
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.7,
+                  height: MediaQuery.of(context).size.height * 0.07,
+                  child: ElevatedButton(
+                    onPressed: surveyController.abvPageSelectedBtnId.value > 0 ? () {
+                      clickNextBtn();
+                    } : null,
+                    child: Text(
+                      '다음',
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold
+                      ),
                     ),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: getPrimaryColor(),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(100.0), // 원하는 둥근 정도로 조절
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: getPrimaryColor(),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(100.0), // 원하는 둥근 정도로 조절
+                      ),
                     ),
                   ),
                 ),
@@ -198,7 +224,6 @@ class _AbvSurveyPageState extends State<AbvSurveyPage> {
             ],
           );
         })
-
     );
   }
 

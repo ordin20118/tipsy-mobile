@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/scheduler/ticker.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:tipsy_mobile/classes/liquor.dart';
@@ -331,6 +332,7 @@ class LiquorGridView extends StatefulWidget {
 }
 
 class _LiquorGridViewState extends State<LiquorGridView> {
+
   @override
   Widget build(BuildContext context) {
     return Obx(
@@ -339,11 +341,10 @@ class _LiquorGridViewState extends State<LiquorGridView> {
             padding: const EdgeInsets.all(8.0),
             child: GridView.builder(
                 gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                    maxCrossAxisExtent: 200,
-                    //childAspectRatio: 3 / 2,
-                    childAspectRatio: 0.7,
-                    crossAxisSpacing: 7,
-                    mainAxisSpacing: 7
+                  maxCrossAxisExtent: 220,  // 가로 최대 길이 - GridView가 세로 방향일 때
+                  childAspectRatio: 0.75,   // 가로와 세로의 비율
+                  mainAxisSpacing: 7,       // 세로 방향 간격 - GridView가 세로 방향일 때
+                  crossAxisSpacing: 7       // 가로 방향 간격
                 ),
                 controller: widget.liquorController.scrollController.value,
                 itemCount: widget.liquorController.data.length,
@@ -358,87 +359,101 @@ class _LiquorGridViewState extends State<LiquorGridView> {
 
   Widget liquorItemBuilder(context, index) {
     return Card(
-        // generate ambers with random shades
-        //color: Colors.amber[Random().nextInt(9) * 100],
-        color: Colors.white,
+      // generate ambers with random shades
+      //color: Colors.amber[Random().nextInt(9) * 100],
+      color: Colors.white,
+      child: GestureDetector(
+        onTap: () {
+          goToLiquorDetailPage(context, widget.liquorController.data[index].liquorId);
+        },
         child: Container(
-          padding: EdgeInsets.all(10),
-          height: MediaQuery.of(context).size.height * 0.4,
           child: Column(
             children: [
-              GestureDetector(
-                child: makeImgWidget(context, widget.liquorController.data[index].repImgUrl, 300, MediaQuery.of(context).size.height * 0.17),
-                onTap: () {
-                  goToLiquorDetailPage(context, widget.liquorController.data[index].liquorId);
-                },
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(5, 10, 0, 0),
-                child: Row(
-                  children: [
-                    Flexible(
-                      child: RichText(
-                          overflow: TextOverflow.ellipsis,
-                          //maxLines: 1,
-                          strutStyle: StrutStyle(fontSize: 8.0),
-                          text: TextSpan(
-                            text: widget.liquorController.data[index].nameKr,
-                            style: TextStyle(
-                              fontSize: 13.0,
-                              color: Colors.black,
-                              fontFamily: 'NanumBarunGothicBold',
-                            ),
-                          )
-                      ),
-                    ),
-                  ],
+              Flexible(
+                flex: 2,
+                child: Container(
+                  child: makeImgWidget(context, widget.liquorController.data[index].repImgUrl, 300, MediaQuery.of(context).size.height * 0.17),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(5, 3, 0, 0),
-                child: Row(
-                  children: [
-                    Flexible(
-                        child: RichText(
-                            overflow: TextOverflow.ellipsis,
-                            //maxLines: 1,
-                            strutStyle: StrutStyle(fontSize: 8.0),
-                            text: TextSpan(
-                              text: widget.liquorController.data[index].nameEn,
-                              style: TextStyle(
-                                fontSize: 11.0,
-                                color: Colors.grey,
-                                fontFamily: 'NanumBarunGothicLight',
+              Flexible(
+                flex: 1,
+                child: Container(
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(5, 10, 0, 0),
+                        child: Row(
+                          children: [
+                            Flexible(
+                              child: RichText(
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                  strutStyle: StrutStyle(fontSize: 8.0),
+                                  text: TextSpan(
+                                    text: widget.liquorController.data[index].nameKr,
+                                    style: TextStyle(
+                                      fontSize: 13.0,
+                                      color: Colors.black,
+                                      fontFamily: 'NanumBarunGothicBold',
+                                    ),
+                                  )
                               ),
-                            )
+                            ),
+                          ],
                         ),
-                    ),
-                  ],
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(5, 5, 0, 0),
+                        child: Row(
+                          children: [
+                            Flexible(
+                              child: RichText(
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                                strutStyle: StrutStyle(fontSize: 8.0),
+                                text: TextSpan(
+                                  text: widget.liquorController.data[index].nameEn,
+                                  style: TextStyle(
+                                    fontSize: 10.0,
+                                    color: Colors.grey,
+                                    fontFamily: 'NanumBarunGothicLight',
+                                  ),
+                                )
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Expanded(
+                        child: Padding(
+                          padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
+                          child: Row(
+                            children: [
+                              Icon(
+                                Icons.star,
+                                color: Colors.yellow,
+                                size: 13, // 아이콘 크기 조절
+                              ),
+                              Text(
+                                widget.liquorController.data[index].ratingAvg.toString(),
+                                style: TextStyle(
+                                  fontSize: 10, // 텍스트 크기 조절
+                                  // 추가적인 텍스트 스타일 속성들을 설정할 수 있습니다.
+                                )
+                              )
+                            ],
+                          ),
+                        ),
+                      )
+                    ],
+                  )
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.fromLTRB(5, 5, 0, 0),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.star,
-                      color: Colors.yellow,
-                      size: 13, // 아이콘 크기 조절
-                    ),
-                    Text(
-                        widget.liquorController.data[index].ratingAvg.toString(),
-                        style: TextStyle(
-                          fontSize: 10, // 텍스트 크기 조절
-                          // 추가적인 텍스트 스타일 속성들을 설정할 수 있습니다.
-                        )
-                    )
-                  ],
-                ),
-              )
             ],
           ),
         ),
-      );
+      ),
+    );
   }
 
   @override

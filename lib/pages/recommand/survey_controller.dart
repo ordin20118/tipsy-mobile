@@ -1,14 +1,9 @@
-import 'dart:ffi';
-
-import 'package:flutter/cupertino.dart';
+import 'dart:developer';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:tipsy_mobile/classes/param/recommand_param.dart';
 import 'package:tipsy_mobile/classes/util.dart';
-import 'package:tipsy_mobile/pages/recommand/price_survey_page.dart';
-
 import '../../classes/liquor.dart';
 
 class SurveyController extends GetxController {

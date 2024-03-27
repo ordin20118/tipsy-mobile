@@ -148,7 +148,6 @@ class _MyBookmarkPageState extends State<MyBookmarkPage> {
                   onTap: (() async {
                     // bookmark 제거 요청
                     // 해당 데이터 요소 제거 setState
-                    log("salkdfjasl;dkfjas;dlkfjas;dlkfjasd;lkfjasdlkf ${index}");
                     BookmarkParam bParam = BookmarkParam();
                     bParam.contentType = bookmark.contentType;
                     bParam.contentId = bookmark.contentId;

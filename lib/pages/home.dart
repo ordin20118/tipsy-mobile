@@ -43,7 +43,7 @@ class _HomeState extends State<Home> {
   Widget buildHomeScreenV2(BuildContext context) {
     return Container(
       padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
-      color: getCommonBackColor(),
+      //color: getCommonBackColor(),
       child: SingleChildScrollView(
         child: Center(
           child: Column(

@@ -246,8 +246,9 @@ void showCommentModal(BuildContext context, FocusNode focusNode
     , TextEditingController commentInputController
     , CommentScrollController commentScrollController
     , int contentId
-    , int contentType) async {
-  List<Comment> commentList = await loadCommentInfo(contentId, contentType, 1, 5);
+    , int contentType
+    , int perPage) async {
+  List<Comment> commentList = await loadCommentInfo(contentId, contentType, 1, perPage);
   commentScrollController.setData(commentList, contentType, contentId);
 
   showModalBottomSheet(

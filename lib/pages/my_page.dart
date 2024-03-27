@@ -1,9 +1,14 @@
 import 'dart:developer';
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:tipsy_mobile/classes/Liquor.dart';
 import 'package:tipsy_mobile/classes/util.dart';
 import 'package:http/http.dart' as http;
+import 'package:tipsy_mobile/pages/collector/liquor_view.dart';
 import 'package:tipsy_mobile/pages/mypage/my_post_page.dart';
+import 'package:tipsy_mobile/requests/liquor.dart';
 import 'dart:convert';
 import '../classes/ui_util.dart';
 import '../classes/styles.dart';
@@ -25,6 +30,8 @@ class MyPage extends StatefulWidget {
 class _MyPageState extends State<MyPage> {
 
   late Future<User> user;
+
+  LiquorScrollController? lastViewLiquorScrollController = Get.put<LiquorScrollController>(LiquorScrollController(), tag: "LastViewLiquor",);
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +56,7 @@ class _MyPageState extends State<MyPage> {
       physics: const AlwaysScrollableScrollPhysics(),
       child: Container(
         color: getCommonBackColor(),
-        height: MediaQuery.of(context).size.height,
+        //height: MediaQuery.of(context).size.height,
         child: Column(
           children: [
             BlankView(color: Colors.white, heightRatio: 0.03),
@@ -150,10 +157,42 @@ class _MyPageState extends State<MyPage> {
             //     ),
             //   ),
             // ),
+            buildLastViewLiquors(context),
             SizedBox(height: MediaQuery.of(context).size.height * 0.02,),
+
             buildMyHistoryMenu(context),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget buildLastViewLiquors(BuildContext context) {
+    return Container(
+      color: Colors.white,
+      child: Column(
+        children: [
+          SizedBox(
+            width: MediaQuery.of(context).size.width,
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Text(
+                "최근 본 주류",
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                  fontSize: 17,
+                  fontFamily: 'NanumBarunGothicUltraThick',
+                  color: Colors.black87,
+                  fontWeight: FontWeight.bold
+                ),
+              ),
+            ),
+          ),
+          Container(
+            height: MediaQuery.of(context).size.height * 0.25,
+            child: LiquorListView(context, liquorScrollController: lastViewLiquorScrollController,)
+          )
+        ],
       ),
     );
   }
@@ -586,15 +625,11 @@ class _MyPageState extends State<MyPage> {
     );
   }
 
-  Widget buildLastViewLiquor(BuildContext context) {
-    return Container(
-      child: Container(),
-    );
-  }
-
   Future<void> _refreshData() async {
+    List<Liquor> lastViewLiquors = await requestLastViewLiquors(1);
     setState(() {
       user = requestUserInfo();
+      lastViewLiquorScrollController?.data = lastViewLiquors.obs;
     });
   }
 
@@ -603,6 +638,7 @@ class _MyPageState extends State<MyPage> {
     super.initState();
     log("my page initState()");
     user = requestUserInfo();
+    _refreshData();
   }
 
 }

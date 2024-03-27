@@ -27,89 +27,115 @@ class _NosingSurveyPageState extends State<NosingSurveyPage> {
         child: Obx( () {
           return Column(
             children: [
-              Text(
-                '좋아하는 향 또는 맛을 선택하시겠나요?',
-                style: TextStyle(
-                  color: Colors.black87,
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(height: MediaQuery.of(context).size.width * 0.1,),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.8,
-                height: MediaQuery.of(context).size.height * 0.08,
-                child: ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      surveyController.nosingPageSelectedBtnId.value = 1;
-                    });
-                  },
-                  child: Text(
-                    '좋아하는 향을 선택할래요!🤩',
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                        color: Colors.black87,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold
-                    ),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: surveyController.nosingPageSelectedBtnId.value == 1 ? Color(0xFF1DE9B6) : Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0), // 원하는 둥근 정도로 조절
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(height: MediaQuery.of(context).size.width * 0.05,),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.8,
-                height: MediaQuery.of(context).size.height * 0.08,
-                child: ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      surveyController.nosingPageSelectedBtnId.value = 2;
-                    });
-                  },
-                  child: Text(
-                    '향 선택 없이 추천받을래요',
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                        color: Colors.black87,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold
-                    ),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: surveyController.nosingPageSelectedBtnId.value == 2 ? Color(0xFF1DE9B6) : Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0), // 원하는 둥근 정도로 조절
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(height: MediaQuery.of(context).size.width * 0.88,),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.7,
+              Container(
                 height: MediaQuery.of(context).size.height * 0.07,
-                child: ElevatedButton(
-                  onPressed: surveyController.nosingPageSelectedBtnId.value > 0 ? () {
-                    clickNextBtn();
-                  } : null,
-                  child: Text(
-                    '다음',
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Q.',
+                      style: TextStyle(
+                        color: getPrimaryColor(),
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: getPrimaryColor(),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(100.0), // 원하는 둥근 정도로 조절
+                    Text(
+                      '좋아하는 향 또는 맛을 선택하시겠나요?',
+                      style: TextStyle(
+                        color: Colors.black87,
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                height: MediaQuery.of(context).size.height * 0.6,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    SizedBox(height: MediaQuery.of(context).size.width * 0.1,),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.8,
+                      height: MediaQuery.of(context).size.height * 0.08,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            surveyController.nosingPageSelectedBtnId.value = 1;
+                          });
+                        },
+                        child: Text(
+                          '좋아하는 향을 선택할래요!🤩',
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                              color: Colors.black87,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold
+                          ),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: surveyController.nosingPageSelectedBtnId.value == 1 ? Color(0xFF1DE9B6) : Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0), // 원하는 둥근 정도로 조절
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: MediaQuery.of(context).size.width * 0.05,),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.8,
+                      height: MediaQuery.of(context).size.height * 0.08,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            surveyController.nosingPageSelectedBtnId.value = 2;
+                          });
+                        },
+                        child: Text(
+                          '향 선택 없이 추천받을래요',
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                              color: Colors.black87,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold
+                          ),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: surveyController.nosingPageSelectedBtnId.value == 2 ? Color(0xFF1DE9B6) : Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0), // 원하는 둥근 정도로 조절
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                height: MediaQuery.of(context).size.height * 0.07,
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.7,
+                  height: MediaQuery.of(context).size.height * 0.07,
+                  child: ElevatedButton(
+                    onPressed: surveyController.nosingPageSelectedBtnId.value > 0 ? () {
+                      clickNextBtn();
+                    } : null,
+                    child: Text(
+                      '다음',
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold
+                      ),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: getPrimaryColor(),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(100.0), // 원하는 둥근 정도로 조절
+                      ),
                     ),
                   ),
                 ),

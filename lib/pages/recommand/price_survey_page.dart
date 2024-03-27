@@ -24,127 +24,152 @@ class _PriceSurveyPageState extends State<PriceSurveyPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        child: Obx( () {
-          return Column(
-            children: [
-              Text(
-                '희망하는 가격을 선택해주세요.',
-                style: TextStyle(
-                  color: Colors.black87,
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(height: MediaQuery.of(context).size.width * 0.1,),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.8,
-                height: MediaQuery.of(context).size.height * 0.08,
-                child: ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      surveyController.pricePageSelectedBtnId.value = 1;
-                    });
-                  },
-                  child: Text(
-                    '5만원 미만',
-                    textAlign: TextAlign.left,
+      child: Obx(() {
+        return Column(
+          children: [
+            Container(
+              height: MediaQuery.of(context).size.height * 0.07,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Q.',
                     style: TextStyle(
-                        color: Colors.black87,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold
+                      color: getPrimaryColor(),
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: surveyController.pricePageSelectedBtnId.value == 1 ? Color(0xFF1DE9B6) : Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0), // 원하는 둥근 정도로 조절
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(height: MediaQuery.of(context).size.width * 0.05,),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.8,
-                height: MediaQuery.of(context).size.height * 0.08,
-                child: ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      surveyController.pricePageSelectedBtnId.value = 2;
-                    });
-                  },
-                  child: Text(
-                    '5 ~ 10만원',
-                    textAlign: TextAlign.left,
+                  Text(
+                    ' 희망하는 가격이 얼마인가요?',
                     style: TextStyle(
-                        color: Colors.black87,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold
+                      color: Colors.black87,
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: surveyController.pricePageSelectedBtnId.value == 2 ? Color(0xFF1DE9B6) : Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0), // 원하는 둥근 정도로 조절
-                    ),
-                  ),
-                ),
+                ],
               ),
-              SizedBox(height: MediaQuery.of(context).size.width * 0.05,),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.8,
-                height: MediaQuery.of(context).size.height * 0.08,
-                child: ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      surveyController.pricePageSelectedBtnId.value = 3;
-                    });
-                  },
-                  child: Text(
-                    '10 ~ 20만원',
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                        color: Colors.black87,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold
+            ),
+            SizedBox(height: MediaQuery.of(context).size.width * 0.1,),
+            Container(
+              height: MediaQuery.of(context).size.height * 0.6,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.8,
+                    height: MediaQuery.of(context).size.height * 0.08,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          surveyController.pricePageSelectedBtnId.value = 1;
+                        });
+                      },
+                      child: Text(
+                        '5만원 미만',
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                            color: Colors.black87,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold
+                        ),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: surveyController.pricePageSelectedBtnId.value == 1 ? Color(0xFF1DE9B6) : Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0), // 원하는 둥근 정도로 조절
+                        ),
+                      ),
                     ),
                   ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: surveyController.pricePageSelectedBtnId.value == 3 ? Color(0xFF1DE9B6) : Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0), // 원하는 둥근 정도로 조절
+                  SizedBox(height: MediaQuery.of(context).size.width * 0.05,),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.8,
+                    height: MediaQuery.of(context).size.height * 0.08,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          surveyController.pricePageSelectedBtnId.value = 2;
+                        });
+                      },
+                      child: Text(
+                        '5 ~ 10만원',
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                            color: Colors.black87,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold
+                        ),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: surveyController.pricePageSelectedBtnId.value == 2 ? Color(0xFF1DE9B6) : Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0), // 원하는 둥근 정도로 조절
+                        ),
+                      ),
                     ),
                   ),
-                ),
+                  SizedBox(height: MediaQuery.of(context).size.width * 0.05,),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.8,
+                    height: MediaQuery.of(context).size.height * 0.08,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          surveyController.pricePageSelectedBtnId.value = 3;
+                        });
+                      },
+                      child: Text(
+                        '10 ~ 20만원',
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                            color: Colors.black87,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold
+                        ),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: surveyController.pricePageSelectedBtnId.value == 3 ? Color(0xFF1DE9B6) : Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0), // 원하는 둥근 정도로 조절
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: MediaQuery.of(context).size.width * 0.05,),
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.8,
+                    height: MediaQuery.of(context).size.height * 0.08,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        setState(() {
+                          surveyController.pricePageSelectedBtnId.value = 4;
+                        });
+                      },
+                      child: Text(
+                        '20만원 이상',
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                            color: Colors.black87,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold
+                        ),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: surveyController.pricePageSelectedBtnId.value == 4 ? Color(0xFF1DE9B6) : Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0), // 원하는 둥근 정도로 조절
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-              SizedBox(height: MediaQuery.of(context).size.width * 0.05,),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.8,
-                height: MediaQuery.of(context).size.height * 0.08,
-                child: ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      surveyController.pricePageSelectedBtnId.value = 4;
-                    });
-                  },
-                  child: Text(
-                    '20만원 이상',
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                        color: Colors.black87,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold
-                    ),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: surveyController.pricePageSelectedBtnId.value == 4 ? Color(0xFF1DE9B6) : Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0), // 원하는 둥근 정도로 조절
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(height: MediaQuery.of(context).size.width * 0.45,),
-              SizedBox(
+            ),
+            Container(
+              height: MediaQuery.of(context).size.height * 0.07,
+              child: SizedBox(
                 width: MediaQuery.of(context).size.width * 0.7,
                 height: MediaQuery.of(context).size.height * 0.07,
                 child: ElevatedButton(
@@ -168,9 +193,10 @@ class _PriceSurveyPageState extends State<PriceSurveyPage> {
                   ),
                 ),
               ),
-            ],
-          );
-        }),
+            ),
+          ],
+        );
+      }),
     );
   }
 

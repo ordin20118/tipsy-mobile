@@ -1,14 +1,9 @@
 import 'dart:developer';
-import 'dart:ffi';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
-import 'package:tipsy_mobile/classes/util.dart';
-import 'package:http/http.dart' as http;
 import 'package:tipsy_mobile/pages/recommand/survey_controller.dart';
-import 'dart:convert';
 import '../../classes/ui_util.dart';
-import '../../classes/styles.dart';
 
 class TastingNoteSurveyPage extends StatefulWidget {
   const TastingNoteSurveyPage({Key? key}) : super(key: key);
@@ -28,194 +23,225 @@ class _TastingNoteSurveyPageState extends State<TastingNoteSurveyPage> {
         child: Obx( () {
           return Column(
             children: [
-              Text(
-                '어떤 향을 좋아하시나요?',
-                style: TextStyle(
-                  color: Colors.black87,
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(height: MediaQuery.of(context).size.height * 0.005,),
-              Text(
-                '2개까지 선택할 수 있어요',
-                style: TextStyle(
-                  //color: Colors.black87,
-                  color: Colors.black54,
-                  fontSize: 16,
+              Container(
+                height: MediaQuery.of(context).size.height * 0.07,
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Q.',
+                          style: TextStyle(
+                            color: getPrimaryColor(),
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          '어떤 향을 좋아하시나요?',
+                          style: TextStyle(
+                            color: Colors.black87,
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: MediaQuery.of(context).size.height * 0.005,),
+                    Text(
+                      '2개까지 선택할 수 있어요',
+                      style: TextStyle(
+                        //color: Colors.black87,
+                        color: Colors.black54,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ],
                 ),
               ),
               SizedBox(height: MediaQuery.of(context).size.width * 0.06,),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.8,
-                height: MediaQuery.of(context).size.height * 0.08,
-                child: ElevatedButton(
-                  onPressed: () {
-                    setBtnState(1);
-                  },
-                  child: Text(
-                    '🍒과일 향',
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                        color: Colors.black87,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold
+              Container(
+                height: MediaQuery.of(context).size.height * 0.6,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.8,
+                      height: MediaQuery.of(context).size.height * 0.07,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          setBtnState(1);
+                        },
+                        child: Text(
+                          '🍒과일 향',
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                              color: Colors.black87,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold
+                          ),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: surveyController.tastingPageSelectedBtnIdList.contains(1)? Color(0xFF1DE9B6) : Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0), // 원하는 둥근 정도로 조절
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: surveyController.tastingPageSelectedBtnIdList.contains(1)? Color(0xFF1DE9B6) : Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0), // 원하는 둥근 정도로 조절
+                    //SizedBox(height: MediaQuery.of(context).size.width * 0.05,),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.8,
+                      height: MediaQuery.of(context).size.height * 0.07,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          setBtnState(2);
+                        },
+                        child: Text(
+                          '🌸꽃 향',
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                              color: Colors.black87,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold
+                          ),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: surveyController.tastingPageSelectedBtnIdList.contains(2) ? Color(0xFF1DE9B6) : Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0), // 원하는 둥근 정도로 조절
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
+                    //SizedBox(height: MediaQuery.of(context).size.width * 0.05,),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.8,
+                      height: MediaQuery.of(context).size.height * 0.07,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          setBtnState(3);
+                        },
+                        child: Text(
+                          '🌿허브 향',
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                              color: Colors.black87,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold
+                          ),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: surveyController.tastingPageSelectedBtnIdList.contains(3) ? Color(0xFF1DE9B6) : Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0), // 원하는 둥근 정도로 조절
+                          ),
+                        ),
+                      ),
+                    ),
+                    //SizedBox(height: MediaQuery.of(context).size.width * 0.05,),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.8,
+                      height: MediaQuery.of(context).size.height * 0.07,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          setBtnState(4);
+                        },
+                        child: Text(
+                          '🧂스파이스 향',
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                              color: Colors.black87,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold
+                          ),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: surveyController.tastingPageSelectedBtnIdList.contains(4) ? Color(0xFF1DE9B6) : Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0), // 원하는 둥근 정도로 조절
+                          ),
+                        ),
+                      ),
+                    ),
+                    //SizedBox(height: MediaQuery.of(context).size.width * 0.05,),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.8,
+                      height: MediaQuery.of(context).size.height * 0.07,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          setBtnState(5);
+                        },
+                        child: Text(
+                          '🍯달콤한 향',
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                              color: Colors.black87,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold
+                          ),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: surveyController.tastingPageSelectedBtnIdList.contains(5) ? Color(0xFF1DE9B6) : Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0), // 원하는 둥근 정도로 조절
+                          ),
+                        ),
+                      ),
+                    ),
+                    //SizedBox(height: MediaQuery.of(context).size.width * 0.05,),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.8,
+                      height: MediaQuery.of(context).size.height * 0.07,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          setBtnState(6);
+                        },
+                        child: Text(
+                          '🪵우디 향',
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                              color: Colors.black87,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold
+                          ),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: surveyController.tastingPageSelectedBtnIdList.contains(6) ? Color(0xFF1DE9B6) : Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0), // 원하는 둥근 정도로 조절
+                          ),
+                        ),
+                      ),
+                    ),
+                  ]
+                )
               ),
-              SizedBox(height: MediaQuery.of(context).size.width * 0.05,),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.8,
-                height: MediaQuery.of(context).size.height * 0.08,
-                child: ElevatedButton(
-                  onPressed: () {
-                    setBtnState(2);
-                  },
-                  child: Text(
-                    '🌸꽃 향',
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                        color: Colors.black87,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold
-                    ),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: surveyController.tastingPageSelectedBtnIdList.contains(2) ? Color(0xFF1DE9B6) : Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0), // 원하는 둥근 정도로 조절
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(height: MediaQuery.of(context).size.width * 0.05,),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.8,
-                height: MediaQuery.of(context).size.height * 0.08,
-                child: ElevatedButton(
-                  onPressed: () {
-                    setBtnState(3);
-                  },
-                  child: Text(
-                    '🌿허브 향',
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                        color: Colors.black87,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold
-                    ),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: surveyController.tastingPageSelectedBtnIdList.contains(3) ? Color(0xFF1DE9B6) : Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0), // 원하는 둥근 정도로 조절
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(height: MediaQuery.of(context).size.width * 0.05,),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.8,
-                height: MediaQuery.of(context).size.height * 0.08,
-                child: ElevatedButton(
-                  onPressed: () {
-                    setBtnState(4);
-                  },
-                  child: Text(
-                    '🧂스파이스 향',
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                        color: Colors.black87,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold
-                    ),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: surveyController.tastingPageSelectedBtnIdList.contains(4) ? Color(0xFF1DE9B6) : Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0), // 원하는 둥근 정도로 조절
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(height: MediaQuery.of(context).size.width * 0.05,),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.8,
-                height: MediaQuery.of(context).size.height * 0.08,
-                child: ElevatedButton(
-                  onPressed: () {
-                    setBtnState(5);
-                  },
-                  child: Text(
-                    '🍯달콤한 향',
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                        color: Colors.black87,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold
-                    ),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: surveyController.tastingPageSelectedBtnIdList.contains(5) ? Color(0xFF1DE9B6) : Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0), // 원하는 둥근 정도로 조절
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(height: MediaQuery.of(context).size.width * 0.05,),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.8,
-                height: MediaQuery.of(context).size.height * 0.08,
-                child: ElevatedButton(
-                  onPressed: () {
-                    setBtnState(6);
-                  },
-                  child: Text(
-                    '🪵우디 향',
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                        color: Colors.black87,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold
-                    ),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: surveyController.tastingPageSelectedBtnIdList.contains(6) ? Color(0xFF1DE9B6) : Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0), // 원하는 둥근 정도로 조절
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(height: MediaQuery.of(context).size.width * 0.07,),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.7,
+              SizedBox(height: MediaQuery.of(context).size.width * 0.06,),
+              Container(
                 height: MediaQuery.of(context).size.height * 0.07,
-                child: ElevatedButton(
-                  onPressed: surveyController.tastingPageSelectedBtnIdList.length > 0 ? () {
-                    clickNextBtn();
-                  } : null,
-                  child: Text(
-                    '다음',
-                    textAlign: TextAlign.left,
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.7,
+                  height: MediaQuery.of(context).size.height * 0.07,
+                  child: ElevatedButton(
+                    onPressed: surveyController.tastingPageSelectedBtnIdList.length > 0 ? () {
+                      clickNextBtn();
+                    } : null,
+                    child: Text(
+                      '다음',
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold
+                      ),
                     ),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: getPrimaryColor(),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(100.0), // 원하는 둥근 정도로 조절
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: getPrimaryColor(),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(100.0), // 원하는 둥근 정도로 조절
+                      ),
                     ),
                   ),
                 ),

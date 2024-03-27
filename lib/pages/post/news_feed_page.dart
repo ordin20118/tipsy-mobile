@@ -8,6 +8,7 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:tipsy_mobile/classes/util.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import '../../classes/common_code.dart';
 import '../../classes/post.dart';
 import '../../classes/ui_util.dart';
 import '../../classes/styles.dart';
@@ -43,7 +44,7 @@ class _NewsFeedPageState extends State<NewsFeedPage> {
   Widget buildNewsFeedPage(BuildContext context) {
     return Container(
       color: getCommonBackColor(),
-      height: MediaQuery.of(context).size.height * 0.77,
+      //height: MediaQuery.of(context).size.height * 0.77,
       child: Obx(() =>
         Padding(
           padding: EdgeInsets.all(0.0),
@@ -219,7 +220,7 @@ class _NewsFeedPageState extends State<NewsFeedPage> {
                   onTap: () {
                     TextEditingController _commentInputController = TextEditingController();
                     CommentScrollController _commentScrollController = Get.put<CommentScrollController>(CommentScrollController(), tag: "commentPreview_602_${post.id}",);
-                    showCommentModal(context, _focusNode, _commentInputController, _commentScrollController, post.id, 602);
+                    showCommentModal(context, _focusNode, _commentInputController, _commentScrollController, post.id, CommonCode.CONTENT_TYPE_POST, 10);
                   },
                   child: Icon(Icons.chat_bubble_outline, size: 22),
                 ),

@@ -3,12 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:tipsy_mobile/classes/util.dart';
-import 'package:http/http.dart' as http;
 import 'package:tipsy_mobile/pages/recommand/survey_controller.dart';
-import 'dart:convert';
 import '../../classes/liquor.dart';
 import '../../classes/ui_util.dart';
-import '../../classes/styles.dart';
 import '../../ui/tipsy_loading_indicator.dart';
 import '../liquor_page.dart';
 
@@ -29,16 +26,21 @@ class _SurveyResultPageState extends State<SurveyResultPage> {
   Widget build(BuildContext context) {
     return Obx(() {
       return Container(
-          child: Column(
-            children: [
-              buildResultText(),
-              SizedBox(height: MediaQuery.of(context).size.width * 0.06,),
-              Container(
-                height: MediaQuery.of(context).size.height * 0.5,
-                child: buildRecommendedLiquors(),
-              ),
-              SizedBox(height: MediaQuery.of(context).size.width * 0.3,),
-              Row(
+        child: Column(
+          children: [
+            Container(
+              height: MediaQuery.of(context).size.height * 0.03,
+              child: buildResultText(),
+            ),
+            SizedBox(height: MediaQuery.of(context).size.width * 0.06,),
+            Container(
+              height: MediaQuery.of(context).size.height * 0.6,
+              child: buildRecommendedLiquors(),
+            ),
+            SizedBox(height: MediaQuery.of(context).size.width * 0.1,),
+            Container(
+              //height: MediaQuery.of(context).size.height * 0.5,
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   SizedBox(
@@ -92,8 +94,9 @@ class _SurveyResultPageState extends State<SurveyResultPage> {
                   )
                 ],
               ),
-            ],
-          )
+            ),
+          ],
+        )
       );
     });
   }
@@ -128,6 +131,7 @@ class _SurveyResultPageState extends State<SurveyResultPage> {
 
   Widget buildRecommendedLiquors() {
     List<Liquor> liquorList = surveyController.recommandedLiquors;
+
     if(liquorList.length == 0 && surveyController.hasLiquors) { // 추천 데이터를 조회중
       return Center(child: TipsyLoadingIndicator(),);
     } else if(!surveyController.hasLiquors) {                   // 추천 결과가 없는 경우 출력
@@ -144,7 +148,7 @@ class _SurveyResultPageState extends State<SurveyResultPage> {
     List<Widget> liquorCardList = <Widget>[];
 
     int limit = 4;
-    if(liquorList.length < 3) {
+    if(liquorList.length <= 3) {
       limit = liquorList.length;
     }
 
@@ -237,7 +241,7 @@ class _SurveyResultPageState extends State<SurveyResultPage> {
   @override
   void initState() {
     super.initState();
-    log("Noising survey page initState()");
+    log("Survey result page initState()");
   }
 }
 

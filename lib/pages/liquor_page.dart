@@ -12,6 +12,7 @@ import 'package:tipsy_mobile/pages/rating/rating_page.dart';
 import 'dart:convert';
 
 import '../classes/bookmark.dart';
+import '../classes/common_code.dart';
 import '../classes/param/bookmark_param.dart';
 import '../requests/bookmark.dart';
 import '../requests/comment.dart';
@@ -343,7 +344,7 @@ class _LiquorDetailState extends State<LiquorDetail> {
                           if(snapshot.hasData) {
                             return GestureDetector(
                               onTap: () {
-                                showCommentModal(context, _focusNode, _commentInputController, _commentScrollController, widget.liquorId, 100);
+                                showCommentModal(context, _focusNode, _commentInputController, _commentScrollController, widget.liquorId, CommonCode.CONTENT_TYPE_LIQUOR, 10);
                               },
                               child: Column(
                                 children: [
@@ -619,7 +620,7 @@ class _CommentPreViewState extends State<CommentPreView> {
               ),
               TextButton(
                 onPressed: () {
-                  showCommentModal(context, _focusNode, _commentInputController, _commentScrollController, widget.contentId, widget.contentType);
+                  showCommentModal(context, _focusNode, _commentInputController, _commentScrollController, widget.contentId, widget.contentType, 10);
                 },
                 child: Text(
                   '댓글 쓰기 >',

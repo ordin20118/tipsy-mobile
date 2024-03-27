@@ -149,7 +149,7 @@ class CommentScrollController extends GetxController {
   var scrollController = ScrollController().obs;
   var data = <Comment>[].obs;
   var nowPage = 2;
-  var perPage = 5;
+  var perPage = 10;
   var isLoading = false.obs;
   var hasMore = true.obs;
   var contentType;
